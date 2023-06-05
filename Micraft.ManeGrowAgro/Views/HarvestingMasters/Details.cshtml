@@ -1,0 +1,83 @@
+﻿@model Micraft.ManeGrowAgro.Models.HarvestingMaster
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>HarvestingMaster</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RoomNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoomNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectionDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProjectionDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.YearlyProjection)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.YearlyProjection)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MonthlyProjection)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MonthlyProjection)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DailyPrediction)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DailyPrediction)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ActualQuentity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ActualQuentity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectionFailuarReason)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProjectionFailuarReason)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsProjection)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsProjection)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

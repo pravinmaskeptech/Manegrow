@@ -1,0 +1,208 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    table.dataTable th,
+    table.dataTable td {
+        white-space: nowrap;
+    }
+    .btn btn-secondary green {
+        color: green;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-4 col-md-2 col-12" style="text-align:center">
+                <h5 class="text-dark mr-4"><b>Employee Master</b></h5>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                           
+                            <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                <thead>
+                                    <tr class="text-uppercase">
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>Email Address</th>
+                                        <th>Mobile No.</th>
+                                        <th>Adhar Number</th>
+                                        <th>Designation</th>                                       
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function () {
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+
+        try {
+
+            $('#example').DataTable({
+                paging: true,
+                "searching": true,
+                dom: 'Bfrtip',
+                "bServerSide": true,
+                "sAjaxSource": '@Url.Action("GetData", "EmployeeMasters")',
+                "sServerMethod": "POST",
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
+                    {
+                        text: "Add New",
+                      
+                        action: function (e, dt, node, config) {
+                            window.location.href = "/EmployeeMasters/Create"
+                        }                    
+                    }],
+                language: {
+                    searchPlaceholder: "Search",
+                    search: ""
+                },
+                
+                "aoColumns": [
+                    {
+                        "mData": "Name"
+                    },
+                    {
+                        "mData": "Address"
+                    },
+                    {
+                        "mData": "EmailAddress"
+                    },
+                    {
+                        "mData": "MobileNumber"
+                    },                   
+                    {
+                        "mData": "AdharNumber"
+                    },
+                    {
+                        "mData":"Designation"
+                    },
+                    {
+                        "mData": function (o) {
+                            return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.ID + " class='btn btn-primary btn-sm mr-2' onclick='Show(this.id);'><i class='fa fa-eye'></i></button><button type='button' id=" + o.ID + " class='btn btn-primary btn-sm mr-2' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button><button type='button' id=" + o.ID + " onclick='Delete(this.id);' class='btn btn-danger btn-sm'><i class='fas fa-trash'></i></button></div>"
+                        }
+                    },
+                ],
+            });
+        }
+        catch (e) {
+        }
+
+
+
+        $("#txtFromDate").change(function (e) {
+            var table = $('#example').DataTable();
+            table.ajax.reload(function (json) {
+            });
+        });
+        $("#txtToDate").change(function (e) {
+            var table = $('#example').DataTable();
+            table.ajax.reload(function (json) {
+            });
+        });
+
+        $("#CompoundNo").change(function (e) {
+            var table = $('#example').DataTable();
+            table.ajax.reload(function (json) {
+            });
+        });
+    });
+    function Delete(id) {
+        debugger;
+        if (confirm("Are you sure you want to delete this record?")) {
+            $.ajax({
+                url: '/EmployeeMasters/DeleteConfirmed',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (result) {
+                    if (result.Message == "success") {
+                        swal("Success", "Record Delete Successfully", "success");
+                        window.location.href = "/EmployeeMasters/Index";
+                    } else {
+                        toastr.error(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    console.log("error");
+                    console.log(ex);
+                }
+            });
+        } else {
+            false;
+        }
+
+    }
+    function Edit(id) {
+        //console.log(id);
+        //$("#EditModal").modal("show");
+        window.location.href = "/EmployeeMasters/Edit/" + id;
+    }
+    function Show(id) {
+        console.log(id);
+        $("#ShowModal").modal("show");
+    }
+
+    $("#addCustomer").click(function () {
+        var Name = $("#Name").val();
+        var Address = $("#Address").val();
+        var EmailAddress = $("#EmailAddress").val();
+        var MobileNumber = $("#MobileNumber").val();
+        var DepartmentID = $("#DepartmentID").val();
+        var AdharNumber = $("#AdharNumber").val();
+        var PanNumber = $("#PanNumber").val();
+        var ReportingToID = $("#ReportingToID").val();
+        var records = {
+            "Name": Name,
+            "Address": Address,
+            "EmailAddress": EmailAddress,
+            "MobileNumber": MobileNumber,
+            "DepartmentID": DepartmentID,
+            "AdharNumber": AdharNumber,
+            "PanNumber": PanNumber,
+            "ReportingToID": ReportingToID
+        };
+         $.ajax({
+             url: "/EmployeeMasters/AddEmployee",
+                type: "Post",
+                dataType: "json",
+                data: JSON.stringify(records),
+                contentType: "Application/json",
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (ex) {
+                console.log("error");
+                console.log(ex);
+            }
+        });
+
+    });
+</script>

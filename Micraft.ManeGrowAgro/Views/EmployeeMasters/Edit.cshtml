@@ -1,0 +1,574 @@
+﻿@model Micraft.ManeGrowAgro.Models.EmployeeMaster
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .tb {
+        border-collapse: collapse;
+        width: 50%;
+    }
+
+        .tb th, .tb td {
+            padding: 5px;
+            border: solid 1px #777;
+        }
+
+        .tb th {
+            background-color: lightblue;
+        }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm("Edit", "EmployeeMasters", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" id="CustomerOrder" name="CustomerOrder" value="false" />
+                            <input type="hidden" id="Harvesting" name="Harvesting" value="false" />
+                            <input type="hidden" id="Packing" name="Packing" value="false" />
+                            <input type="hidden" id="Dispatch" name="Dispatch" value="false" />
+                            <input type="hidden" id="PODUpdation" name="PODUpdation" value="false" />
+                            <input type="hidden" id="Collection" name="Collection" value="false" />
+                            <input type="hidden" id="RateUpdation" name="RateUpdation" value="false" />
+                            <input type="hidden" id="LocationDetails" name="LocationDetails" value="false" />
+                            <input type="hidden" id="AllMaster" name="AllMaster" value="false" />
+                            <input type="hidden" id="Reports" name="Reports" value="false" />
+                            <input type="hidden" id="ResetPassword" name="ResetPassword" value="false" />
+                            <div class="form-horizontal">
+                                <h4>Employee Master</h4>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                @Html.HiddenFor(model => model.ID)
+                                <input type="hidden" id="PreviousFile" name="PreviousFile" value=@Model.PhotoUpload />
+
+                                <div class="row">
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.Name)
+                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Name is required and cannot be empty" } })
+
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.EmpCode)
+                                        @Html.EditorFor(model => model.EmpCode, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Emp Code is required and cannot be empty", required = "required" } })
+
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.Address)
+                                        <br />
+                                        @Html.TextAreaFor(model => model.Address, new { htmlAttributes = new { cols = "38", @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Address is required and cannot be empty", required = "required" } })
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.Pincode)
+
+                                        @Html.EditorFor(model => model.Pincode, new { @type = "number", htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Pincode is required and cannot be empty", required = "required", @onchange = "GetCityArea()" } })
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.City)
+                                        @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "City Name is required and cannot be empty", required = "required" } })
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.Area)
+
+                                        @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Area is required and cannot be empty", required = "required" } })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.EmailAddress)
+
+                                        @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control", maxlength = "100", data_bv_regexp_message = "Input string is not valid Email Id.", @Pattern = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$", data_bv_notempty_message = "Email Id is required", data_bv_emailaddress_message = "The input is not a valid email address", data_bv_notempty = "true", Autocomplete = "off" } })
+
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.MobileNumber)
+
+                                        @Html.EditorFor(model => model.MobileNumber, new { htmlAttributes = new { @class = "form-control", @type = "number", data_bv_notempty = "true", data_bv_notempty_message = "The Mobile No is required", data_bv_stringlength = "true", data_bv_stringlength_min = "10", required = "required", autocomplete = "off", data_bv_stringlength_max = "11", data_bv_stringlength_message = "The Mobile must be 10 digits long", data_bv_regexp = "true", data_bv_regexp_regexp = "[0-9]", data_bv_regexp_message = "The Mobile can only consist digit" } })
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.DepartmentID)
+
+                                        @Html.DropDownListFor(model => model.DepartmentID, new SelectList(ViewBag.DeptName, "ID", "Department"), "Select Type", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Department is required and cannot be empty" })
+                                        @*@Html.EditorFor(model => model.DepartmentID, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.DesigID)
+                                        @Html.DropDownListFor(model => model.DesigID, new SelectList(ViewBag.DesigName, "ID", "Designation"), "Select Sales Person", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Sales Person is required and cannot be empty" })
+
+                                        @*@Html.EditorFor(model => model.DepartmentID, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.AdharNumber)
+                                        @Html.EditorFor(model => model.AdharNumber, new { @type = "number", htmlAttributes = new { @class = "form-control", Autocomplete = "off", @Pattern = "", data_bv_regexp_message = "Input string is not valid aadhar No.", maxlength = "20", style = "text-transform:uppercase" } })
+
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.PanNumber)
+                                        @Html.EditorFor(model => model.PanNumber, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", @Pattern = "^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$", data_bv_regexp_message = "Input string is not valid Pan no.", maxlength = "20", style = "text-transform:uppercase" } })
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.ReportingToID)
+
+                                        @*@Html.EditorFor(model => model.ReportingToID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ReportingToID, "", new { @class = "text-danger" })*@
+                                        @Html.DropDownListFor(model => model.ReportingToID, new SelectList(ViewBag.EMP, "ID", "Name"), "Select Reporting Person", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Reporting Person is required and cannot be empty" })
+
+                                    </div>
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.Username)
+
+                                        @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "User Name is required and cannot be empty", required = "required" } })
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.Password)
+                                        <br />
+                                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Passward is required and cannot be empty", maxlength = "200", required = "required" } })
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.PhotoUpload)
+                                        <input type="file" id="PhotoUpload" name="PhotoUpload" class="form-control form-control-sm">
+                                        @*@Html.EditorFor(model => model.ProfilePic, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    </div>
+
+                                    <!--<div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.UserRole)
+
+                                        @Html.DropDownListFor(model => model.UserRole, new SelectList(ViewBag.UserRole, "ID", "Name"), "Select Type", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "User Role is required and cannot be empty" })-->
+                                        @*@Html.EditorFor(model => model.DepartmentID, new { htmlAttributes = new { @class = "form-control" } })*@
+                                        <!--@Html.ValidationMessageFor(model => model.UserRole, "", new { @class = "text-danger" })
+                                    </div>-->
+                                    <div class="col-md-4 col-12 mb-3">
+                                        <img id="ProPic" src="~/Attachments/EmployeePic/@Model.PhotoUpload" / style="width:100px">
+                                    </div>
+
+                                </div>
+
+                                <br />
+
+                                <table id="tblDetails" class="tb">
+                                    <thead>
+                                        <tr>
+                                            <th>Form</th>
+                                            <th style="display:none">ID</th>
+                                            <th>View</th>
+                                            <th style="display:none">ID</th>
+                                            <th>Edit </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       
+                                        @foreach (var item in ViewBag.UserRole)
+                                        {
+                                         
+                                        <tr>
+                                            <td>@item.Name</td>
+                                            <td style="display:none">@item.IdView</td>
+                                            <td><center><input type="checkbox" id="@item.IdView" /></center></td>
+
+                                            <td style="display:none">@item.Id</td>
+                                            <td><center><input type="checkbox" id="@item.Id" /></center></td>
+
+
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                                <br />
+                                <div class="row">
+
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                            </div>
+                                            <div class="col-md-8">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input type="button" id="edit1" value="Save" class="btn btn-primary" onclick="SaveDAta()" />
+                                                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    //function SetData(ID) {
+    //   // alert(ID)
+    //    var X = $("#" + ID).is(':checked') ? true : false;
+    //    var Name = ID.replace(/\d+/g, '');
+    //    $('#' + Name).val(X);
+    //}
+
+    $(document).ready(function () {
+
+        $("#form0").bootstrapValidator();
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+     var statesAvailable = @Html.Raw(Json.Encode(@ViewBag.UserRoleID));
+debugger
+
+        $.each(statesAvailable, function (i, item) {
+            debugger
+            $('#' + item.RoleId).attr('checked', true);
+        })
+
+
+
+        @*var Urole = "@Model.UserRole";
+        $('#UserRole').val(Urole);
+        $("#form0").bootstrapValidator('revalidateField', 'Pincode');
+        $("#form0").bootstrapValidator('revalidateField', 'UserRole');
+
+        debugger
+
+        try {
+
+
+            var CustomerOrder = "@Model.CustomerOrder";
+            if (CustomerOrder == "False") {
+                $('#CustomerOrder1').attr('checked', false);
+                $('#CustomerOrder').val(false);
+            } else {
+                $('#CustomerOrder1').attr('checked', true);
+                $('#CustomerOrder').val(true);
+            }
+        } catch
+        {
+
+        }
+
+
+        try {
+
+            var Harvesting = "@Model.Harvesting";
+            if (Harvesting == "False") {
+                $('#Harvesting1').attr('checked', false);
+                $('#Harvesting').val(false);
+            } else {
+                $('#Harvesting1').attr('checked', true);
+                $('#Harvesting').val(true);
+            }
+        }catch
+        {}
+
+
+        var Packing = "@Model.Packing";
+        if (Packing == "False") {
+            $('#Packing1').attr('checked', false);
+            $('#Packing').val(false);
+        } else {
+            $('#Packing1').attr('checked', true);
+            $('#Packing').val(true);
+        }
+
+
+        var Dispatch = "@Model.Dispatch";
+        if (Dispatch == "False") {
+            $('#Dispatch1').attr('checked', false);
+            $('#Dispatch').val(false);
+        } else {
+            $('#Dispatch1').attr('checked', true);
+            $('#Dispatch').val(true);
+        }
+
+
+
+
+        var PODUpdation = "@Model.PODUpdation";
+        if (PODUpdation == "False") {
+            $('#PODUpdation1').attr('checked', false);
+            $('#PODUpdation').val(false);
+        } else {
+            $('#PODUpdation1').attr('checked', true);
+            $('#PODUpdation').val(true);
+        }
+
+        var Collection = "@Model.Collection";
+        if (Collection == "False") {
+            $('#Collection1').attr('checked', false);
+            $('#Collection').val(false);
+        } else
+        {
+            $('#Collection1').attr('checked', true);
+            $('#Collection').val(true);
+        }
+
+        var RateUpdation = "@Model.RateUpdation";
+        if (RateUpdation == "False") {
+            $('#RateUpdation1').attr('checked', false);
+            $('#RateUpdation').val(false);
+        } else {
+            $('#RateUpdation1').attr('checked', true);
+            $('#RateUpdation').val(true);
+        }
+
+
+
+        var LocationDetails = "@Model.LocationDetails";
+        if (LocationDetails == "False") {
+            $('#LocationDetails1').attr('checked', false);
+            $('#LocationDetails').val(false);
+        } else {
+            $('#LocationDetails1').attr('checked', true);
+            $('#LocationDetails').val(true);
+        }
+
+
+
+        var AllMaster = "@Model.AllMaster";
+        if (AllMaster == "False") {
+            $('#AllMaster1').prop('checked', false);
+            $('#AllMaster').val(false);
+        }else
+        {
+            $('#AllMaster1').prop('checked', true);
+            $('#AllMaster').val(true);
+        }
+
+
+        var Reports = "@Model.Reports";
+        if (Reports == "False") {
+            $('#Reports1').attr('checked', false);
+            $('#Reports').val(false);
+        } else {
+            $('#Reports1').attr('checked', true);
+            $('#Reports').val(true);
+        }
+
+        var ResetPassword = "@Model.ResetPassword";
+        if (ResetPassword == "False") {
+            $('#ResetPassword1').attr('checked', false);
+            $('#ResetPassword').val(false);
+        } else {
+            $('#ResetPassword1').attr('checked', true);
+            $('#ResetPassword').val(true);
+        }*@
+    });
+
+    $('#PhotoUpload').on('change', function () {
+
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#PhotoUpload").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            // Adding one more key to FormData object
+            fileData.append('username', 'Bandu');
+
+            $.ajax({
+                url: '/EmployeeMasters/UploadFiles',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+                    alert(result);
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            alert("FormData is not supported.");
+        }
+    });
+    function GetCityArea() {
+        $.ajax({
+            url: "/EmployeeMasters/GetCityArea",
+            type: "GET",
+            dataType: "json",
+            data: { Pincode: $('#Pincode').val() },
+            success: function (result) {
+                if (result.Message == "success") {
+                    $('#City').val(result.pincode[0].City);
+                    $('#Area').val(result.pincode[0].Area);
+                    $("#form0").bootstrapValidator('revalidateField', 'City');
+                    $("#form0").bootstrapValidator('revalidateField', 'Area');
+                } else {
+                    toastr.error(result.Message);
+                }
+            },
+            error: function (ex) {
+                console.log("error");
+                console.log(ex);
+            }
+        });
+    }
+
+
+    function SaveDAta() {
+        debugger
+        var orderItem = {
+            ID: $('#ID').val(),
+            Name: $('#Name').val(),
+            Address: $('#Address').val(),
+            City: $('#City').val(),
+            Pincode: $('#Pincode').val(),
+            EmailAddress: $('#EmailAddress').val(),
+            MobileNumber: $('#MobileNumber').val(),
+            DepartmentID: $('#DepartmentID').val(),
+            AdharNumber: $('#AdharNumber').val(),
+            PanNumber: $('#PanNumber').val(),
+            ReportingToID: $('#ReportingToID').val(),
+            DesigID: $('#DesigID').val(),
+            EmpCode: $('#EmpCode').val(),
+            Area: $('#Area').val(),
+            //   PhotoUpload: $('#PhotoUpload').val(),
+            Username: $('#Username').val(),
+            Password: $('#Password').val(),
+        }
+//Edit
+        var LST = [];
+        $("#tblDetails TBODY TR").each(function () {
+            try {
+
+                var row = $(this);
+                var ID = row.find("TD").eq(1).html();
+                var Name = row.find("TD").eq(2).html();
+
+                var X = $("#" + ID).is(':checked') ? true : false;
+                if (X == true) {
+                    var order = {
+                        RoleID: ID,
+                        RoleName: Name
+                    }
+                    LST.push(order);
+                }
+
+            } catch { }
+
+
+        });
+            //Save
+
+            var LSTView = [];
+            $("#tblDetails TBODY TR").each(function () {
+                try {
+
+                    var row = $(this);
+                    var ID = row.find("TD").eq(3).html();
+                    var Name = row.find("TD").eq(4).html();
+
+                    var X = $("#" + ID).is(':checked') ? true : false;
+                    if (X == true) {
+                        var order = {
+                            RoleID: ID,
+                            RoleName: Name
+                        }
+                        LSTView.push(order);
+                    }
+
+                } catch { }
+
+        });
+        debugger
+
+        var data = {
+
+            employeeMaster: orderItem, UserRoless: LST, LSTView: LSTView
+        }
+        debugger;
+        //Send the JSON array to Controller using AJAX.
+        $.ajax({
+            type: "POST",
+            url: "/EmployeeMasters/Save",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.Message == "success") {
+                    alert("Record Successfully Created...")
+                    window.location.href = "/EmployeeMasters/Index";
+
+                } else {
+                    if (result.Message == "successs") {
+                        alert("Record Successfully Updated...");
+                        window.location.href = "/EmployeeMasters/Index";
+                    }
+                }
+            }
+        })
+
+    }
+
+</script>

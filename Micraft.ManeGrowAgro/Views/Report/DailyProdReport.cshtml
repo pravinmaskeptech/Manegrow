@@ -1,0 +1,302 @@
+﻿@model IEnumerable<Micraft.ManeGrowAgro.Models.MainOrder>
+
+@{
+    ViewBag.Title = "Daily Prod Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #tbl11 .form-control {
+        width: 70px;
+        padding: 0;
+    }
+
+    .dataTables_filter {
+        margin-top: -40px;
+    }
+
+    .btn-group {
+        margin-bottom: 20px;
+    }
+</style>
+
+<style>
+    table.dataTable th,
+    table.dataTable td {
+        white-space: nowrap;
+    }
+
+    .btn btn-secondary green {
+        color: green;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12">
+                <h5 class="text-dark mr-2"><b>Daily Prod Report</b></h5>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="">
+
+                            <div class="row">
+                                <div class="col-md-1 col-12" @*style="font-size:12px"*@>
+                                    <lable>Year</lable>
+                                </div>
+                                <div class="col-md-2 col-12">
+                                    <select class="form-control" id="Year" name="Year">
+                                        @{
+                                            <option value="">Select</option>
+                                            for (int i = 2020; i <= 2030; i++)
+                                            {
+                                                <option value="@i">@i</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-1 col-12" @*style="font-size:12px"*@>
+                                    <lable>Month</lable>
+                                </div>
+                                <div class="col-md-2 col-12">
+                                    <select class="form-control" id="Month" name="Month">
+                                        @{
+                                            <option value="">Select</option>
+                                            for (int i = 1; i <= 12; i++)
+                                            {
+                                                <option value="@i">@i</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                @*<div class="col-md-1 col-12" style="font-size:12px">
+                                        <lable>Room No.</lable>
+                                    </div>*@
+                                @*<div class="col-md-2 col-12">
+                                        @Html.DropDownList("RoomNo", new SelectList(ViewBag.RoomNo, "RoomNo", "RoomNo"), "Select", new { @class = "form-control", @style = "width:100px!important" })
+                                    </div>*@
+
+                                <button type="button" class="btn btn-primary" onclick="btngoclick();">Get Report</button>
+
+                            </div>
+
+                            <hr />
+
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                <thead style="font-size:12px!important;background-color: #d8e9c1">
+                                    <tr class="text-uppercase">
+                                        <th>Year</th>
+                                        <th>Month</th>
+                                        <th>Room No</th>
+                                        <th>Total</th>
+
+                                        @for (int i = 1; i <= 31; i++)
+                                        {
+                                            <th> @i </th>
+
+                                        }
+
+                                        <th>Created By</th>
+                                        <th>Created Date</th>
+                                        <th>Updated By</th>
+                                        <th>Updated Date</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/. col -->
+
+        </div>
+        <!--/. row -->
+
+    </div>
+
+
+    <!-- /.container-fluid -->
+</section>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+
+
+<script>
+
+    $(document).ready(function () {
+        $("#example").hide();
+    });
+
+
+    function btngoclick() {
+
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+
+        var val = true;
+
+        if ($("#Year").val() == null || $("#Year").val() == "") {
+            val = false;
+            toastr.error("Please Select Year.");
+        }
+
+        if ($("#Month").val() == null || $("#Month").val() == "") {
+            val = false;
+            toastr.error("Please Select Month.");
+        }
+
+        if (val == true) {
+            getdata();
+            $("#example").show();
+        }
+        else {
+            $.preloader.stop();
+        }
+
+    }
+
+
+    function getdata() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetDailyReport", "Report")',
+            data: { YEAR: $("#Year").val(), MONTH: $("#Month").val() },
+            dataType: "json",
+            success: OnSuccess,
+            failure: function (response) {
+                alert(response.d);
+                $.preloader.stop();
+            },
+            error: function (response) {
+                alert(response.d);
+                $.preloader.stop();
+            }
+        });
+        function OnSuccess(response) {
+
+            $("#example").DataTable(
+                {
+                    "destroy": true,
+                    'columnDefs': [
+                        //{ 'visible': false, 'targets': [2, 7] },
+                        //{
+                        //    "render": function (data, type, row) {
+                        //        return data ? 'Yes' : 'No';
+                        //    },
+                        //    "targets": 9 // replace 0 by your column if
+                        //}
+                    ],
+                    "bInfo": true,
+                    //"order": [0, 'desc'],
+                    pageLength: 10,
+                    filter: true,
+                    searching: true,
+                    bLengthChange: true,
+                    lengthMenu: [[10, 20, -1], [10, 20, "All"]],
+                    dom: 'Blfrtip',
+                    buttons: [/*'copy', 'csv', */{
+                        extend: 'excel',
+                        title: 'Daily Production Report-Manegrow',
+                        exportOptions: {
+                            columns: ':visible',
+                            orthogonal: 'excel',
+                            modifier: {
+                                order: 'current',
+                                page: 'all',
+                                selected: false,
+                            },
+                        },
+                    },/*, 'pdf', 'print'*/
+                    ],
+                    bFilter: true,
+                    bSort: true,
+                    bPaginate: true,
+                    data: response,
+                    columns: [
+                        { 'data': 'Year' },
+                        { 'data': 'Month' },
+                        { 'data': 'RoomNo' },
+                        { 'data': 'Total' },
+                        { 'data': 'D1' },
+                        { 'data': 'D2' },
+                        { 'data': 'D3' },
+                        { 'data': 'D4' },
+                        { 'data': 'D5' },
+                        { 'data': 'D6' },
+                        { 'data': 'D7' },
+                        { 'data': 'D8' },
+                        { 'data': 'D9' },
+                        { 'data': 'D10' },
+                        { 'data': 'D11' },
+                        { 'data': 'D12' },
+                        { 'data': 'D13' },
+                        { 'data': 'D14' },
+                        { 'data': 'D15' },
+                        { 'data': 'D16' },
+                        { 'data': 'D17' },
+                        { 'data': 'D18' },
+                        { 'data': 'D19' },
+                        { 'data': 'D20' },
+                        { 'data': 'D21' },
+                        { 'data': 'D22' },
+                        { 'data': 'D23' },
+                        { 'data': 'D24' },
+                        { 'data': 'D25' },
+                        { 'data': 'D26' },
+                        { 'data': 'D27' },
+                        { 'data': 'D28' },
+                        { 'data': 'D29' },
+                        { 'data': 'D30' },
+                        { 'data': 'D31' },
+                        { 'data': 'CreatedBy' },
+                        { 'data': 'CreatedDateS' },
+                        { 'data': 'UpdatedBy' },
+                        { 'data': 'UpdatedDateS' },
+                        //{
+                        //    "mData": null,
+                        //    "bSortable": false,
+                        //    "mRender": function (data, type, full) {
+                        //        return '<button type="button" onclick="DeleteRow(this, \'' + data.AssetID + '\',);" class="btn  btn-danger btnDelete">Delete &nbsp; <i class="fa fa-trash"></i></button>'
+
+                        //    }
+                        //},
+                        //{
+                        //    'data': 'DemoSetDetailsID',
+                        //    'render': function (data, type, row, meta) {
+                        //        return '<button type="button" class="btn btn-danger btnDelete"  onclick=DeleteRow("' + row.AssetID + '");  >Delete </button>'
+                        //    }
+                        //},
+
+                    ]
+                });
+
+
+            $.preloader.stop();
+        };
+    }
+
+</script>

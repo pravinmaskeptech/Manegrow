@@ -1,0 +1,705 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #tbl11 .form-control {
+        width: 70px;
+        padding: 0;
+    }
+
+    .wrapper {
+        overflow-x: auto;
+    }
+
+        .wrapper table {
+            white-space: nowrap;
+        }
+</style>
+
+<!-- /.content-header -->
+<!-- Main content -->
+<br />
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            onSubmit = "return false"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                <div class="content-header" style="padding:1px">
+                                    <h4>Actual Production</h4>
+                                </div>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="modal-body">
+
+                                    <input type="hidden" id="Id" name="Id" />
+
+                                    <div class="row">
+                                        <div class="col-md-2 col-12">
+                                            <lable>Enter Date</lable>
+                                        </div>
+                                        <div class="col-md-2 col-12">
+                                            <input type="text" class="form-control" id="mydate" readonly="readonly">
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div style="overflow-x:auto;">
+                                            <table class="table table-striped table-bordered dt-responsive" style="width:100%;">
+
+                                                <thead style="background-color: #d8e9c1">
+                                                    <tr>
+                                                        <th><lable>Room No</lable></th>
+                                                        <th>
+                                                            <lable>Caret Type</lable>
+                                                        </th>
+                                                        <th width="15%">
+                                                            <lable>No. of Carets</lable>
+                                                        </th>
+                                                        <th>
+                                                            <lable>Gross Weight</lable>
+                                                        </th>
+                                                        <th>
+                                                            <lable>Actual Weight</lable>
+                                                        </th>
+                                                        <th>
+
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DropDownList("RoomNo", new SelectList(ViewBag.RoomNo, "RoomNo", "RoomNo"), "Select", new { @class = "form-control", style = "min-width:100px" })
+                                                            @Html.ValidationMessage("RoomNo", "", new { @class = "text-danger" })
+                                                        </td>
+                                                        <td>
+                                                            @Html.DropDownList("CaretType", new SelectList(ViewBag.Caret, "CaretType", "CaretType", "CARATE"), "Select", new { @class = "form-control", onchange = "CaretTypeChange()", style = "min-width:100px" })
+                                                            @Html.ValidationMessage("CaretType", "", new { @class = "text-danger" })
+
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" id="NoOfCaret" type="number" name="NoOfCaret" @*onkeypress = "return isNumberKey(event)"*@ />
+                                                        </td>
+
+                                                        <td>
+                                                            <input class="form-control" id="Weight" name="Weight" onkeypress="return isNumberKey(event)" />
+                                                        </td>
+
+                                                        <td>
+                                                            <input readonly class="form-control" id="actualweight" name="actualweight" />
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary" id="btnad" onclick="btnadd()"> Add <i class="fa fa-plus"></i>  </button>
+
+                                                            <button type="button" class="btn btn-primary" id="btnup" onclick="btnadd()"> Update <i class="fa fa-plus"></i>  </button>
+
+                                                            <button type="button" class="btn btn-outline-danger" id="btnreset" onclick="Reset()"> Cancel <i class="fa fa-refresh"></i>  </button>
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+                                        </div>
+
+
+                                        <div class="col-md-12">
+                                            <br /><br />
+
+                                            <div class="table-responsive">
+                                                <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                                    <thead>
+                                                        <tr class="text-uppercase">
+                                                            <th>Date</th>
+                                                            <th>Room No</th>
+                                                            <th>Caret Type</th>
+                                                            <th>No Of Caret</th>
+                                                            <th>Gross Weight</th>
+                                                            <th>Actual Weight</th>
+                                                            <th>Action</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                            @*<button type="button" class="btn btn-success" onclick="Save()"> Save </button>*@
+                                        </div>
+
+                                    </div>
+
+
+                                    <br />
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        try {
+            $('#mydate').datepicker({
+                dateFormat: 'dd-mm-yy',
+                autoclose: true,
+                onSelect: function () {
+                    GetTodaysData();
+                }
+            });
+
+            $('#mydate').val('@DateTime.Now.ToString("dd-MM-yyyy")');
+
+            $('#btnup').hide();
+            $('#btnreset').hide();
+            GetTodaysData();
+        }
+        catch (e) {
+        }
+    });
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    $('#RoomNo').on('change', function () {
+        if ($('#mydate').val() != null) {
+            if ($('#mydate').val() != "") {
+                GetProjection();
+            }
+        }
+    });
+    $('#mydate').on('change', function () {
+        if ($('#RoomNo').val() != null) {
+            if ($('#RoomNo').val() != "") {
+                GetProjection();
+            }
+        }
+    });
+
+    function GetProjection() {
+
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetProjection", "ActualProduction")',
+            data: { DATE: $('#mydate').val(), ROOMNO: $('#RoomNo').val() },
+            dataType: "json",
+            success: function (result)
+            {
+                if (result.Message == "success") {
+                    $("#lblprojection").html(result.projection);
+                    $.preloader.stop();
+                }
+                else {
+                    $("#lblprojection").html(0);
+                    toastr.error(result.Message);
+                    $.preloader.stop();
+                }
+            },
+            failure: function (response) {
+                /*alert(response.d);*/
+            },
+            error: function (err) {
+                $("#lblprojection").html(0);
+                $.preloader.stop();
+                /*alert(err.statusText);*/
+
+            }
+        });
+    };
+
+    function btnadd() {
+
+        var valid = true;
+
+        if ($('#mydate').val() == null || $('#mydate').val() == "") {
+            toastr.error("Date is Required.");
+            valid = false;
+        }
+        if ($('#RoomNo').val() == null || $('#RoomNo').val() == "") {
+            toastr.error("Room No. is Required.");
+            valid = false;
+        }
+
+        if ($('#CaretType').val() == null || $('#CaretType').val() == "") {
+            toastr.error("Caret Type is Required.");
+            valid = false;
+        }
+
+        if ($('#NoOfCaret').val() == null || $('#NoOfCaret').val() == "") {
+            toastr.error("No. Of Caret is Required.");
+            valid = false;
+        }
+
+        if ($('#Weight').val() == null || $('#Weight').val() == "") {
+            toastr.error("Weight is Required.");
+            valid = false;
+        }
+
+        if ($('#actualweight').val() == null || $('#actualweight').val() == "") {
+            toastr.error("Actual Weight is Required.");
+            valid = false;
+        }
+
+        if (valid == true) {
+
+
+
+            //$("#example").append("<tr> <td>" + $("#mydate").val() + "</td> <td>" + $("#RoomNo").val() + "</td> <td>" + $("#CaretType").val() + "</td> <td>" + $("#NoOfCaret").val() + "</td> <td>" + $("#Weight").val() + "</td><td>" + $("#actualweight").val() + "</td><td> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
+
+            $.preloader.start({
+                modal: true,
+                src: 'sprites2.png'
+            });
+
+            var recs = new Array();
+           // $("#example TBODY TR").each(function () {
+                var row = $(this);
+                var Production = {};
+            Production.Date = $("#mydate").val();
+            Production.RoomNo = $("#RoomNo").val();
+            Production.CaretType = $("#CaretType").val();
+            Production.NoOfCaret = $("#NoOfCaret").val();
+            Production.GrossWeight = $("#Weight").val();
+            Production.ActualWeight = $("#actualweight").val();
+
+                recs.push(Production);
+         //   });
+            var data = {
+
+                recs: recs, ID: $("#Id").val()
+            }
+
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/ActualProduction/Save",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $.preloader.stop();
+                    if (result.Message == "success") {
+                        $("#Id").val('');
+                        $('#form0').each(function () {
+                            this.reset();
+                        });
+
+                        $("#NoOfCaret").val('');
+                        $("#Weight").val('');
+                        $("#actualweight").val('');
+                        $("#mydate").val(result.lastdate);
+
+                        $("#btnad").show();
+                        $("#btnup").hide();
+                        $("#btnreset").hide();
+                        $("#mydate").datepicker("option", "disabled", false);
+
+                        toastr.success("Saved.");
+                        GetTodaysData();
+                    }
+                    else {
+                        toastr.error(result.Message);
+                        $.preloader.stop();
+                    }
+                    $.preloader.stop();
+                }
+            });
+
+
+
+            //var result = [];
+            //var cou = 0;
+            //var row = "";
+            //$("#row1").remove();
+            //$('#example tr').each(function () {
+            //    $('td', this).each(function (index, val) {
+            //        if (!result[index]) result[index] = 0;
+            //        result[index] += parseFloat($(val).text());
+            //    });
+            //});
+
+            //$(result).each(function () {
+            //    cou = cou + 1;
+            //    if (cou > 3 && cou <= 6) {
+            //        row = row + "<td>" + this + "</td>";
+            //    }
+
+            //});
+
+            //$("#row1").remove();
+
+            //$("#example>thead").prepend("<tr style='background-color:#e8f2d9;' id='row1'><td colspan='3'>Total</td>" + row + "</tr>");
+
+            //$("#NoOfCaret").val('');
+            //$("#Weight").val('');
+            //$("#actualweight").val('');
+
+        }
+        //}
+    }
+
+    function Save() {
+
+        if ($('#example TBODY tr').length == 0) {
+            //...do something here
+            toastr.error("Please add Some records.");
+        }
+        else {
+
+            $.preloader.start({
+                modal: true,
+                src: 'sprites2.png'
+            });
+
+            var recs = new Array();
+
+            $("#example TBODY TR").each(function () {
+                var row = $(this);
+                var Production = {};
+                Production.Date = row.find("TD").eq(0).html();
+                Production.RoomNo = row.find("TD").eq(1).html();
+                Production.CaretType = row.find("TD").eq(2).html();
+                Production.NoOfCaret = row.find("TD").eq(3).html();
+                Production.GrossWeight = row.find("TD").eq(4).html();
+                Production.ActualWeight = row.find("TD").eq(5).html();
+
+                recs.push(Production);
+            });
+            var data = {
+
+                recs: recs
+            }
+
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/ActualProduction/Save",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Message == "success") {
+                        $('#form0').each(function () {
+                            this.reset();
+                        });
+                        $('#example tbody').empty();
+
+                        var result = [];
+                        var cou = 0;
+                        var row = "";
+                        $("#row1").remove();
+                        $('#example tr').each(function () {
+                            $('td', this).each(function (index, val) {
+                                if (!result[index]) result[index] = 0;
+                                result[index] += parseFloat($(val).text());
+                            });
+                        });
+
+                        $(result).each(function () {
+                            cou = cou + 1;
+                            if (cou > 3 && cou <= 6) {
+                                row = row + "<td>" + this + "</td>";
+                            }
+
+                        });
+
+                        $("#row1").remove();
+
+                        $("#example>thead").prepend("<tr style='background-color:#e8f2d9;' id='row1'><td colspan='3'>Total</td>" + row + "</tr>");
+
+
+                        toastr.success("Saved.");
+                    }
+                    else {
+                        toastr.error(result.Message);
+                        $.preloader.stop();
+                    }
+                    $.preloader.stop();
+                }
+            });
+        }
+    }
+
+    $("#example").on('click', '.btnDelete', function () {
+        $(this).closest('tr').remove();
+
+
+        var result = [];
+        var cou = 0;
+        var row = "";
+        $("#row1").remove();
+        $('#example tr').each(function () {
+            $('td', this).each(function (index, val) {
+                if (!result[index]) result[index] = 0;
+                result[index] += parseFloat($(val).text());
+            });
+        });
+
+        $(result).each(function () {
+            cou = cou + 1;
+            if (cou > 3 && cou <= 6) {
+                row = row + "<td>" + this + "</td>";
+            }
+
+        });
+
+        $("#row1").remove();
+        $("#example>thead").prepend("<tr style='background-color:#e8f2d9;' id='row1'><td colspan='3'>Total</td>" + row + "</tr>");
+
+    });
+
+    function GetTodaysData() {
+
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+                $('#example tbody').empty();
+                 $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetToDAYSData", "ActualProduction")',
+                     data: { DATE:$('#mydate').val() },
+                dataType: "json",
+                     success: function (result) {
+                    if (result.Message == "success") {
+                        $.each(result.Product, function (i, item) {
+                            var dateString = result.Product[i].Date.substr(6);
+                            var currentTime = new Date(parseInt(dateString));
+                            var month = currentTime.getMonth() + 1;
+                            var day = currentTime.getDate();
+                            var year = currentTime.getFullYear();
+                            var date = day + "/" + month + "/" + year;
+                            $("#example").append("<tr> <td>" + date + "</td> <td>" + result.Product[i].RoomNo + "</td> <td>" + result.Product[i].CaretType + "</td> <td>" + result.Product[i].NoOfCaret + "</td> <td>" + result.Product[i].GrossWeight + "</td><td>" + result.Product[i].ActualWeight + "</td><td hidden>" + result.Product[i].Id + "</td><td><button type='button' id=" + result.Product[i].Id + " class='mr-4' data-toggle='modal' data-target='#EditModal' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button></td> </tr>");
+
+                        });
+
+                        var result = [];
+                        var cou = 0;
+                        var row = "";
+                        $("#row1").remove();
+                        $('#example tr').each(function () {
+                            $('td', this).each(function (index, val) {
+                                if (!result[index]) result[index] = 0;
+                                result[index] += parseFloat($(val).text());
+                            });
+                        });
+
+                        $(result).each(function () {
+                            cou = cou + 1;
+                            if (cou > 3 && cou <= 6) {
+                                row = row + "<td>" + this.toFixed(2) + "</td>";
+                            }
+
+                        });
+
+                        $("#row1").remove();
+                        $("#example>thead").prepend("<tr style='background-color:#e8f2d9;' id='row1'><td colspan='3'>Total</td>" + row + "</tr>");
+
+                    }
+                         $.preloader.stop();
+                },
+
+            });
+
+    }
+
+    function Edit(id) {
+
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+        $.ajax({
+            url: "/ActualProduction/Edit",
+            type: "GET",
+            dataType: "JSON",
+            data: { ID: id },
+            success: function (result) {
+                $('#Id').val(id);
+               // $("#mydate").val(result.Date);
+                $("#RoomNo").val(result.RoomNo);
+                $("#CaretType").val(result.CaretType);
+                $("#NoOfCaret").val(result.NoOfCaret);
+                $("#Weight").val(result.GrossWeight);
+                $("#actualweight").val(result.ActualWeight);
+
+                $('#btnup').show();
+                $('#btnreset').show();
+                $('#btnad').hide();
+                $("#mydate").datepicker("option", "disabled", true);
+                $('html, body').animate({
+                    scrollTop: $(".form-horizontal").offset().top
+                }, 2000);
+
+                $.preloader.stop();
+            },
+            error: function (ex) {
+                console.log("error");
+                console.log(ex);
+
+                $.preloader.stop();
+            }
+        });
+
+    }
+
+    function CalculateActualWeight() {
+
+            $.preloader.start({
+                modal: true,
+                src: 'sprites2.png'
+            });
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("CalculateActualWeight", "ActualProduction")',
+                data: { CARET: $('#CaretType').val(), NOOFCARET: $('#NoOfCaret').val(), GROSSWEIGHT: $('#Weight').val() },
+                dataType: "json",
+                success: function (result) {
+                    if (result.Message == "success") {
+                        $("#actualweight").val(result.ActualWeight);
+
+                        if (parseFloat($("#actualweight").val()) <= 0 || $("#actualweight").val() == "" || $("#actualweight").val() == null) {
+                                $('#btnad').prop('disabled', true);
+                                $('#btnup').prop('disabled', true);
+                            }
+                            else {
+                            $('#btnad').prop('disabled', false);
+                            $('#btnup').prop('disabled', false);
+                            }
+
+                        $.preloader.stop();
+                    }
+                    else {
+                        $("#actualweight").val(0);
+
+                        if (parseFloat($("#actualweight").val()) <= 0 || $("#actualweight").val() == "" || $("#actualweight").val() == null) {
+                            $('#btnad').prop('disabled', true);
+                            $('#btnup').prop('disabled', true);
+                        }
+                        else {
+                            $('#btnad').prop('disabled', false);
+                            $('#btnup').prop('disabled', false);
+                        }
+
+                        toastr.error(result.Message);
+                        $.preloader.stop();
+                    }
+                },
+                failure: function (response) {
+                    $.preloader.stop();
+                    /*alert(response.d);*/
+                },
+                error: function (err) {
+                    $("#actualweight").val(0);
+                    $.preloader.stop();
+                    /*alert(err.statusText);*/
+
+                }
+            });
+
+    }
+
+    $("#Weight").keyup(function () {
+        var valid = true;
+
+        if ($('#CaretType').val() == null || $('#CaretType').val() == "") {
+            toastr.error("Caret Type is Required.");
+            valid = false;
+        }
+
+        if ($('#NoOfCaret').val() == null || $('#NoOfCaret').val() == "") {
+            toastr.error("No. of Caret is Required.");
+            valid = false;
+        }
+
+        if (valid == true) {
+            CalculateActualWeight();
+        }
+
+    });
+
+    $("#NoOfCaret").keyup(function () {
+        var valid = true;
+        if ($('#CaretType').val() == null || $('#CaretType').val() == "") {
+            toastr.error("Caret Type is Required.");
+            valid = false;
+        }
+
+        if (valid == true) {
+            CalculateActualWeight();
+        }
+
+    });
+
+    function CaretTypeChange() {
+        var val = true;
+        if ($("#Weight").val() == null || $("#Weight").val() == "") {
+            val = false;
+        }
+
+        if (val == true) {
+            CalculateActualWeight();
+        }
+    }
+
+    function Reset() {
+        $('#form0').each(function () {
+          this.reset();
+        });
+        $('#btnad').show();
+        $('#btnup').hide();
+        $('#btnreset').hide();
+        $("#mydate").datepicker("option", "disabled", false);
+
+        $("#mydate").datepicker({ dateFormat: "dd-mm-yy" }).datepicker("setDate", new Date());
+        GetTodaysData();
+    }
+
+</script>
+

@@ -1,0 +1,154 @@
+﻿@model Micraft.ManeGrowAgro.Models.CutOffMasater
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    body {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+
+    .ui-autocomplete {
+        overflow: auto;
+        max-height: max-content;
+    }
+
+    ul.ui-autocomplete {
+        z-index: 1100;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("Create", "CutOffMasaters", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+
+                        {
+                            @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <h4>Cut Off Master</h4>
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.CityCutOff)
+                                    @Html.EditorFor(model => model.CityCutOff, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "City is required and cannot be empty" } })
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Mode)
+                                    @Html.DropDownList("Mode", new SelectList(ViewBag.TrMode, "Mode", "Mode"), "Select Mode", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Mode is required and cannot be empty" })
+                                    @*@Html.EditorFor(model => model.Mode, new { htmlAttributes = new { @class = "form-control" } })*@
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Vendor)
+                                    @Html.DropDownList("Vendor", new SelectList(ViewBag.Vendor, "VendorName", "VendorName"), "Select Vender", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Vender is required and cannot be empty" })
+                                    @*@Html.EditorFor(model => model.Vendor, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @Html.ValidationMessageFor(model => model.Vendor, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.PackingCutoff)
+                                    @Html.EditorFor(model => model.PackingCutoff, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Packing is required and cannot be empty" } })
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.PlantCutoff)
+                                    @Html.EditorFor(model => model.PlantCutoff, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Plant is required and cannot be empty" } })
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.DispatchCutoff)
+                                    @Html.EditorFor(model => model.DispatchCutoff, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Dispatch is required and cannot be empty" } })
+                                </div>
+                            </div>
+                            <div class="row">
+
+
+                            </div>
+                            <div class="col-md-8">
+                                <input type="submit" id="create" value="Create" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                            </div>
+                        </div>
+                        }
+
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+<script>
+
+    $(document).ready(function () {
+
+         $("#form0").bootstrapValidator();
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+        //City autocomplete
+        $(function () {
+            $("#CityCutOff").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/CutOffMasaters/AutoCity',
+                        data: "{ 'prefix': '" + request.term + "'}",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    //$("#State").val(i.item.val);
+                },
+                minLength: 0
+            }).focus(function () {
+                $(this).autocomplete("search");
+            });
+        });
+    });
+</script>

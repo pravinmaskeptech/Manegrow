@@ -1,0 +1,158 @@
+﻿@model Micraft.ManeGrowAgro.Models.ZonesMaster
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+                <h5 class="text-dark mr-2"><b>Zones</b></h5>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                       
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <div class="col-md-4 col-12 mb-3">
+                                @Html.LabelFor(model => model.Zone, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.Zone, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Zone is required and cannot be empty",Onchange= "CheckDuplicate()", required = "required" } })
+
+                            </div>
+
+                            <div class="col-md-8">
+                                <input type="button" id="AddNew" value="Create" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                            </div>
+
+                            @*<div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="button" value="Save" id="AddNew" class="btn btn-primary" />
+                                </div>
+                            </div>*@
+                        </div>
+                        }
+
+                      
+
+                        @section Scripts {
+                            @Scripts.Render("~/bundles/jqueryval")
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+
+      $(document).ready(function () {
+
+        $("#form0").bootstrapValidator();
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+      });
+
+
+    $("#AddNew").click(function () {
+        debugger;
+
+        var Zone = $("#Zone").val();
+
+        var IsActive = true;
+        if ($('#IsActive').is(":checked")) {
+            IsActive = true;
+        } else {
+            IsActive = false;
+        }
+
+        if (Zone == null || Zone == "") {
+            swal("Error", "Zone is required", "error");
+            return;
+        }
+
+        var records = {
+            "Zone": Zone,
+            "IsActive": IsActive
+        };
+        $.ajax({
+            url: "/ZonesMasters/AddRecord",
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(records),
+            contentType: "Application/json",
+            success: function (result) {
+                //swal("Success", "Record Added Success", "success");
+                if (result.Message == 'success') {
+                    window.location.href = '/ZonesMasters/Index/';
+                    swal("success", "Record Added Success", "success");
+                } else {
+                    swal("Error", "Something went wrong while adding record", "error");
+                }
+            },
+
+            error: function (ex) {
+                console.log("error");
+                console.log(ex);
+            }
+        });
+
+    });
+
+
+    function CheckDuplicate() {
+        debugger;
+         var Zone = $("#Zone").val();
+        $.ajax({
+            url: '@Url.Action("CheckDuplicate", "ZonesMasters")',
+            type: "GET",
+            dataType: "JSON",
+            data: { Zone: Zone, Mode: "Create", ID: 0 },
+            success: function (result) {
+                try {
+                    if (result == "1") {
+                        $("#Zone").val("");
+                        $("#form0").bootstrapValidator('revalidateField', 'Zone');
+                        toastr.error("Zone already exist");
+                    }
+                    else if (result == "0") {
+
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+
+
+
+</script>

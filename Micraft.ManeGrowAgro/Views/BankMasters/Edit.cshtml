@@ -1,0 +1,115 @@
+﻿@model Micraft.ManeGrowAgro.Models.BankMaster
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("Edit", "BankMasters", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                <h4>Bank Master</h4>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                @Html.HiddenFor(model => model.ID)
+
+                                <div class="row">
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.LinkID)
+                                        @*@Html.EditorFor(model => model.LinkID, new { htmlAttributes = new { @class = "form-control" } })*@
+                                        @Html.DropDownList("LinkID", new SelectList(ViewBag.LinkTo, "ID", "Name"), "--Select--", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Account Holer is required and cannot be empty" })
+                                    </div>
+
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.BranchName)
+                                        @Html.EditorFor(model => model.BranchName, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Branch Name is required and cannot be empty", required = "required" } })
+                                    </div>
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.AccName)
+                                        @Html.EditorFor(model => model.AccName, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Account Name is required and cannot be empty", required = "required" } })
+                                    </div>
+
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.AccNumber)
+                                        @Html.EditorFor(model => model.AccNumber, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Account Number is required and cannot be empty", required = "required" } })
+                                    </div>
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.MICRCode)
+                                        @Html.EditorFor(model => model.MICRCode, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "MIC Code is required and cannot be empty", required = "required" } })
+                                    </div>
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.IFSCCode)
+                                        @Html.EditorFor(model => model.IFSCCode, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "IFSC Code is required and cannot be empty", required = "required" } })
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.BranchCity)
+                                        @Html.EditorFor(model => model.BranchCity, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "City  is required and cannot be empty", required = "required" } })
+                                    </div>
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.BranchState)
+                                        @Html.EditorFor(model => model.BranchState, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "State is required and cannot be empty", required = "required" } })
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-8">
+                                    <input type="submit" id="edit" value="Update" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+     $(document).ready(function () {
+      $("#form0").bootstrapValidator();
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+         }
+
+     });
+</script>

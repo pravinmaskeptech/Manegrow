@@ -1,0 +1,159 @@
+﻿@model Micraft.ManeGrowAgro.Models.DepartmentMaster
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("Create", "DepartmentMasters", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <h4>Department Master</h4>
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                            <div class="col-md-4 col-12 mb-3">
+                                @Html.LabelFor(model => model.Department, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.Department, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Department is required and cannot be empty", required = "required", Onchange = "CheckDuplicate()", maxlength = "50" } })
+                            </div>
+
+
+
+                            <div class="col-md-8">
+                                <input type="submit" id="AddNew" value="Create" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                            </div>
+
+                            @*<div class="col-md-offset-2 col-md-10">
+                                <input type="button" value="Create" id="AddNew" class="btn btn-primary" />
+                            </div>*@
+
+                        </div>
+                        }
+
+                        @section Scripts {
+                            @Scripts.Render("~/bundles/jqueryval")
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+
+
+      $(document).ready(function () {
+
+        $("#form0").bootstrapValidator();
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+     });
+
+
+    //$("#AddNew").click(function () {
+    //    var Type = $("#Department").val();
+    //    var IsActive = true;
+    //    if ($('#IsActive').is(":checked")) {
+    //        IsActive = true;
+    //    } else {
+    //        IsActive = false;
+    //    }
+
+
+    //    var records = {
+    //        "Department": Type,
+    //        "IsActive": IsActive
+    //    };
+    //    $.ajax({
+    //        url: "/DepartmentMasters/AddRecord",
+    //        type: "POST",
+    //        dataType: "json",
+    //        data: JSON.stringify(records),
+    //        contentType: "Application/json",
+    //        success: function (result) {
+    //            //swal("Success", "Record Added Success", "success");
+    //            if (result.Message == 'success') {
+    //                window.location.href = '/DepartmentMasters/Index/';
+    //                swal("success", "Record Added Success", "success");
+    //            } else {
+    //                swal("Error", "Something went wrong while adding record", "error");
+    //            }
+    //        },
+
+    //        error: function (ex) {
+    //            console.log("error");
+    //            console.log(ex);
+    //        }
+    //    });
+
+    //});
+
+
+    function CheckDuplicate() {
+        debugger;
+        var Department = $("#Department").val();
+        $.ajax({
+            url: '@Url.Action("CheckDuplicate", "DepartmentMasters")',
+            type: "GET",
+            dataType: "JSON",
+            data: { Department: Department, Mode: "Create", ID: 0 },
+            success: function (result) {
+                try {
+                    if (result == "1") {
+                        $("#Department").val("");
+                        $("#form0").bootstrapValidator('revalidateField', 'Department');
+                        toastr.error("Record already exist");
+                    }
+                    else if (result == "0") {
+
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+
+</script>

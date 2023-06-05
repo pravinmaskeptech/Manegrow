@@ -1,0 +1,400 @@
+﻿@model IEnumerable<Micraft.ManeGrowAgro.Models.CustomerType>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-lg-10 col-md-3 col-12">
+                <h5 class="text-dark mr-3"><b>Customer Type</b></h5>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                <thead>
+                                    <tr class="text-uppercase">
+                                        <th>Customer Type</th>
+                                        <th>Prefix</th>
+                                        <th>Customer Start Code</th>
+                                        <th>IsActive</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/. col -->
+
+        </div>
+        <!--/. row -->
+        <!--Add New Modal-->
+        <div class="modal" id="AddNewModal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add Customer Type</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form>
+                            <div class="row">
+
+                                <div class="col-12 mb-3">
+                                    <label>Customer Type</label>
+                                    <input type="text" id="Type" class="form-control" placeholder="Type">
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label>Prefix</label>
+                                    <input type="text" id="Prefix" class="form-control" placeholder="Prefix">
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label>Customer Start Code</label>
+                                    <input type="text" id="StartCode" class="form-control" placeholder="Customer Start Code">
+                                </div>
+                                <!--/. col -->
+                                <div class="col-12 mb-3">
+                                    <label>IsActive</label><br>
+                                    <label class="switch">
+                                        <input type="checkbox" checked id="IsActive">
+                                        <span class="slider round"></span>
+                                    </label>
+
+                                </div>
+                                <!--/. col -->
+                            </div>
+                            <!--/. row -->
+                            <div class="col-12 text-center mb-3">
+                                <button class="btn btn-primary" type="button" id="AddNew">Save</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            </div>
+                            <!--/. col -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--View Modal-->
+        <div class="modal" id="EditModal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Customer Type</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form>
+                            <div class="row">
+                                <input type="hidden" id="TypeId" />
+
+                                <div class="col-12 mb-3">
+                                    <label>Customer Type</label>
+                                    <input type="text" id="eType" class="form-control" placeholder="Type">
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label>Prefix</label>
+                                    <input type="text" id="ePrefix" class="form-control" placeholder="Prefix">
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label>Customer Start Code</label>
+                                    <input type="text" id="eStartCode" class="form-control" placeholder="Customer Start Code">
+                                </div>
+                                <!--/. col -->
+                                <div class="col-12 mb-3">
+                                    <label>IsActive</label><br>
+                                    <label class="switch">
+                                        <input type="checkbox" checked id="eIsActive">
+                                        <span class="slider round"></span>
+                                    </label>
+
+                                </div>
+                                <!--/. col -->
+                            </div>
+                            <!--/. row -->
+                            <div class="col-12 text-center mb-3">
+                                <button class="btn btn-primary" type="button" id="Update">Update</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            </div>
+                            <!--/. col -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- /.container-fluid -->
+</section>
+<script>
+
+    $(document).ready(function () {
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+
+        try {
+            $('#example').DataTable({
+                "paging": true,
+                "searching": true,
+                dom: 'Bfrtip',
+                "bServerSide": true,
+                "sAjaxSource": '@Url.Action("GetData", "CustomerTypes")',
+                "sServerMethod": "POST",
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
+                    {
+                        text: 'Add New',
+                        action: function (e, dt, node, config) {
+
+                            window.location.href = '/CustomerTypes/Create'
+                        }
+                    },
+
+                ],
+                language: {
+                    searchPlaceholder: "Search",
+                    search: ""
+                },
+                "aoColumns": [
+                    {
+                        "mData": "Type"
+                    },
+                    {
+                        "mData": "Prefix"
+                    },
+                    {
+                        "mData": "StartCode"
+                    },
+                    {
+                        "mData": "IsActive"
+                    },
+
+                    {
+                        "mData": function (o) {
+                            return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.ID + " class='btn btn-primary btn-sm mr-2' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button><button type='button' id=" + o.ID + " onclick='Delete(this.id);' class='btn btn-danger btn-sm'><i class='fas fa-trash'></i></button></div>"
+                        }
+                    },
+                ],
+            });
+        }
+        catch (e) {
+        }
+    });
+        $("#AddNew").click(function () {
+            var Type = $("#Type").val();
+            var IsActive = true;
+            if ($('#IsActive').is(":checked")) {
+                IsActive = true;
+            } else {
+                IsActive = false;
+            }
+
+            if (Type == null || Type == "") {
+                swal("Error", "Customer type is required", "error");
+                return;
+            }
+            var Prefix = $("#Prefix").val();
+            if (Prefix == null || Prefix == "") {
+                swal("Error", "Prefix is required", "error");
+                return;
+            }
+            var StartCode = $("#StartCode").val();
+            if (StartCode == null || StartCode == "") {
+                swal("Error", "Customer Start Code is required", "error");
+                return;
+            }
+            var records = {
+                "Type": Type,
+                "Prefix": Prefix,
+                "StartCode": StartCode,
+                "IsActive": IsActive
+            };
+            $.ajax({
+                url: "/CustomerTypes/AddRecord",
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify(records),
+                contentType: "Application/json",
+                success: function (data) {
+                    //swal("Success", "Record Added Success", "success");
+                    RefreshData();
+                    if (data == 1) {
+                        swal("Success", "Record Added Success", "success");
+                        RefreshData();
+                        $("#AddNewModal").modal("hide");
+                    } else {
+                        swal("Error", "Something went wrong while adding record", "error");
+                    }
+                },
+                error: function (ex) {
+                    console.log("error");
+                    console.log(ex);
+                }
+            });
+
+        });
+
+    $("#Update").click(function () {
+        var Type = $("#eType").val();
+        var IsActive = true;
+        if ($('#eIsActive').is(":checked")) {
+            IsActive = true;
+        } else {
+            IsActive = false;
+        }
+
+        if (Type == null || Type == "") {
+            swal("Error", "Customer type is required", "error");
+            return;
+        }
+        var Prefix = $("#ePrefix").val();
+        if (Prefix == null || Prefix == "") {
+            swal("Error", "Prefix is required", "error");
+            return;
+        }
+        var StartCode = $("#eStartCode").val();
+        if (StartCode == null || StartCode == "") {
+            swal("Error", "Customer Start Code is required", "error");
+            return;
+        }
+        var ID = $("#TypeId").val();
+        var records = {
+            "ID":ID,
+            "Type": Type,
+            "Prefix": Prefix,
+            "StartCode": StartCode,
+            "IsActive": IsActive
+        };
+            $.ajax({
+                url: "/CustomerTypes/EditRecord",
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify(records),
+                contentType: "Application/json",
+                success: function (data) {
+                    //swal("Success", "Record Added Success", "success");
+                    RefreshData();
+                    if (data == 1) {
+                        swal("Success", "Record Updated Success", "success");
+                        RefreshData();
+                        $("#EditModal").modal("hide");
+                    } else {
+                        swal("Error", "Something went wrong while updating record", "error");
+                    }
+                },
+                error: function (ex) {
+                    console.log("error");
+                    console.log(ex);
+                }
+            });
+    });
+
+
+
+        function RefreshData() {
+            var table = $('#example').DataTable();
+            table.ajax.reload(function (json) {
+            });
+        }
+
+
+    function Edit(id) {
+        debugger;
+        window.location.href = '/CustomerMasters/Edit/' + id
+    }
+
+
+        function Delete(id) {
+            console.log(id);
+        }
+        function Edit(id) {
+
+            window.location.href = '/CustomerTypes/Edit/' + id
+            console.log(id);
+            var TypeId = id;
+            $("#TypeId").val(id);
+            var records = {
+                "ID": TypeId
+            };
+            $.ajax({
+                url: "/CustomerTypes/GetRecord",
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify(records),
+                contentType: "Application/json",
+                success: function (data) {
+                    $("#eType").val(data.Type);
+                    $("#ePrefix").val(data.Prefix);
+                    $("#eStartCode").val(data.StartCode);
+                    $('#eIsActive').is(":checked") = data.IsActive;
+                },
+                error: function (ex) {
+                    console.log("error");
+                    console.log(ex);
+                }
+            });
+        }
+
+    function Delete(id) {
+        debugger;
+        if (confirm("Are you sure you want to delete this record?")) {
+            $.ajax({
+                url: '/CustomerTypes/DeleteConfirmed',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (result) {
+                    if (result.Message == "success") {
+                        swal("Success", "Record Delete Successfully", "success");
+                        window.location.href = "/CustomerTypes/Index";
+                    } else {
+                        toastr.error(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    console.log("error");
+                    console.log(ex);
+                }
+            });
+        } else {
+
+            false;
+        }
+
+    }
+
+
+
+</script>

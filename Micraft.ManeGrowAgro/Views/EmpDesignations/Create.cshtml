@@ -1,0 +1,112 @@
+﻿@model Micraft.ManeGrowAgro.Models.EmpDesignation
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+                <h5 class="text-dark mr-2"><b>Deignation</b></h5>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm("Create", "EmpDesignations", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Designation, htmlAttributes: new { })
+                                    @Html.EditorFor(model => model.Designation, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Designation is required and cannot be empty", Onchange = "CheckDuplicate()", required = "required" } })
+
+                                </div>
+
+
+                                <div class="col-md-8">
+                                    <input type="submit" id="AddNew" value="Create" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+
+      $(document).ready(function () {
+
+        $("#form0").bootstrapValidator();
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+      });
+
+
+    function CheckDuplicate() {
+        debugger;
+          var Designation = $("#Designation").val();
+        $.ajax({
+            url: '@Url.Action("CheckDuplicate", "EmpDesignations")',
+            type: "GET",
+            dataType: "JSON",
+            data: { Designation: Designation, Mode: "Create", ID: 0 },
+            success: function (result) {
+                try {
+                    if (result == "1") {
+                        $("#Designation").val("");
+                        $("#form0").bootstrapValidator('revalidateField', 'Designation');
+                        toastr.error("Record already exist");
+                    }
+                    else if (result == "0") {
+
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+
+</script>

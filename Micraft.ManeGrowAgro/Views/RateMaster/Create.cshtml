@@ -1,0 +1,359 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+</style>
+
+<!-- /.content-header -->
+<!-- Main content -->
+<br />
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            onSubmit = "return false"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                <div class="content-header" style="padding:1px">
+                                    <h4>Rate Updation Create</h4>
+                                </div>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <input type="hidden" id="abcc" />
+                                <input type="hidden" id="SelectedOrderNo" />
+                                <div class="modal-body">
+
+                                    <input type="hidden" id="Id" name="Id" />
+
+                                    <input type="hidden" id="OrderNo" name="OrderNo" />
+
+                                    <input type="hidden" id="Count" value="1000" />
+
+                                    <input type="hidden" id="SelectedCount" value="" />
+
+                                    <div class="row">
+                                        <div class="col-md-2 col-12">
+                                            <lable>Date</lable>
+                                        </div>
+                                        <div class="col-md-2 col-12">
+                                            <input type="text" class="form-control" id="mydate">
+                                        </div>
+                                        @*<div class="col-md-2 col-12">
+                                                <lable>Select Customer</lable>
+                                            </div>
+                                            <div class="col-md-2 col-12">
+                                                @Html.DropDownList("CustID", new SelectList(ViewBag.CustID, "ID", "CustName"), "Select", new { @class = "form-control", style = "min-width:100px", onchange = "GetDamageDetails()" })
+                                            </div>*@
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div style="overflow-x:auto;">
+
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                                    <thead>
+                                                        <tr class="text-uppercase">
+                                                            <th style="display:none"></th>
+                                                            <th>Order No</th>
+                                                            <th>Customer Name</th>
+                                                            <th>Short Name</th>
+                                                            <th>Location</th>
+                                                            <th>Product Name </th>
+                                                            <th>Weight</th>
+                                                            <th>UOM</th>
+                                                            <th>Qty</th>
+                                                            <th>Todays Rate</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                            <button type="button" class="btn btn-success" id="Savebtn" onclick="Save()"> Save </button>
+                                            <button type="button" class="btn btn-primary" onclick="backToList()"> Back to List </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal" id="myModal">
+                                <div class="modal-dialog modal-xl modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div id="PnlUploadFiles">
+                                            <div class="modal-header" style="background-color:#3c8dbc;">
+                                                <h5 class="box-title"><strong style="color:white">  Reject Product Image  </strong></h5>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <div class="box-tools pull-right">
+                                                </div>
+                                            </div>
+                                            <hr />
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table class="table table-responsive" id="AttachmentList" style="width: 100%;  white-space: nowrap;"></table>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <label id="lbltot" class="ml-4"></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="col-md-8">
+
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="button" id="btnSave" value="Save Files" onclick="SaveFiles()" class="btn btn-success" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        try {
+            $('#mydate').datepicker({
+                dateFormat: 'dd-mm-yy',
+                autoclose: true,
+                onSelect: function () {
+                    GetDamageDetails()
+
+                }
+            });
+              $('#mydate').val('@DateTime.Now.ToString("dd-MM-yyyy")');
+            GetDamageDetails();
+            $("#myModal").hide();
+            $("#hdpreviousqty").val();
+
+
+
+
+         /* GetTodaysData();*/
+        }
+        catch (e) {
+        }
+    })
+    function showremark() {
+        debugger;
+
+        if ($("#myModal").val() != $('#TodayRate').val()) {
+            $("#myModal").show();
+        }
+        else {
+            $("#myModal").hide();
+        }
+
+        $("#hdpreviousqty").val();
+
+
+    }
+
+    function GetDamageDetails() {
+
+       // $('#mydate').empty();
+        $("#example").find("tr:gt(0)").remove();
+         $.ajax({
+                type: "GET",
+                //url: '@Url.Action("GetDamageDetails", "RateMaster")',
+             url: '/RateMaster/GetDamageDetails',
+             data: { DATE: $('#mydate').val() },
+                    dataType: "json",
+                     success: function (results) {
+                         if (results.Message == "success") {
+
+                             var Count = 1001;
+                           //  var selecteddate = document.getElementById("mydate").val();
+                             $.each(results.prd, function (i, item) {
+
+                                 $("#example").append("<tr> <td style='display:none'><label id='ProductID" + Count + "' ></label></td>     <td><label id='OrderNo" + Count + "' ></label></td>    <td><label id='CustomerName" + Count + "' ></label></td>     <td><label id='CustomerCode" + Count + "' ></label></td>    <td><label id='Location" + Count + "' ></label></td>                    <td><label id='ProductName" + Count + "' ></label></td> <td><label id='Weight" + Count + "' ></label></td> <td><label id='UOM" + Count + "' ></label></td> <td><label id='Qty" + Count + "' ></label></td> <td><input type='text' id='TodayRate" + Count + "'  style='width: 100px'  onchange='checkval(" + Count + ")' ></input</td> </tr>");
+
+
+                                 
+
+                                 $('#OrderNo' + Count).text(item.OrderNo);
+
+                                 $('#CustomerName' + Count).text(item.CustomerName);
+                                 $('#CustomerCode' + Count).text(item.CustomerCode);
+                                 $('#Location' + Count).text(item.Location);
+
+
+                                 $('#ProductID' + Count).text(item.ID);
+                                 $('#ProductName' + Count).text(item.ProductName);
+                                 $('#Qty' + Count).text(item.Qty);
+                                 $('#UOM' + Count).text(item.UOM);
+                                 $('#Weight' + Count).text(item.Weight);
+                                 $('#TodayRate' + Count).val(item.TodayRate);
+
+
+                                 $('#TodayRate' + Count).prop("disabled", results.isdisabled);
+                                 Count++;
+                             });
+
+                         }
+
+                     },
+        });
+    }
+
+  function Save() {
+        var temp = true;
+
+
+        var Countt = 0;
+      //  var PODMSG = "";
+        var TodayRate = "";
+       // var rejectreasonMSG = "";
+        $("#example TBODY TR").each(function () {
+            var row = $(this);
+            var Order = {};
+
+            Countt = Countt + 1;
+
+
+            if ( row.find("TD:eq(6) input[type='text']").val()=="") {
+
+                TodayRate = "Please Enter Today Rate";
+             ////   temp = false;
+            }
+
+
+
+        });
+        debugger
+
+
+        if (TodayRate != "") {
+            temp = false;
+            toastr.error(TodayRate);
+        }
+
+        if (Countt == 0) {
+            toastr.error("No Data Found.");
+            temp = false;
+        }
+
+
+         if (temp == true){
+            //$.preloader.start({
+            //    modal: true,
+            //    src: 'sprites2.png'
+            //});
+
+            var recs = new Array();
+
+            $("#example TBODY TR").each(function () {
+                var row = $(this);
+                var Order = {};
+                Order.OrderNo = row.find("TD").eq(1).text();                
+                Order.TodayRate = row.find("TD:eq(9) input[type='text']").val();
+                    recs.push(Order);
+            });
+             debugger
+            var url = window.location.href;
+            var part = url.substring(url.lastIndexOf('/') + 1);
+            var MainID = 0
+            if (part != "Create") {
+                MainID = part;
+            }
+            var list = [];
+
+            var data = {
+
+                recs: recs, DATE: $('#mydate').val()
+            }
+            debugger;
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/RateMaster/SaveData",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Message == "success") {
+                        alert("Records Successfully Updated..");
+                        window.location.href = "/RateMaster/Index";
+                        //   GetEditData(result.Max);
+                    }
+                    else {
+                        toastr.error(result.Message);
+                       // $.preloader.stop();
+                    }
+                 //   $.preloader.stop();
+                }
+            });
+         }
+    }
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,190 @@
+﻿@model Micraft.ManeGrowAgro.Models.Zones
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <h4>Zones</h4>
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.ID)
+                           
+
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.CityFrom, htmlAttributes: new { })
+                                    @Html.EditorFor(model => model.CityFrom, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "City From is required and cannot be empty", required = "required", Onchange = "CheckDuplicate()" } })
+
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.CityTo, htmlAttributes: new { })
+                                    @Html.EditorFor(model => model.CityTo, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "City To required and cannot be empty", required = "required", Onchange = "CheckDuplicate()" } })
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Zone, htmlAttributes: new { })
+                                    @Html.DropDownListFor(model => model.Zone, new SelectList(ViewBag.zone, "Zone", "Zone"), "Select Zone", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Customer Type is required and cannot be empty", required = "required", Onchange = "CheckDuplicate()" })
+
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label>IsActive</label><br>
+                                    <label class="switch">
+                                        <input type="checkbox" checked id="IsActive">
+                                        <span class="slider round"></span>
+                                    </label>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <input type="button" id="Update" value="Update" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                            </div>
+
+                            @*<div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" id="Update" class="btn btn-primary" />
+            </div>
+        </div>*@
+                        </div>
+                        }
+
+                     
+                        @section Scripts {
+                            @Scripts.Render("~/bundles/jqueryval")
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+
+    $(document).ready(function () {
+
+        $("#form0").bootstrapValidator();
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+    });
+
+    $("#Update").click(function () {
+        debugger;
+        var CityFrom = $("#CityFrom").val();
+        var CityTo = $("#CityTo").val();
+        var Zone = $("#Zone").val();
+
+        var IsActive = true;
+        if ($('#IsActive').is(":checked")) {
+            IsActive = true;
+        } else {
+            IsActive = false;
+        }
+
+        if (CityFrom == null || CityFrom == "") {
+            swal("Error", "CityFrom is required", "error");
+            return;
+        }
+        if (CityTo == null || CityTo == "") {
+            swal("Error", "CityTo is required", "error");
+            return;
+        } if (Zone == null || Zone == "") {
+            swal("Error", "Zone is required", "error");
+            return;
+        }
+
+        var Id = $("#ID").val();
+
+        var records = {
+            "CityFrom": CityFrom,
+            "CityTo": CityTo,
+            "Zone": Zone,
+            "IsActive": IsActive,
+            "ID": Id
+        };
+
+        $.ajax({
+            url: "/Zones/EditRecord",
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(records),
+            contentType: "Application/json",
+            success: function (result) {
+                //swal("Success", "Record Added Success", "success");
+                if (result.Message == 'success') {
+                    swal("success", "Record Added Success", "success");
+
+                    window.location.href = '/Zones/Index/';
+                } else {
+                    swal("Error", "Something went wrong while adding record", "error");
+                }
+            },
+            error: function (ex) {
+                console.log("error");
+                console.log(ex);
+            }
+        });
+    });
+
+
+
+      function CheckDuplicate() {
+        debugger;
+        var CityFrom = $("#CityFrom").val();
+        var CityTo = $("#CityTo").val();
+        var Zone = $("#Zone").val();
+
+        $.ajax({
+            url: '@Url.Action("CheckDuplicate", "Zones")',
+            type: "GET",
+            dataType: "JSON",
+            data: { CityTo: CityTo, CityFrom: CityFrom, Zone: Zone, Mode: "Create", ID: 0 },
+            success: function (result) {
+                try {
+                    if (result == "1") {
+                        $("#CityTo").val("");
+                        $("#CityFrom").val("");
+                        $("#Zone").val("");
+                        $("#form0").bootstrapValidator('revalidateField', 'CityTo');
+                        $("#form0").bootstrapValidator('revalidateField', 'CityFrom');
+                        $("#form0").bootstrapValidator('revalidateField', 'Zone');
+                        toastr.error("Record already exist");
+                    }
+                    else if (result == "0") {
+
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+      }
+
+</script>

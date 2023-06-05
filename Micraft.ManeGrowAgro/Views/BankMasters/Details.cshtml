@@ -1,0 +1,83 @@
+﻿@model Micraft.ManeGrowAgro.Models.BankMaster
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>BankMaster</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LinkID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LinkID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BranchName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BranchName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BranchCity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BranchCity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BranchState)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BranchState)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MICRCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MICRCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IFSCCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IFSCCode)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

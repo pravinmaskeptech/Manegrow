@@ -1,0 +1,158 @@
+﻿@model Micraft.ManeGrowAgro.Models.ProductType
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+                <h4>Product Types</h4>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("Create", "ProductTypes", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Type is required and cannot be empty", required = "required", Onchange = "CheckDuplicate()" } })
+                                </div>
+                            </div>
+
+                            <div class="row">
+                            </div>
+
+                            <div class="col-md-8">
+                                <input type="submit" id="create" value="Save" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                            </div>
+
+                           
+
+                        </div>
+                        }
+
+                        @section Scripts {
+                            @Scripts.Render("~/bundles/jqueryval")
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+      $(document).ready(function () {
+
+        $("#form0").bootstrapValidator();
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+     });
+
+
+    function CheckDuplicate() {
+        debugger;
+        var Type = $("#Type").val();
+        $.ajax({
+            url: '@Url.Action("CheckDuplicate", "ProductTypes")',
+            type: "GET",
+            dataType: "JSON",
+            data: { Type: Type, Mode: "Create", ID: 0 },
+            success: function (result) {
+                try {
+                    if (result == "1") {
+                        $("#Type").val("");
+                        $("#form0").bootstrapValidator('revalidateField', 'Type');
+                        toastr.error("Record already exist");
+                    }
+                    else if (result == "0") {
+
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+
+
+
+    //$("#btnsave").click(function () {
+    //    var Type = $("#Type").val();
+
+    //    var IsActive = true;
+    //    if ($('#IsActive').is(":checked")) {
+    //        IsActive = true;
+    //    } else {
+    //        IsActive = false;
+    //    }
+
+    //    var records = {
+    //        "Type": Type,
+    //        "IsActive": IsActive
+    //    };
+
+
+    //    $.ajax({
+    //        url: "/ProductTypes/AddRecord",
+    //        type: "POST",
+    //        dataType: "json",
+    //        data: JSON.stringify(records),
+    //        contentType: "Application/json",
+    //        success: function (result) {
+    //            //swal("Success", "Record Added Success", "success");
+    //            if (result.Message == 'success') {
+    //                window.location.href = '/ProductTypes/Index/';
+    //                swal("Success", "Record Added Success", "success");
+
+    //            } else {
+    //                swal("Error", "Something went wrong while adding record", "error");
+    //            }
+    //        },
+    //        error: function (ex) {
+    //            console.log("error");
+    //            console.log(ex);
+    //        }
+    //    });
+    //});
+</script>

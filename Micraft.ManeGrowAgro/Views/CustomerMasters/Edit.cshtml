@@ -1,0 +1,448 @@
+﻿@model Micraft.ManeGrowAgro.Models.CustomerMaster
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("Edit", "CustomerMasters", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+
+                        {
+                            @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <h4>Customer Master</h4>
+                            <hr />
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.ID)
+                            @Html.HiddenFor(model => model.IsApproved)
+                            @Html.HiddenFor(model => model.CreatedDate)
+                            @Html.HiddenFor(model => model.CreatedDate)
+
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.CustTypeID)
+                                    @*@Html.DropDownList("CustTypeID", new SelectList(ViewBag.CustType, "ID", "Type"), new { @class = "form-control" })*@
+                                    @Html.DropDownListFor(model => model.CustTypeID, new SelectList(ViewBag.CustType, "ID", "Type"), "Select Type", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Customer Type is required and cannot be empty" })
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.CustID)
+                                    @Html.EditorFor(model => model.CustID, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Customer Code is required and cannot be empty", required = "required" } })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.CustName)
+                                    @*@Html.EditorFor(model => model.CustName, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @Html.EditorFor(model => model.CustName, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Consignor Name is required and cannot be empty", required = "required" } })
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.ShortName)
+                                    @Html.EditorFor(model => model.ShortName, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "ShortName is required and cannot be empty", required = "required" } })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Address)
+                                    <br />
+                                    @Html.TextAreaFor(model => model.Address, new { cols = "38", htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Address is required and cannot be empty", required = "required" } })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+
+                                    @Html.LabelFor(model => model.PinCode)
+                                    @Html.EditorFor(model => model.PinCode, new { @type = "number", htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Pincode is required and cannot be empty", required = "required", @onchange = "GetCityArea()" } })
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.City)
+                                    @*@Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })*@
+                                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "City Name is required and cannot be empty", required = "required" } })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.State)
+                                    @*@Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })*@
+                                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "State Name is required and cannot be empty", required = "required" } })
+
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Area)
+                                    @*@Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })*@
+                                    @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Area Name is required and cannot be empty", required = "required" } })
+
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-12  mb-3">
+                                    @Html.LabelFor(model => model.MobileNumber)
+                                    @Html.EditorFor(model => model.MobileNumber, new { htmlAttributes = new { @class = "form-control", @type = "number", data_bv_notempty = "true", data_bv_notempty_message = "The Mobile No is required", data_bv_stringlength = "true", data_bv_stringlength_min = "10", required = "required", autocomplete = "off", data_bv_stringlength_max = "11", data_bv_stringlength_message = "The Mobile must be 10 digits long", data_bv_regexp = "true", data_bv_regexp_regexp = "[0-9]", data_bv_regexp_message = "The Mobile can only consist digit" } })
+
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.ContactPerson)
+                                    @Html.EditorFor(model => model.ContactPerson, new { htmlAttributes = new { @class = "form-control" } })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.ContactNumber)
+                                    @Html.EditorFor(model => model.ContactNumber, new { htmlAttributes = new { @class = "form-control" } })
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.EmailAddress)
+                                    @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control", maxlength = "100", data_bv_regexp_message = "Input string is not valid Email Id.", @Pattern = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$", data_bv_notempty_message = "Email Id is required", data_bv_emailaddress_message = "The input is not a valid email address", data_bv_notempty = "true", Autocomplete = "off" } })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.SalesPersonID)
+                                    @*@Html.EditorFor(model => model.SalesPersonID, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @Html.DropDownListFor(model => model.SalesPersonID, new SelectList(ViewBag.SalesPerson, "ID", "Name"), "Select Sales Person", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Sales Person is required and cannot be empty" })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.QuotationID)
+
+                                    @Html.DropDownListFor(model => model.QuotationID, new SelectList(ViewBag.Quotations, "ID", "QuotationName"), "Select Quotation", new { @class = "form-control", Autocomplete = "off" })
+
+                                </div>
+
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.AdharNumber)
+                                    @Html.EditorFor(model => model.AdharNumber, new { @type = "number", htmlAttributes = new { @class = "form-control", Autocomplete = "off", @Pattern = "", data_bv_regexp_message = "Input string is not valid aadhar No.", maxlength = "20", style = "text-transform:uppercase" } })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.PanNumber)
+                                    @Html.EditorFor(model => model.PanNumber, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", @Pattern = "^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$", data_bv_regexp_message = "Input string is not valid Pan no.", maxlength = "20", style = "text-transform:uppercase" } })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.GSTNumber)
+                                    @Html.EditorFor(model => model.GSTNumber, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", @Pattern = "^([0][1-9]|[1-2][0-9]|[3][0-5])([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$", data_bv_regexp_message = "Input string is not valid GST No..", data_bv_emailaddress_message = "GST No. is not a valid", maxlength = "20", style = "text-transform:uppercase" } })
+
+
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+
+                                    @Html.LabelFor(model => model.ProfilePhoto)
+                                    @*@Html.EditorFor(model => model.ProfilePhoto, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    <input type="file" id="ProfilePhoto" name="ProfilePhoto" class="form-control" placeholder="">
+                                    @*@Html.ValidationMessageFor(model => model.ProfilePhoto, "", new { @class = "text-danger" })*@
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.AdharUpload)
+                                    <input type="file" id="AdharUpload" name="AdharUpload" class="form-control" placeholder="Adhar Upload">
+                                    @*@Html.EditorFor(model => model.AdharUpload, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AdharUpload, "", new { @class = "text-danger" })*@
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.PanUpload)
+                                    <input type="file" id="PanUpload" name="PanUpload" class="form-control" placeholder="PAN Upload">
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Username)
+                                    @Html.EditorFor(model => model.Username, new { htmlAttributes = new { onchange = "DuplicteUserName();", @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "User Name is required and cannot be empty", maxlength = "200", required = "required", @readonly = "readonly" } })
+
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Password)
+                                    <br />
+                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Passward is required and cannot be empty", maxlength = "200", required = "required" } })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label " })
+                                    @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Freeze required and cannot be empty", maxlength = "10" } })
+
+                                </div>
+
+                              
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                        </div>
+                                        <div class="col-md-8">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="submit" id="edit" value="Save" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        }                      
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>  
+ 
+<script>
+
+        $(document).ready(function () {
+            $("#form0").bootstrapValidator();
+            var tEMP = '@TempData["error"]';
+            if (tEMP != "" && tEMP != undefined && tEMP != null) {
+                swal("Error!", tEMP, "error");
+            }
+
+        }
+
+        );
+        function CheckVal(event) {
+            $("#form0").bootstrapValidator('revalidateField', 'CustName');
+
+            var Flag = true;
+            var CustName = $("#CustName").val();
+
+            if (CustName == null || CustName == "") {
+                $('#CustName').val();
+                $("#form0").bootstrapValidator('revalidateField', 'CustName');
+                toastr.error("Please Enter CustName..!");
+                Flag = false;
+            }
+
+            //if (Flag == false) {
+            //    event.preventDefault();
+            //}
+        }
+        $(function () {
+            $("#PinCode").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/CustomerMasters/PincodeAutoComplete',
+                        data: "{ 'prefix': '" + request.term + "','city': '" + $("#City").val() + "'}",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    $("#Area").val(i.item.val);
+                },
+                minLength: 0
+            }).focus(function () {
+                $(this).autocomplete("search");
+            });
+        });
+        //City autocomplete
+
+        $(function () {
+            $("#City").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/CustomerMasters/AutoCity',
+                        data: "{ 'prefix': '" + request.term + "'}",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    $("#State").val(i.item.val);
+                },
+                minLength: 0
+            }).focus(function () {
+                $(this).autocomplete("search");
+            });
+
+            $('#ProfilePhoto').on('change', function () {
+
+                // Checking whether FormData is available in browser
+                if (window.FormData !== undefined) {
+
+                    var fileUpload = $("#ProfilePhoto").get(0);
+                    var files = fileUpload.files;
+
+                    // Create FormData object
+                    var fileData = new FormData();
+
+                    // Looping over all files and add it to FormData object
+                    for (var i = 0; i < files.length; i++) {
+                        fileData.append(files[i].name, files[i]);
+                    }
+
+                    // Adding one more key to FormData object
+                    fileData.append('username', 'Bandu');
+
+                    $.ajax({
+                        url: '/CustomerMasters/UploadFiles',
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        data: fileData,
+                        success: function (result) {
+                            alert(result);
+                        },
+                        error: function (err) {
+                            alert(err.statusText);
+                        }
+                    });
+                } else {
+                    alert("FormData is not supported.");
+                }
+            });
+
+
+            $('#AdharUpload').on('change', function () {
+
+                // Checking whether FormData is available in browser
+                if (window.FormData !== undefined) {
+
+                    var fileUpload = $("#AdharUpload").get(0);
+                    var files = fileUpload.files;
+
+                    // Create FormData object
+                    var fileData = new FormData();
+
+                    // Looping over all files and add it to FormData object
+                    for (var i = 0; i < files.length; i++) {
+                        fileData.append(files[i].name, files[i]);
+                    }
+
+                    // Adding one more key to FormData object
+                    fileData.append('username', 'Bandu');
+
+                    $.ajax({
+                        url: '/CustomerMasters/UploadFiles',
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        data: fileData,
+                        success: function (result) {
+                            alert(result);
+                        },
+                        error: function (err) {
+                            alert(err.statusText);
+                        }
+                    });
+                } else {
+                    alert("FormData is not supported.");
+                }
+            });
+            $('#PanUpload').on('change', function () {
+                // Checking whether FormData is available in browser
+                if (window.FormData !== undefined) {
+
+                    var fileUpload = $("#PanUpload").get(0);
+                    var files = fileUpload.files;
+
+                    // Create FormData object
+                    var fileData = new FormData();
+
+                    // Looping over all files and add it to FormData object
+                    for (var i = 0; i < files.length; i++) {
+                        fileData.append(files[i].name, files[i]);
+                    }
+
+                    // Adding one more key to FormData object
+                    fileData.append('username', 'Bandu');
+
+                    $.ajax({
+                        url: '/CustomerMasters/UploadFiles',
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        data: fileData,
+                        success: function (result) {
+                            alert(result);
+                        },
+                        error: function (err) {
+                            alert(err.statusText);
+                        }
+                    });
+                } else {
+                    alert("FormData is not supported.");
+                }
+            });
+        });
+</script>

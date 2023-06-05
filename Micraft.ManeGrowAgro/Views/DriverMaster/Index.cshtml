@@ -1,0 +1,140 @@
+﻿@model Micraft.ManeGrowAgro.Models.DriverMaster
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+                <h5 class="text-dark mr-2"><b>Driver Master</b></h5>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                <thead>
+                                    <tr class="text-uppercase">
+                                        <th>Vendor Name</th>
+                                        <th>Driver Name</th>
+                                        <th>Mobile No</th>
+                                        <th>Address</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/. col -->
+
+        </div>
+        </div>
+    </section>
+
+<script>
+    $(document).ready(function () {
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+
+        try {
+            $('#example').DataTable({
+                "paging": true,
+                "searching": true,
+                dom: 'Bfrtip',
+                "bServerSide": true,
+                "sAjaxSource": '@Url.Action("GetData", "DriverMaster")',
+                "sServerMethod": "POST",
+                buttons: [ 'excel',
+                    {
+                        text: 'Add New',
+                        action: function (e, dt, node, config) {
+
+                            window.location.href = '/DriverMaster/Create'
+                        }
+                    },
+
+                ],
+                language: {
+                    searchPlaceholder: "Search",
+                    search: ""
+                },
+                "aoColumns": [
+                    {
+                        "mData": "VendorName"
+                    },
+                    {
+                        "mData": "DriverName"
+                    },
+                    {
+                        "mData": "MobileNo"
+                    }, {
+                        "mData": "Address"
+                    },
+                    {
+                        "mData": function (o) {
+                            return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.ID + " class='btn btn-primary btn-sm mr-2' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button><button type='button' id=" + o.ID + " onclick='Delete(this.id);' class='btn btn-danger btn-sm'><i class='fas fa-trash'></i></button></div>"
+                        }
+                    },
+                ],
+            });
+        }
+        catch (e) {
+        }
+    });
+
+
+    function Edit(id) {
+        window.location.href = "/DriverMaster/Edit/" + id;
+    }
+
+
+    function Delete(id) {
+        debugger;
+        if (confirm("Are you sure you want to delete this record?")) {
+            $.ajax({
+                url: '/DriverMaster/DeleteConfirmed',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (result) {
+                    if (result.Message == "success") {
+                        swal("Success", "Record Delete Successfully", "success");
+                        window.location.href = "/DriverMaster/Index";
+                    } else {
+                        toastr.error(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    console.log("error");
+                    console.log(ex);
+                }
+            });
+        } else {
+
+            false;
+        }
+
+    }
+
+
+</script>

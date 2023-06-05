@@ -1,0 +1,148 @@
+﻿@model Micraft.ManeGrowAgro.Models.ExpenceTypes
+
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm("Edit", "ExpenceTypes", FormMethod.Post, new
+                        {
+                            @id = "form0"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                <div class="content-header" style="padding:1px">
+                                    <h4>Expence Type</h4>
+                                </div>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="modal-body">
+
+                                    <div class="row">
+
+                                        <div class="col-md-2 col-12 ">
+                                            @Html.LabelFor(model => model.ExpenceType)
+                                        </div>
+                                        <div class="col-md-4 col-12 ">
+
+                                            @Html.EditorFor(model => model.ExpenceType, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.ExpenceType, "", new { @class = "text-danger" })
+
+                                        </div>
+                                        <div class="col-md-3 col-12 ">
+                                            <input type="submit" id="savebtn" class="btn btn-success" value="Save" />
+                                            <button type="button" class="btn btn-primary" onclick="backToList()"> Back to List </button>
+                                        </div>
+                                    </div>
+                                    <br />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+<script>
+
+    $(document).ready(function () {
+        try {
+
+        var temp = '@TempData["success"]';
+        if (temp != null && temp != undefined && temp != "")
+        {
+            toastr.success("Update Successfully");
+            }
+
+        var temp = '@TempData["error"]';
+        if (temp != null && temp != undefined && temp != "")
+        {
+            toastr.error(temp);
+            @*@TempData["error"] = "";*@
+                }
+
+        }
+        catch (e) {
+        }
+    });
+
+    function backToList() {
+        window.location.href = '/ExpenceTypes/Index'
+    }
+
+
+
+    $("#form0").submit(function (event) {
+        var valid = true;
+
+
+
+        if (valid == true) {
+            $("#form0").submit();
+        }
+        else {
+            return false;
+        }
+    });
+
+    $("#ExpenceType").keyup(function () {
+       //$.preloader.start({
+       //     modal: true,
+       //     src: 'sprites2.png'
+       // });
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("CheckDuplicateName", "ExpenceTypes")',
+            data: { EXPENCE: $("#ExpenceType").val()},
+            dataType: "json",
+            success: function (result)
+            {
+                if (result.Message == "success") {
+                    if (result.flg == 1) {
+                        $("#savebtn").prop('disabled', true);
+                        toastr.error("Expence Type Already Exist.");
+                    }
+                    else {
+                        $("#savebtn").prop('disabled', false);
+                    }
+                    $.preloader.stop();
+                }
+                else {
+                  /*  toastr.error(result.Message);*/
+                    $.preloader.stop();
+                }
+            },
+            failure: function (response) {
+               /* alert(response.d);*/
+            },
+            error: function (err) {
+                $.preloader.stop();
+                //alert(err.statusText);
+
+            }
+        });
+    });
+
+</script>
+
+

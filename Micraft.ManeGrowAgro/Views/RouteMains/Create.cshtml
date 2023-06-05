@@ -1,0 +1,1216 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    table {
+        border-style: ridge;
+    }
+
+    tr:nth-child(even) {
+        background-color: #D6EEEE;
+    }
+    .table td, .table th {
+        min-width: 120px;
+    }
+</style>
+<br />
+<section class="content">
+    <div class="container-fluid">
+
+
+        @using (Html.BeginForm(null, null, FormMethod.Post, new
+        {
+            @id = "form0",
+            onSubmit = "return false"
+        }))
+
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" id="Count" value="10" />
+            <input type="hidden" id="DestinationCount" value="10000" />
+
+            <input type="hidden" id="MainRouteID" />
+            <input type="hidden" id="RouteDetailsID" />
+            <input type="hidden" id="RouteCount" value="1000" />
+
+            <input type="hidden" id="NewCustCount" value="19000" />
+            <input type="hidden" id="ID" />
+
+            <div class="form-horizontal">
+                <div class="content-header" style="padding:1px">
+                    <h4>Create Main Route</h4>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-1">
+                        <label for="Route">Route</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" id="Root" name="Root" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <input type="button" id="btnadd" value="Add" class="btn btn-primary" onclick="SetRoot()" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="button" id="btnadd" value="Add Destinations" class="btn btn-primary" onclick="GetDestinations()" />
+                    </div>
+                    @*<div class="col-md-3">
+                <a href="@Url.Action("Index", "RouteMains")" class="btn btn-primary"> Back to List </a>
+            </div>*@
+
+
+
+                </div>
+                <br />
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <div style="overflow: scroll">
+                                <table class="table table-responsive">
+                                    <tr style="color: #301ae3; font-size: 50px">
+                                        <td>From Destination</td>
+                                        <td>To Destination</td>
+                                        <td>Mile</td>
+                                        <td>Vendor</td>
+                                        <td>Vehicle Type</td>
+                                        <td>Mode</td>
+                                        <td>KM</td>
+                                        <td>Rate Type</td>
+                                        <th>WT From 1</th>
+                                        <th>WT To 1</th>
+                                        <th>Rate 1</th>
+                                        <th>WT From 2</th>
+                                        <th>WT To 2</th>
+                                        <th>Rate 2</th>
+                                        <th>WT From 3</th>
+                                        <th>WT To 3</th>
+                                        <th>Rate 3</th>
+                                        <td>Unit</td>
+                                        <td>Rate</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="mycontainer" id="mainrow">
+                                        <td>
+                                            @Html.DropDownList("FromCity", new SelectList(ViewBag.CityName, "Destinations", "Destinations"), "Select From City", new { @class = "form-control", Autocomplete = "off" })
+                                            @*<input type="text" id="FromCity" name="FromCity" class="form-control" , Autocomplete="off" />*@
+                                        </td>
+
+                                        <td>
+                                            @*<input type="text" id="ToCity" name="ToCity" class="form-control" , Autocomplete="off" />*@
+                                            @Html.DropDownList("ToCity", new SelectList(ViewBag.CityName, "Destinations", "Destinations"), "Select To City", new { @class = "form-control", Autocomplete = "off" })
+                                        </td>
+                                        <td>
+                                            <select id="Mile" name="Mile" class="form-control">
+                                                <option value="">Select Mile</option>
+                                                <option value="First">First</option>
+                                                <option value="Middle">Middle</option>
+                                                <option value="First and Last">First and Last</option>
+                                                <option value="Last">Last</option>
+                                               
+                                            </select>
+                                        </td>
+                                        <td>
+                                            @Html.DropDownList("VendorName", new SelectList(ViewBag.VenorNames, "ID", "VendorName"), "Select Vendor", new { @class = "form-control", Autocomplete = "off" })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownList("VehicleType", new SelectList(ViewBag.VehicleType, "VehicleType", "VehicleType"), "Select Vehicle Type", new { @class = "form-control", Autocomplete = "off" })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownList("Mode", new SelectList(ViewBag.Modes, "Mode", "Mode"), "Select Mode", new { @class = "form-control", Autocomplete = "off" })
+                                        </td>
+                                        <td>
+                                            <input type="text" id="KM" name="KM" class="form-control" , Autocomplete="off" />
+                                        </td>
+                                        <td>
+                                            <select id="RateType" name="RateType" class="form-control" onchange="DisabledWeight()">
+                                                <option value="">Select UOM</option>
+                                                <option value="WEIGHT">WEIGHT</option>
+                                                <option value="BOX">BOX</option>
+                                                <option value="TRIP">TRIP</option>
+                                                <option value="PER KM">PER KM</option>
+                                                <option value="UP TO KM">UP TO KM</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="text" id="WTFrom1" name="WTFrom1" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode!=47" /></td>
+                                        <td><input type="text" id="WTTo1" name="WTTo1" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode!=47" /></td>
+                                        <td><input type="text" id="Rate1" name="Rate1" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode!=47" /></td>
+
+                                        <td><input type="text" id="WTFrom2" name="WTFrom2" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode!=47" /></td>
+                                        <td><input type="text" id="WTTo2" name="WTTo2" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode!=47" /></td>
+                                        <td><input type="text" id="Rate2" name="Rate2" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode!=47" /></td>
+
+                                        <td><input type="text" id="WTFrom3" name="WTFrom3" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode!=47" /></td>
+                                        <td><input type="text" id="WTTo3" name="WTTo3" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode!=47" /></td>
+                                        <td><input type="text" id="Rate3" name="Rate3" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode!=47" /></td>
+
+                                        <td>
+                                            <input type="number" id="Unit" name="Unit" class="form-control" , Autocomplete="off" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Rate" name="Rate" class="form-control" , Autocomplete="off" />
+                                        </td>
+                                        <td>
+                                            <input type="button" id="addNew" value="add" style="width:80px" class="btn btn-success" onclick="SaveBom()" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <table class="table table-responsive" id="orderdetailsItems">
+                            <tr style="color: #301ae3; font-size: 50px">
+                                <td>From Destination</td>
+                                <td>To Destination</td>
+                                <td>Mile</td>
+                                <td>Vendor</td>
+                                <td>Vehicle Type</td>
+                                <td>Mode</td>
+                                <td>KM</td>
+                                <td>Rate Type</td>
+                                <th>WT From 1</th>
+                                <th>WT To 1</th>
+                                <th>Rate 1</th>
+                                <th>WT From 2</th>
+                                <th>WT To 2</th>
+                                <th>Rate 2</th>
+                                <th>WT From 3</th>
+                                <th>WT To 3</th>
+                                <th>Rate 3</th>
+                                <td>Unit</td>
+                                <td>Rate</td>
+
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+
+                    </div>
+                    <div class="col-md-2 col-12">
+                        @*<input type="button" id="bttnSavae" value="Save" onclick="SaveBom()" class="btn btn-success" />*@
+                    </div>
+
+                    <div class="col-md-2">
+                        <a href="@Url.Action("Index", "RouteMains")" class="btn btn-primary"> Back to List </a>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        }
+        <div class="modal" id="myModal">
+            <input type="hidden" id="hdpreviousqty" />
+            <input type="hidden" id="hdproductid" />
+
+            <div class="modal-dialog modal-md modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Destination List</h4>
+                        <button type="button" class="close" data-dismiss="modal" onclick="ClosePopup();">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <lable>Enter Destination</lable>
+                                    <input type="text" id="Destination" class="form-control" />
+
+                                </div>
+                                <div class="col-md-3 col-12">
+                                    <br />
+                                    <input type="button" id="AddCust" class="btn btn-primary" value="Add" onclick="AddData();">
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="overflow-x:auto;">
+                                <table class="table table-responsive " id="DestinationList" style="width: 100%; height:300px"></table>
+                                <span id="orderItemError" style="color:red"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+
+                                        <div class="col-md-6">
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <input type="button" id="btnSave" value="Save" class="btn btn-primary" onclick="SaveSubCustomers()" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="myCustModal">
+            <input type="hidden" id="hdpreviousqty" />
+            <input type="hidden" id="hdproductid" />
+
+            <div class="modal-dialog modal-md modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Customer List</h4>
+                        <button type="button" class="close" data-dismiss="modal" onclick="ClosePopup();">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-3 col-12">
+                                    <lable>Short Name</lable>
+                                    @Html.DropDownList("ShortName", new SelectList(ViewBag.ShortNames, "ShortName", "ShortName"), "Select", new { @class = "form-control", onchange = "GetCustomers()" })
+
+                                </div>
+
+                                <div class="col-md-6 col-12">
+                                    <label>Select Customer</label>
+                                    @Html.DropDownList("CustomerName", new SelectList(ViewBag.CustomerName, "ID", "CustName"), "Select Customer", new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-3 col-12">
+                                    <br />
+                                    <input type="button" id="AddCust" class="btn btn-primary" value="Add" onclick="AddCustData();">
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="overflow-x:auto;">
+                                <table class="table table-responsive " id="NewCustomerOrderList" style="width: 100%; height:300px"></table>
+                                <span id="orderItemError" style="color:red"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+
+                                        <div class="col-md-6">
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <input type="button" id="btnSave" value="Save" class="btn btn-primary" onclick="SaveRouteCustomers()" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+       var url = window.location.href;
+            var part = url.substring(url.lastIndexOf('/') + 1);
+        if (part != "Create") {
+         //   $('#ID').val(part);
+            $('#MainRouteID').val(part);
+            GetMainRouteDetails();
+            GetDestinationsList();
+
+
+            }
+    });
+
+    function AddData() {
+        debugger
+        var temp = true;
+
+        if ($('#Root').val() == "") {
+            temp = false;
+            toastr.error("Root Not Found Please Add Route...")
+        }
+
+        if ($('#Destination').val() == "") {
+            temp = false;
+            toastr.error("Destination Not Found Please Add Destination...")
+        }
+
+        $('#DestinationList tbody tr').each(function (index, e) {
+            try {
+                debugger
+                var inputEl1 = $(e).children().get(0);
+                var SR1 =parseInt( inputEl1.firstElementChild.value);
+
+                if ($('#Destination' + SR1).text() == $('#Destination').val()) {
+                    temp = false;
+                    toastr.error("Destination Already Added..");
+
+                }
+            } catch (ee) {
+
+            }
+        })
+
+        if (temp == true) {
+
+            debugger;
+            var Count = $('#DestinationCount').val();
+            $("#DestinationList").append(" <tbody> <tr id='R" + Count + "'><td><input type='hidden' id='Count" + Count + "' readonly  class='Count'' /><input type='hidden' id='DestID" + Count + "' readonly  class='Count'' /><label id='Destination" + Count + "' readonly class='Destination'' ></label></td>   </tr> <tbody>");
+
+            $('#Count' + Count).val(Count);
+            $('#Destination' + Count).text($('#Destination').val());
+            $('#DestID' + Count).val(0);
+            Count = Count + 1;
+
+            $('#DestinationCount').val(Count);
+            $('#Destination').val('');
+            $('#Destination').focus();
+        }
+    }
+    function GetDestinations() {
+
+        if ($('#MainRouteID').val() != "") {
+            $("#myModal").modal("show");
+            GetDestinationsList();
+        } else {
+            toastr.error("Please enter Route");
+        }
+    }
+
+    function SetRoot() {
+
+    $.ajax({
+                url: '@Url.Action("SaveRouteMain", "RouteMains")',
+                type: "Get",
+                dataType: "JSON",
+                data: {Root: $('#Root').val()},
+                success: function (result) {
+                    try {
+                        if (result.Message == "success") {
+                            $('#MainRouteID').val(result.RouteID);
+                            $('#Root').prop("disabled", true);
+                            GetMainRouteDetails();
+                        } else {
+
+                        }
+                    }
+                    catch (e) {
+                    }
+                }
+            });
+
+
+
+      //  AddRoot();
+    }
+
+
+    function SaveBom() {
+        var isduplicate = false;
+        $('#orderdetailsItems tbody tr').each(function (index, e) {
+
+            try {
+                var FromCity = $(e).children().get(0);
+                var ToCity = $(e).children().get(1);
+                debugger;
+
+                if ($('#FromCity').val() == FromCity.firstElementChild.value && $('#ToCity').val() == ToCity.firstElementChild.value) {
+                    isduplicate = true;
+                    $('#ProductComponent').val('');
+                    $('#Quantity').val('');
+                    toastr.warning("From City & To City already added...");
+                }
+            } catch {
+
+            }
+
+        })
+
+        if ($('#Mile').val() =="") {
+            isduplicate = true;
+            toastr.error("Please Select Mile");
+        }
+
+        if ($('#FromCity').val() =="") {
+            isduplicate = true;
+            toastr.error("Please Select From Destinations");
+        }
+        if ($('#ToCity').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Select To Destinations");
+        }
+        if ($('#VendorName').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Select Vendor Name");
+        }
+        if ($('#VehicleType').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Select Vehicle Type");
+        }
+
+        if ($('#Mode').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Select Mode");
+        }
+
+        if ($('#KM').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Select Mode");
+        }
+
+        if ($('#Unit').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter Add WT");
+        }
+
+        if ($('#Rate').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter Add Rate");
+        }
+
+        if ($('#WTFrom1').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter WTFrom1");
+        }
+        if ($('#WTTo1').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter WTTo1");
+        }
+
+        if ($('#Rate1').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter Rate1");
+        }
+
+        if ($('#WTFrom2').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter WTFrom2");
+        }
+        if ($('#WTTo2').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter WTTo2");
+        }
+
+        if ($('#Rate2').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter Rate2");
+        }
+
+
+        if ($('#WTFrom3').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter WTFrom3");
+        }
+        if ($('#WTTo3').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter WTTo3");
+        }
+
+        if ($('#Rate3').val() == "") {
+            isduplicate = true;
+            toastr.error("Please Enter Rate3");
+        }
+
+
+        if (isduplicate == false) {
+            SaveData()
+        }
+    }
+
+
+
+
+    function SaveData()
+    {
+
+    $.preloader.start({
+        modal: true,
+        src: 'sprites2.png'
+    });
+
+        var list = [];
+        var errorItemCount = 0;
+
+      //  $('#orderdetailsItems tbody tr').each(function (index, ele) {
+
+                var orderItem = {
+                    FromRoute: $('#FromCity').val(),
+                    ToRoute: $('#ToCity').val(),
+                    VendorID: $('#VendorName').val(),
+                    VendorName: $("#VendorName option:selected").text(),
+
+                    Mode: $('#Mode').val(),
+                    VehicleType: $('#VehicleType').val(),
+                    KM: $('#KM').val(),
+                    Unit: $('#Unit').val(),
+                    RateType: $('#RateType').val(),
+                    Rate: $('#Rate').val(),
+                    ID: $('#ID').val(),
+
+                    WTFrom1: $('#WTFrom1').val(),
+                    WTTo1: $('#WTTo1').val(),
+                    Rate1: $('#Rate1').val(),
+
+                    WTFrom2: $('#WTFrom2').val(),
+                    WTTo2: $('#WTTo2').val(),
+                    Rate2: $('#Rate2').val(),
+
+                    WTFrom3: $('#WTFrom3').val(),
+                    WTTo3: $('#WTTo3').val(),
+                    Rate3: $('#Rate3').val(),
+
+                    RouteMainID: $('#MainRouteID').val(),
+                    Mile: $('#Mile').val(),
+                }
+                list.push(orderItem);
+
+     //   })
+
+        debugger
+
+            var data = {
+                bomdata: list
+
+            }
+            $(this).val('Please wait...');
+            $.ajax({
+                type: 'POST',
+                url: '/RouteMains/SaveBOM',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    $.preloader.stop();
+                    if (result.Message=="success") {
+                        toastr.success("Successfully saved..");
+                    //    window.location.href = "/RouteMains/Index";
+                                    $('#Rate').val('');
+            $('#Unit').val('');
+            $('#RateType').val('');
+
+
+
+            $('#FromCity').val('');
+            $('#ToCity').val('');
+            $('#VendorName').val('');
+            $('#BomID').val('');
+            $('#Mode').val('');
+                        $('#KM').val('');
+                        $('#ID').val('');
+                        $('#VehicleType').val('')
+
+                        $('#WTFrom1').val('');
+                        $('#WTTo1').val('');
+                        $('#Rate1').val('')
+
+                        $('#WTFrom2').val('');
+                        $('#WTTo2').val('');
+                        $('#Rate2').val('')
+
+                        $('#WTFrom3').val('');
+                        $('#WTTo3').val('');
+                        $('#Rate3').val('')
+
+                        GetMainRouteDetails();
+                    }
+                    else {
+                        toastr.error(result.Message);
+                    }
+
+                },
+                error: function (error) {
+                    alert(error);
+
+                }
+            });
+
+    }
+
+    function EditRow(Count)
+    {
+        $('#FromCity').val($('#FromCity' + Count).val())
+        $('#BomID').val($('#ID' + Count).val())
+        $('#ToCity').val($('#ToCity' + Count).val())
+        $('#VendorName').val($('#VendorID' + Count).val())
+        $('#ID').val($('#ID' + Count).val())
+        $('#Mode').val($('#Mode' + Count).val())
+        $('#KM').val($('#KM' + Count).val())
+
+        $('#Rate').val($('#Rate' + Count).val())
+        $('#RateType').val($('#RateType' + Count).val())
+        $('#Unit').val($('#Unit' + Count).val())
+
+        $('#WTFrom1').val($('#WTFrom1' + Count).val())
+        $('#WTTo1').val($('#WTTo1' + Count).val())
+        $('#Rate1').val($('#Rate1' + Count).val())
+
+        $('#WTFrom2').val($('#WTFrom2' + Count).val())
+        $('#WTTo2').val($('#WTTo2' + Count).val())
+        $('#Rate2').val($('#Rate2' + Count).val())
+
+        $('#WTFrom3').val($('#WTFrom3' + Count).val())
+        $('#WTTo3').val($('#WTTo3' + Count).val())
+        $('#Rate3').val($('#Rate3' + Count).val())
+        $('#VehicleType').val($('#VehicleType' + Count).val())
+        $('#Mile').val($('#Mile' + Count).val())
+
+
+        $("#R" + Count + "").remove();
+    }
+
+
+    function RemoveRow(Count) {
+
+        var result = confirm("Are You Sure You Want to delete?");
+        if (result) {
+
+
+              $.ajax({
+            type: "GET",
+            url: '@Url.Action("DeleteRouteDetails", "RouteMains")',
+              data: { ID: $('#ID'+Count).val()},
+            dataType: "json",
+            success: function (result)
+            {
+                if (result.Message == "success") {
+                    toastr.success("Record Successfully Deleted...")
+                    $("#R" + Count + "").remove();
+                }
+
+            },
+
+        });
+
+        }
+
+
+    }
+
+    function GetMainRouteDetails()
+    {
+     //   $("#orderdetailsItems").empty();
+    //    $("#orderdetailsItems:not(:first)").remove();
+        $('#orderdetailsItems tr:gt(0)').remove()
+        $.ajax({
+                url: '@Url.Action("GetMainRouteDetails", "RouteMains")',
+                type: "Get",
+                dataType: "JSON",
+            data: { RouteID: $('#MainRouteID').val()},
+            success: function (result) {
+                if ($('#Root').val() == "") {
+                    $('#Root').val(result.Route);
+                    $('#Root').attr('disabled',true);
+                }
+
+                        if (result.bom.Count != 0) {
+                            var Count = 10000;
+                            var url = window.location.href;
+                            var part = url.substring(url.lastIndexOf('/') + 1);
+                            $('#CustomerName').text(result.CustName);
+                         //   $("#orderdetailsItems:not(:first)").remove();
+                            $('#orderdetailsItems tr:gt(0)').remove()
+                            $.each(result.bom, function (i, Temp) {
+                                var Count = parseInt($('#RouteCount').val());
+                                $("#orderdetailsItems").append(" <tbody> <tr id='R" + Count + "'> <td> <input type='text' id='FromCity" + Count + "' readonly  class='FromCity form-control'' /></td>" +
+                                    "<td><input type='text' id='ToCity" + Count + "' readonly class='ToCity form-control'' /></td> " +
+
+                                    " <td><input type='text' id='Mile" + Count + "' readonly class='Mile form-control'' /></td>" +
+
+                                    "<td><input type='text' id='VendorName" + Count + "' readonly class='VendorName form-control'' /><input type='hidden' id='VendorID" + Count + "' readonly class='VendorID form-control'' /></td>" +
+
+                                    " <td><input type='text' id='VehicleType" + Count + "' readonly class='VehicleType form-control'' /></td>" +
+                                    " <td><input type='text' id='Mode" + Count + "' readonly class='Mode form-control'' /></td>" +
+                                    "<td><input type='text' id='KM" + Count + "' readonly class='KM form-control'' /></td>" +
+                                    "<td><input type='text' id='RateType" + Count + "' readonly class='RateType form-control'' /></td>" +
+
+                                    + "<td><input type='hidden' id='WTFrom11111" + Count + "'  readonly class='WTFrom11111 form-control'' /></td>"
+                                    + "<td><input type='text' id='WTFrom1" + Count + "'  readonly class='WTFrom1 form-control'' /></td>"
+                                    + "<td><input type='text' id='WTTo1" + Count + "'   readonly class='WTTo1 form-control'' /></td>"
+                                    + "<td><input type='text'  id='Rate1" + Count + "'  readonly class='Rate1 form-control'' /></td>"
+
+                                    + "<td><input type='text' id='WTFrom2" + Count + "'    readonly class='WTFrom2 form-control'' /></td>"
+                                    + "<td><input type='text' id='WTTo2" + Count + "'    readonly class='WTTo2 form-control'' /></td>"
+                                    + "<td><input type='text'  id='Rate2" + Count + "'   readonly class='Rate2 form-control'' /></td>"
+
+                                    + "<td><input type='text' id='WTFrom3" + Count + "'   readonly class='WTFrom3 form-control'' /></td>"
+                                    + "<td><input type='text' id='WTTo3" + Count + "'   readonly class='WTTo3 form-control'' /></td>"
+                                    + "<td><input type='text'  id='Rate3" + Count + "'    readonly class='Rate3 form-control'' /></td>"+
+
+                                    "<td><input type='text' id='Unit" + Count + "' readonly class='Unit form-control'' /></td>" +
+                                    "<td><input type='text' id='Rate" + Count + "' readonly class='Rate form-control'' /></td> " +
+                                    "<td><button type='button' id='edit1" + Count + "'  class='btn btn-primary btn-sm mr-2' onclick='AddCustomers(" + Count + ");'><i class='fa fa-plus'></i></button> <input type='hidden' id='ID" + Count + "' readonly class='ID form-control'' style='width:0px' /></td>" +
+                                    "<td><button type='button' id='Edit" + Count + "'  class='btn btn-primary btn-sm mr-2' onclick='EditRow(" + Count + ");'><i class='fa fa-edit'></i></button> </td><td><button type='button' id='Remove" + Count + "'  class='btn btn-danger btn-sm mr-2' onclick='RemoveRow(" + Count + ");'><i class='fa fa-trash'></i></button> </td>    </tr> <tbody>");
+
+
+                                $("#WTFrom1" + Count + "").val(Temp.WTFrom1);
+                                $("#WTTo1" + Count + "").val(Temp.WTTo1);
+                                $("#Rate1" + Count + "").val(Temp.Rate1);
+
+                                $("#WTFrom2" + Count + "").val(Temp.WTFrom2);
+                                $("#WTTo2" + Count + "").val(Temp.WTTo2);
+                                $("#Rate2" + Count + "").val(Temp.Rate2);
+
+                                $("#WTFrom3" + Count + "").val(Temp.WTFrom3);
+                                $("#WTTo3" + Count + "").val(Temp.WTTo3);
+                                $("#Rate3" + Count + "").val(Temp.Rate3);
+
+
+                                $("#FromCity" + Count + "").val(Temp.FromRoute);
+                                $("#ToCity" + Count + "").val(Temp.ToRoute);
+                                $("#VendorID" + Count + "").val(Temp.VendorID);
+                                $("#VendorName" + Count + "").val(Temp.VendorName);
+                                $("#VehicleType" + Count + "").val(Temp.VehicleType);
+
+                                $("#KM" + Count + "").val(Temp.KM);
+                                $("#Mode" + Count + "").val(Temp.Mode);
+                                $("#RateType" + Count + "").val(Temp.RateType);
+                                $("#Unit" + Count + "").val(Temp.Unit);
+                                $("#Rate" + Count + "").val(Temp.Rate);
+                                $("#ID" + Count + "").val(Temp.ID);
+
+                                $("#Mile" + Count + "").val(Temp.Mile);
+
+
+
+
+
+
+                               // $("#BomApplicableNew" + Count + "").val(Temp.BomApplicable);
+                                    Count = Count + 1;
+                                    $('#RouteCount').val(Count)
+
+                            });
+
+                            /*AddRoot();*/
+                        } else {
+                            toastr.error('Customer Not Found...');
+                        }
+
+
+                }
+            });
+
+      //  $("#ProductDetailsModels").modal("show");
+    }
+
+    function SaveSubCustomers() {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+        var SubID = $('#SubID').val();
+        var SubRouteNAmes = $('#SubRouteNAmes').val();
+        var LST = [];
+        $('#DestinationList tbody tr').each(function (index, e) {
+            try {
+                var inputEl1 = $(e).children().get(0);
+                var Count = parseInt(inputEl1.firstElementChild.value);
+
+                var order = {
+                    Destinations: $('#Destination' + Count).text(),
+                    DestID: $('#DestID' + Count).val(),
+                    RouteID: $('#MainRouteID').val(),
+
+                }
+                LST.push(order)
+
+            } catch (ee) {
+
+            }
+        })
+
+        var data = {
+            recs: LST
+        }
+
+        debugger
+        //Send the JSON array to Controller using AJAX.
+        $.ajax({
+            type: "POST",
+            url: "/RouteMains/SaveDestinations",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.Message == "success") {
+                    toastr.success("Records Saved Succesfully");
+                    //  GetSubCustomer();
+                    $("#myModal").modal("hide");
+                    $('#DestinationList').empty();
+                    GetDestinationsList();
+                    $.preloader.stop();
+                }
+                else {
+                    toastr.error(result.Message);
+                    $.preloader.stop();
+                }
+                $.preloader.stop();
+            }
+        });
+    }
+
+
+
+    function GetDestinationsList() {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetDestinations", "RouteMains")',
+             data: { ID: $('#MainRouteID').val() },
+            dataType: "json",
+            success: function (result)
+            {
+                $("#DestinationList").empty();
+              //  $("#Location").append("<option value=''>Select</option>");
+              //  var Count = 1
+
+                $("#ToCity").empty();
+                $("#ToCity").append("<option value=''>Select To Destination</option>");
+
+
+                $("#FromCity").empty();
+                $("#FromCity").append("<option value=''>Select From Destination</option>");
+                $.each(result.RouteData, function (i, val) {
+
+                    $("#FromCity").append("<option value='" + val.Destinations + "'>" + val.Destinations + "</option>");
+                    $("#ToCity").append("<option value='" + val.Destinations + "'>" + val.Destinations + "</option>");
+
+                    debugger;
+                    var Count = $('#DestinationCount').val();
+                    $("#DestinationList").append(" <tbody> <tr id='R" + Count + "'><td><input type='hidden' id='Count" + Count + "' readonly  class='Count'' /><input type='hidden' id='DestID" + Count + "' readonly  class='Count'' /><label id='Destination" + Count + "' readonly class='Destination'' ></label></td>   </tr> <tbody>");
+
+                    $('#Count' + Count).val(Count);
+                    $('#Destination' + Count).text(val.Destinations);
+                    $('#DestID' + Count).val(val.DestID);
+
+                    Count =parseInt(Count)+ 1;
+                    $('#DestinationCount').val(Count);
+
+                });
+
+
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                $.preloader.stop();
+                /*alert(response.d);*/
+            },
+            error: function (err) {
+                $.preloader.stop();
+                /*alert(err.statusText);*/
+            }
+        });
+    }
+
+
+
+    function AddCustomers(Count) {
+
+        $('#RouteDetailsID').val($('#ID' + Count).val());
+     //   $('#SubRouteNAmes').val($('#SubRoute' + ID).val());
+        $("#myCustModal").modal("show");
+        GetSubCustomer()
+    }
+
+    function GetSubCustomer() {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetSubCustomer", "RouteMains")',
+             data: { ID: $('#RouteDetailsID').val() },
+            dataType: "json",
+            success: function (result)
+            {
+                $("#NewCustomerOrderList").empty();
+              //  $("#Location").append("<option value=''>Select</option>");
+              //  var Count = 1
+                $("#NewCustomerOrderList").append("<tbody> <tr bgcolor='#7eb533' style='color: #FBF8F7' > <th>Location</th> <th>Customer Code</th><th>Customer Name</th><th></th></tr> <tbody>");
+                $.each(result.CustData, function (i, val) {
+
+                    debugger;
+                    var Count = $('#NewCustCount').val();
+                  //  $("#Location").append("<option value='" + val.Area + "'>" + val.Area + "</option>");
+                    $("#NewCustomerOrderList").append(" <tbody> <tr id='R" + Count + "'><td><input type='hidden' id='CustomerID" + Count + "' readonly  class='CustomerID'' /><label id='Area" + Count + "' style='width:120px' readonly class='Area'' ></label></td><td><input type='hidden' id='ID" + Count + "' readonly  class='ID'' /><label id='CustomerCode" + Count + "' style='width:65px' readonly class='CustomerCode'' ></label></td><td ><label id='CustomerName" + Count + "' style='width:150px' readonly class='CustomerName'' ></label></td>  <td><button type='button' id=" + Count + "  class='btn btn-danger btn-sm mr-2' onclick='RemoveCustData(" + Count +");'><i class='fa fa-trash'></i></button></td>   </tr> <tbody>");
+
+
+                    $('#cnt' + Count).val(Count);
+                    $('#CustomerID' + Count).val(val.CustomerID);
+                    $('#CustomerCode' + Count).text(val.CustID);
+                    $('#CustomerName' + Count).text(val.CustName);
+                    $('#Area' + Count).text(val.Location);
+                    $('#ID' + Count).val(val.ID);
+                    Count =parseInt(Count)+ 1;
+                    $('#NewCustCount').val(Count);
+
+                });
+
+
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                $.preloader.stop();
+                /*alert(response.d);*/
+            },
+            error: function (err) {
+                $.preloader.stop();
+                /*alert(err.statusText);*/
+            }
+        });
+    }
+     function GetCustomers() {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+         $.ajax({
+            type: "GET",
+           url: '@Url.Action("GetLocations", "CustomerOrder")',
+            data: { SHORTNAME: $('#ShortName').val() },
+            dataType: "json",
+            success: function (tbldata)
+            {
+                $("#CustomerName").empty();
+                $("#CustomerName").append("<option value=''>Select</option>");
+                var Count = 1
+              //  $("#CustomerOrderList").append("<tbody> <tr bgcolor='#7eb533' style='color: #FBF8F7' > <th></th> <th>Customer Code</th><th>Customer Name</th></tr> <tbody>");
+                $.each(tbldata, function (i, val) {
+
+                    debugger;
+                    $("#CustomerName").append("<option value='" + val.ID + "'>" + val.CustName + "</option>");
+
+                });
+
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                $.preloader.stop();
+                /*alert(response.d);*/
+            },
+            error: function (err) {
+                $.preloader.stop();
+                /*alert(err.statusText);*/
+            }
+        });
+    }
+
+    function AddCustData() {
+
+
+        var temp = true;
+        if ($('#ShortName').val == "") {
+            temp = false;
+            toastr.error("Please select Short Name...")
+        }
+        if ($('#CustomerName').val == "") {
+            temp = false;
+            toastr.error("Please selectCustomer Name...")
+        }
+
+        $('#NewCustomerOrderList tbody tr').each(function (index, e) {
+            try {
+                var inputEl1 = $(e).children().get(0);
+                var SR1 = inputEl1.firstElementChild.value;
+
+                if (SR1 == $('#CustomerName').val()) {
+                    temp = false;
+                    toastr.error("Record Already Added..");
+
+                }
+            } catch (ee) {
+
+            }
+        })
+
+        if (temp == true) {
+
+            debugger;
+            var Count = $('#NewCustCount').val();
+            $("#NewCustomerOrderList").append(" <tbody> <tr id='R" + Count + "'><td><input type='hidden' id='CustomerID" + Count + "' readonly  class='CustomerID'' /><label id='Area" + Count + "' style='width:120px' readonly class='Area'' ></label></td><td><input type='hidden' id='ID" + Count + "' readonly  class='ID'' /><label id='CustomerCode" + Count + "' style='width:65px' readonly class='CustomerCode'' ></label></td><td ><label id='CustomerName" + Count + "' style='width:150px' readonly class='CustomerName'' ></label></td>  <td><button type='button' id=" + Count + "  class='btn btn-danger btn-sm mr-2' onclick='RemoveCustData(" + Count + ");'><i class='fa fa-trash'></i></button></td>   </tr> <tbody>");
+
+            $('#CustomerID' + Count).val($('#CustomerName').val());
+            $('#CustomerCode' + Count).text('');
+            $('#CustomerName' + Count).text($('#CustomerName option:selected').text());
+            $('#Area' + Count).text('');
+            $('#ID' + Count).val(0);
+            Count = Count + 1;
+            $('#NewCustCount').val(Count);
+            $('#CustomerName').val('');
+
+        }
+
+    }
+
+    function SaveRouteCustomers() {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+        var SubID = $('#SubID').val();
+
+        var SubRouteNAmes = $('#SubRouteNAmes').val();
+        var LST = [];
+        $('#NewCustomerOrderList tbody tr').each(function (index, e) {
+            try {
+                var inputEl = $(e).children().get(0);
+                var SR1 = inputEl.firstElementChild.value;
+
+                var inputEl1 = $(e).children().get(1);
+                var SR2 = inputEl1.firstElementChild.value;
+                //  alert(SR2)
+
+                var order = {
+                    CustomerID: SR1,
+                    RouteDetailsID: $('#RouteDetailsID').val(),
+                    RouteMainID: $('#MainRouteID').val(),
+                    ID: SR2
+                }
+                LST.push(order)
+
+            } catch (ee) {
+
+            }
+        })
+        var data = {
+            recs: LST
+        }
+
+        debugger
+        //Send the JSON array to Controller using AJAX.
+        $.ajax({
+            type: "POST",
+            url: "/SubRouteDetails/SaveSubRouteCustomers",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.Message == "success") {
+                    toastr.success("Records Saved Succesfully");
+                    AddCustData();
+                    $("#myModal").modal("hide");
+                    $('#CustomerOrderList').empty();
+                    $.preloader.stop();
+                }
+                else {
+                    toastr.error(result.Message);
+                    $.preloader.stop();
+                }
+                $.preloader.stop();
+            }
+        });
+    }
+
+
+    function DisabledWeight() {
+        if ($('#RateType').val() == "TRIP" || $('#RateType').val() == "PER KM") {
+
+            $("#WTFrom1").val("0").prop("disabled", true);
+            $("#WTTo1").val("0").prop("disabled", true);
+            $("#Rate1").val("0").prop("disabled", true);
+            $("#WTFrom2").val("0").prop("disabled", true);
+            $("#WTTo2").val("0").prop("disabled", true);
+            $("#Rate2").val("0").prop("disabled", true);
+            $("#WTFrom3").val("0").prop("disabled", true);
+            $("#WTTo3").val("0").prop("disabled", true);
+            $("#Rate3").val("0").prop("disabled", true);
+            $("#Unit").focus();
+
+
+        }
+        else {
+            $("#WTFrom1").prop("disabled", false);
+            $("#WTTo1").prop("disabled", false);
+            $("#Rate1").prop("disabled", false);
+            $("#WTFrom2").prop("disabled", false);
+            $("#WTTo2").prop("disabled", false);
+            $("#Rate2").prop("disabled", false);
+            $("#WTFrom3").prop("disabled", false);
+            $("#WTTo3").prop("disabled", false);
+            $("#Rate3").prop("disabled", false);
+        }
+    }
+
+    function RemoveCustData(Count) {
+        
+
+
+
+
+    }
+
+    function RemoveCustData(Count) {
+
+        var result = confirm("Are You Sure You Want to delete?");
+        if (result) {
+            var Custid = $('#CustomerID' + Count).val();
+            var RouteDetailsID=  $('#RouteDetailsID').val()
+            var MainRouteID=  $('#MainRouteID').val()
+
+              $.ajax({
+            type: "GET",
+            url: '@Url.Action("DeleteSubCustData", "RouteMains")',
+                  data: { Custid: Custid, RouteDetailsID: RouteDetailsID, MainRouteID: MainRouteID},
+            dataType: "json",
+            success: function (result)
+            {
+                if (result.Message == "success") {
+                    toastr.success("Record Successfully Deleted...")
+                    $("#R" + Count + "").remove();
+                }
+
+            },
+
+        });
+
+        }
+
+
+    }
+
+</script>
+

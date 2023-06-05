@@ -1,0 +1,774 @@
+﻿@model IEnumerable<Micraft.ManeGrowAgro.Models.DispatchDetails>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #tbl11 .form-control {
+        width: 70px;
+        padding: 0;
+    }
+    table.dataTable th,
+    table.dataTable td {
+        white-space: nowrap;
+    }
+
+    .btn btn-secondary green {
+        color: green;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12">
+                <center> <h4 class="text-dark mr-2"><b>Dispatch List</b></h4></center> 
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <input type="hidden" id="ID" />
+        <input type="hidden" id="Count" value="1000" />
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                <thead>
+                                    <tr class="text-uppercase">
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Dispatch ID</th>
+                                        <th>Date</th>
+                                        <th>Vendor Name</th>
+                                        <th>Route</th>
+                                        <th>Driver Name</th>
+                                        <th>Vehical No</th>
+                                        <th>No of Boxes</th>
+                                        <th>Total Weight</th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/. col -->
+
+        </div>
+
+    </div>
+    <div class="modal" id="myModal">
+        <input type="hidden" id="hdpreviousqty" />
+        <input type="hidden" id="hdproductid" />
+        <input type="hidden" id="DispatchID" />
+        <input type="hidden" id="ExpMainID" />
+        <input type="hidden" id="FileName" />
+
+
+
+
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title"> Expence Main</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="row" id="focushere">
+
+                    <div class="col-md-12">
+                        <br />
+                        <div class="table-responsive">
+                            <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                <thead style="background-color: #d8e9c1">
+                                    <tr class="text-uppercase">
+                                        <th>From Km</th>
+                                        <th>To Km</th>
+                                        <th>Total Km</th>
+                                        <th>Total Amount</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input type="text" id="FromKM" class="form-control" placeholder="From KM" onchange="totalKmcalculator()">
+
+                                        </td>
+                                        <td>
+                                            <input type="text" id="ToKM" class="form-control" placeholder="To KM" onchange="totalKmcalculator()">
+                                        </td>
+                                        <td>
+                                            <input type="text" id="TotalKM" class="form-control" placeholder="Total KM" disabled>
+                                        </td>
+                                        <td>
+                                            <input type="text" id="TotalAmount" class="form-control" placeholder="Total Amount">
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title"> Expence Details</h5>
+
+                </div>
+
+                <div class="row" id="focushere">
+
+                    <div class="col-md-12">
+
+                        <div class="table-responsive">
+                            <table id="exampleNew" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                <thead style="background-color: #d8e9c1">
+                                    <tr class="text-uppercase">
+                                        <th>Expence Type</th>
+                                        <th>Amount</th>
+                                        <th>Cash Memo</th>
+                                        <th>Receipt No</th>
+                                        <th>Receipt Date</th>
+                                        <th>Image</th>
+                                        <th>Action</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @Html.DropDownList("ExpType", new SelectList(ViewBag.Expence, "ExpenceType", "ExpenceType"), "Select Expence Type", new
+                                            {
+                                                @class = "form-control",
+                                                Autocomplete = "off"@*, onchange = "SaveSubRouteMain()"*@})
+
+                                        </td>
+                                        <td>
+                                            <input type="text" id="BillAmount" class="form-control" placeholder="Bill Amount" onchange="totalKmcalculator()">
+                                        </td>
+
+                                        <td>
+                                            <input type="text" id="CashMemo" class="form-control" placeholder="Cash Memo">
+                                        </td>
+
+                                        <td>
+                                            <input type="text" id="ReceiptNo" class="form-control" placeholder="Receipt No">
+                                        </td>
+
+                                        <td>
+                                            <input type="text" id="ReceiptDate" class="form-control" placeholder="Receipt Date">
+                                        </td>
+
+                                        <td>
+                                            <input type="file" id="Upload" class="form-control" placeholder="Upload">
+                                            <input type="hidden" id="ExpMainID" />
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary" id="btnad" onclick="btnadd()">Add</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+
+                            <div class="col-md-12">
+                                <br />
+                                <div class="table-responsive">
+                                    <div style="overflow: scroll">
+                                        <table id="real" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                            <thead style="background-color: #d8e9c1">
+                                                <tr class="text-uppercase">
+                                                    <th>Expence Type</th>
+                                                    <th>Amount</th>
+                                                    <th>Cash Memo</th>
+                                                    <th>Receipt No</th>
+                                                    <th>Receipt Date</th>
+                                                    <th>Image</th>
+                                                    <th>Action</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+
+                                        </table>
+                                    </div>
+                                    @*<button type="button" class="btn btn-success" onclick="Save()"> Save </button>
+                                    <a href="@Url.Action("Index", "DashbordControl")" class="btn btn-primary"> Back to List </a>*@
+                                </div>
+                                <div class="row m-0">
+                                    <div class="col-md-2">
+                                      
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label id="lbltot" class="ml-4"></label>
+                                    </div>
+                                    <div class="col-md-3">
+
+
+                                    </div>
+                                    <div class="col-md-3" id="hfSave">
+                                        <button type="button" class="btn btn-success mx-3" onclick="SaveExpence()"> Save </button>
+                                        <a href="@Url.Action("Index", "RouteAssignment")" class="btn btn-primary"> Back to List </a>
+                                    </div>
+                                    <br />
+
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+         $('#ReceiptDate').datepicker({
+                dateFormat: 'dd-mm-yy',
+                autoclose: true,
+              //  minDate: 0
+            });
+      //  $('#ReceiptDate').val('@DateTime.Now.ToString("dd-MM-yyyy")');
+
+        try {
+            $('#example').DataTable({
+                "paging": true,
+                'iDisplayLength': 50,
+               
+                "searching": true,
+                dom: 'Bfrtip',
+                "bServerSide": true,
+                "sAjaxSource": '@Url.Action("GetData", "RouteAssignment")',
+                "sServerMethod": "POST",
+               buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
+                    {
+                        text: 'Add New',
+                        action: function (e, dt, node, config) {
+                            window.location.href = '/RouteAssignment/Create'
+
+                        }
+                    },
+
+                ],
+                language: {
+                    searchPlaceholder: "Search",
+                    search: ""
+                },
+                "aoColumns": [
+                    {
+                        "mData": function (o) {
+                            return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.DispatchID + " class='btn btn-primary btn-sm mr-2' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button></div>";
+                        }
+                    },
+                    {
+                        "mData": function (o) {
+                            return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.DispatchID + "  class='btn btn-primary btn-sm mr-2' onclick='AddExpences(" + o.DispatchID + ");'><i class='fa fa-plus'></i></button></div>"
+                        }
+                    },
+
+                    {
+                        "mData": function (o) {
+                            return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.DispatchID + " class='btn btn-primary btn-sm mr-2' onclick='ManifestPrint(this.id);'><i class='fa fa-print'></i></button></div>";
+                        }
+                    },
+                    {
+                        "mData": function (o) {
+                            return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.DispatchID + " class='btn btn-primary btn-sm mr-2' onclick='InvoicePrint(this.id);'><i class='fa fa-user'></i></button></div>";
+                        }
+                    },
+                    {
+                        "mData": "DispatchID"
+                    },
+
+                    {
+                        "mData": "DispatchDate",
+                        data: "DispatchDate", render: function (data) {
+                           return moment(data).format('DD/MM/YYYY');
+                    }
+
+                    },
+                    {
+                        "mData": "VendorName"
+                    },
+                    {
+                        "mData": "Route"
+                    },
+                    {
+                        "mData": "DriverName"
+                    },
+                    {
+                        "mData": "VehicalNo"
+                    },
+
+                    {
+                        "mData": "NoofBoxes"
+                    },
+                    {
+                        "mData": "TotalWeight"
+                    }
+                  ],
+            });
+        }
+        catch (e) {
+        }
+    });
+
+
+    function DeleteFile(id) {
+        if (confirm("Are you sure you want to delete ?")) {
+            $.ajax({
+                url: '/RouteAssignment/DeleteFile',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (result) {
+                    if (result.Message == "success") {
+                        swal("Success", "Record Delete Successfully", "success");
+                        GetExpenceDtl($('#ID').val())
+                        CalculateTotal();
+
+                    } else {
+                        toastr.error(result.Message);
+                    }
+
+                },
+                error: function (ex) {
+                    console.log("error");
+                    console.log(ex);
+                }
+            });
+        } else {
+            false;
+        }
+
+    }
+
+    function Delete(id) {
+        if (confirm("Are you sure you want to delete this record?")) {
+            $.ajax({
+                url: '/CustomerOrder/DeleteConfirmed',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (result) {
+                    if (result.Message == "success") {
+                        swal("Success", "Record Delete Successfully", "success");
+                        window.location.href = "/CustomerOrder/Index";
+                    } else {
+                        toastr.error(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    console.log("error");
+                    console.log(ex);
+                }
+            });
+        } else {
+            false;
+        }
+
+        }
+  function Edit(id) {
+
+            window.location.href = '/RouteAssignment/Edit/'+id
+    }
+    function ManifestPrint(ID) {
+
+        $.ajax({
+            url: '@Url.Action("DRSPrint", "RouteAssignment")',
+            type: "GET",
+            dataType: "JSON",
+            async: false,
+            data: { DispatchID: ID },
+            success: function (result) {
+                try {
+
+                    if (result.Message == "success") {
+                        debugger;
+                        window.open('/RouteAssignment/GetReportLabel', '_blank');
+                        //window.open('http://www.bing.com/', '_blank');
+                        //window.location = '/ShipmentDetails/GetReport';
+                    }
+                    else {
+                        toastr.error(result.Message);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+    function InvoicePrint(ID) {
+
+       /* alert("Customer Invoice Page Under Construction")*/
+        $.ajax({
+            url: '@Url.Action("InvoicePrint", "RouteAssignment")',
+            type: "GET",//
+            dataType: "JSON",
+            async: false,
+            data: { DispatchID: ID },
+            success: function (result) {
+                try {
+
+                    if (result.Message == "success") {
+                        debugger;
+                        window.open('/RouteAssignment/GetReportLabel', '_blank');
+                        //window.open('http://www.bing.com/', '_blank');
+                        //window.location = '/ShipmentDetails/GetReport';
+                    }
+                    else {
+                        toastr.error(result.Message);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+    //  Expence Details
+
+    function AddExpences(DispatchID) {
+
+        $("#ID").val(DispatchID)
+        $("#DispatchID").val(DispatchID)
+        $("#ExpMainID").val(0)
+
+        $("#myModal").modal("show");
+
+
+        GetExpenceDtl(DispatchID)
+
+    }
+
+
+    function GetExpenceDtl(DispatchID) {
+           $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetExpencePopupData", "RouteAssignment")',
+             data: { ID: DispatchID },
+            dataType: "json",
+            success: function (result)
+            {
+                debugger
+                if (result.Message == "success") {
+
+                    $("#FromKM").val(result.order[0].FromKM)
+                    $("#ToKM").val(result.order[0].ToKM)
+                    $("#TotalKM").val(result.order[0].TotalKM)
+                    $("#TotalAmount").val(result.order[0].TotalAmount)
+                    $("#ExpMainID").val(result.order[0].ID);
+                    $.each(result.dtl, function (i, item) {
+                        try {
+                            var value = new Date(parseInt(result.dtl[i].ReceiptDate.substr(6)));
+                            var month = ("0" + (value.getMonth() + 1)).slice(-2);
+                            var day = ("0" + value.getDate()).slice(-2);
+                            var ret = day + "-" + month + "-" + value.getFullYear();
+                            // result.dtl[i].ReceiptDate
+                            //    $("#real").append("<tr> <td>" + result.dtl[i].ExpType + "</td> <td>" + result.dtl[i].Amount + "</td>                                                                                                                    <td><label id= 'lbl" + result.dtl[i].ID + "'>" + result.dtl[i].ImageName + "</label> </td> <td style='display:none'>" + result.dtl[i].ID + "</td> <td style='display:none'>" + result.dtl[i].ID + "</td><td><Button type='Button' id='Upload" + result.dtl[i].ID + "' onclick='DownloadFile(" + result.dtl[i].ID + ")' class='btn btn-default' ><i class='fa fa-download' style='font-size:20px;color:black'></i></button><Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' onclick='DeleteFile(" + result.dtl[i].ID + ")' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
+                            $("#real").append("<tr> <td>" + result.dtl[i].ExpType + "</td> <td>" + result.dtl[i].Amount + "</td><td>" + result.dtl[i].CashMemo + "</td><td>" + result.dtl[i].ReceiptNo + "</td><td>" + ret + "</td>      <td><label id= 'lbl" + result.dtl[i].ID + "'>" + result.dtl[i].ImageName + "</label></td><td style='display:none'>" + result.dtl[i].ID + "</td>   <td style='display:none'>" + result.dtl[i].ID + "</td><td><Button type='Button' id='Upload" + result.dtl[i].ID + "' onclick='DownloadFile(" + result.dtl[i].ID + ")' class='btn btn-default' ><i class='fa fa-download' style='font-size:20px;color:black'></i></button><Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' onclick='DeleteFile(" + result.dtl[i].ID + ")' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
+                        } catch(e) { };
+                    });
+                    CalculateTotal()
+
+                } else {
+                    $("#ID").val('')
+                    $("#DispatchID").val('')
+                    $("#myModal").modal("hide");
+                    toastr.error(result.Message);
+                }
+
+            },
+            failure: function (response) {
+            },
+            error: function (err) {
+
+            }
+        });
+    }
+    function totalKmcalculator() {
+        $("#TotalKM").val(parseFloat($("#ToKM").val()) - parseFloat($("#FromKM").val()))
+
+    }
+    $('#Upload').on('change', function () {
+
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#Upload").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+            var ID = $('#ID').val();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+                fileData.append("ID", ID);
+            }
+
+            $.ajax({
+                url: '/RouteAssignment/UploadFile',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+                    if (result.Message == "success") {
+                        toastr.success("File Successfully Uploaded")
+                        $('#FileName').val(result.FileNM);
+                    } else {
+                        toastr.error(result.Message);
+                    }
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            alert("FormData is not supported.");
+        }
+    });
+
+
+    function btnadd() {
+
+        var valid = true;
+
+
+
+        if ($("#yourdropdownid option:selected").text() =="Select Expence Type") {
+            toastr.error("Expence Type  is Required.");
+            valid = false;
+        }
+        if ($('#BillAmount').val() == null || $('#BillAmount').val() == "") {
+            toastr.error("Amount is Required.");
+            valid = false;
+        }
+        if ($('#Upload').val() == null || $('#Upload').val() == "") {
+            toastr.error("Image is Required.");
+            valid = false;
+        }
+
+        if ($('#CashMemo').val() == null || $('#CashMemo').val() == "") {
+            toastr.error("CashMemo is Required.");
+            valid = false;
+        }
+
+        if ($('#ReceiptNo').val() == null || $('#ReceiptNo').val() == "") {
+            toastr.error("ReceiptNo is Required.");
+            valid = false;
+        }
+
+        if ($('#ReceiptDate').val() == null || $('#ReceiptDate').val() == "") {
+            toastr.error("ReceiptDate  is Required.");
+            valid = false;
+        }
+
+        if (valid == true) {
+            var isexist = false;
+
+
+            var table = document.getElementById("real");
+            var Count = table.rows.length; // 5
+            if (isexist == true) {
+                toastr.error("Already Added.");
+            }
+
+
+
+            else {
+                Count = Count + 234567;
+
+                $("#real").append("<tr> <td>" + $("#ExpType").val() + "</td> <td>" + $("#BillAmount").val() + "</td><td>" + $("#CashMemo").val() + "</td><td>" + $("#ReceiptNo").val() + "</td><td>" + $("#ReceiptDate").val() + "</td> <td> <label id = 'lbl" + Count + "'>"+$("#FileName").val()+"</label > </td> <td style='display:none'>" + "0" + "</td><td style='display:none'>" + Count + "</td><td><Button type='Button' id='Upload" + Count + "' onclick='DownloadFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-download' style='font-size:20px;color:black'></i></button><Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
+                $("#ExpType").val('');
+                $("#BillAmount").val('');
+                $("#Upload").val('');
+                $("#FileName").val('')
+
+                $("#CashMemo").val('');
+                $("#ReceiptNo").val('');
+                $("#ReceiptDate").val('')
+
+                CalculateTotal();
+
+              ///  alculatewt();
+                //var result = FromKM + "    " + ToKM + "     " + TotalKM;
+                //$('table#real tr#dynamic').remove();
+                //$("#real").append("<tr id='dynamic'> <td>" + FromKM + "</td> <td>" + ToKM + "</td> <td>" + TotalKM + "</td>   </tr>");
+
+                // alert(result)
+
+            }
+
+
+
+        }
+
+    }
+    function DownloadFile(Count) {
+
+        window.location = '/RouteAssignment/Download?file='+$('#lbl'+Count).text();
+    }
+
+    function CalculateTotal() {
+
+        var totamt = 0;
+        try {
+            $("#real TBODY TR").each(function () {
+                debugger
+                var row = $(this);
+                var total = parseFloat(row.find("TD").eq(1).html())
+
+                totamt = totamt + parseFloat(total);
+            });
+
+
+            $('#lbltot').text(totamt);
+        } catch {}
+
+
+    }
+    function SaveExpence() {
+        var temp = true;
+
+        if ($('#real TBODY tr').length == 0) {
+            toastr.error("Please add Some records.");
+            temp = false;
+        }
+
+        if (parseFloat($("#lbltot").text()) != parseFloat($("#TotalAmount").val())) {
+            temp = false;
+            toastr.error("List Amount And Total Amount Missmatch....");
+        }
+        if ($('#FromKM').val() == "") {
+            toastr.error("From KM is Required.");
+            temp = false;
+        }
+        if ($('#ToKM').val() == "") {
+            toastr.error("To KM is Required.");
+            temp = false;
+        }
+        if ($('#TotalKM').val() == "") {
+            toastr.error("Total KM is Required.");
+            temp = false;
+        }
+
+        if ($('#TotalAmount').val() == "") {
+            toastr.error("Total Amount is Required.");
+            temp = false;
+        }
+
+        if (temp == true) {
+        var FromKM = 0;
+        var ToKM = 0;
+        var TotalKM = 0;
+        var TotalAmount = 0;
+        var ExpType = 0;
+        var BillAmount = 0;
+        var Upload = 0;
+        var lst = [];
+        $("#real TBODY TR").each(function () {
+            var row = $(this);
+            var count = row.find("TD").eq(7).html();
+            var order = {
+                ExpType: row.find("TD").eq(0).html(),
+                Amount: parseFloat(row.find("TD").eq(1).html()),
+                CashMemo: row.find("TD").eq(2).html(),
+                ReceiptNo: row.find("TD").eq(3).html(),
+                strDate: row.find("TD").eq(4).html(),
+                ImageName: $('#lbl' + count).text(),
+                ID: row.find("TD").eq(6).html(),
+            }
+            lst.push(order)
+        });
+        var data = {
+            Order: lst, FromKM: $("#FromKM").val(), ToKM: $("#ToKM").val(), TotalKM: $("#TotalKM").val(), TotalAmount: $("#TotalAmount").val(), DispatchID: $("#ID").val(), ExpMainID: $("#ExpMainID").val()
+        }
+        debugger
+        $.ajax({
+            type: "POST",
+            url: "/RouteAssignment/SaveExpence",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.Message == "success") {
+                    $.preloader.stop();
+                    //$('#form0').each(function () {
+                    //    this.reset();
+
+                    //});
+                    /* window.location.href = '/RouteAssignment/Index';*/
+                    $("#real tbody").empty();
+                    $("#myModal").modal("hide");
+                    toastr.success("Records Saved Succesfully");
+                    godata();
+                }
+                else {
+                    toastr.error(result.Message);
+                    $.preloader.stop();
+                }
+                $.preloader.stop();
+            }
+        });
+    }
+
+    }
+    function BEdit(id) {
+
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        $("#real").on('click', '.btnEdit', function () {
+            var row = $(this).closest("tr");
+            //var row = $(this).closest('tr')/*.remove()*/;
+            $("#ExpType").val(row.find("TD").eq(0).html());
+            $("#BillAmount").val(row.find("TD").eq(1).html());
+            $("#Upload").val(row.find("TD").eq(2).html());
+
+            $(this).closest('tr').remove();
+        });
+        //$('html, body').animate({
+        //    scrollTop: $("#focushere").offset().top
+        //}, 2000);
+
+        $.preloader.stop();
+        alculatewt();
+
+    }
+    $("#real").on('click', '.btnDelete', function () {
+        $(this).closest('tr').remove();
+    });
+</script>

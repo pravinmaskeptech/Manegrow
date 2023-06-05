@@ -1,0 +1,51 @@
+﻿@model Micraft.ManeGrowAgro.Models.Zones
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Zones</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CityFrom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CityFrom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CityTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CityTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Zone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Zone)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

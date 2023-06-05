@@ -1,0 +1,290 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    table {
+        border-style: ridge;
+    }
+
+    tr:nth-child(even) {
+        background-color: #D6EEEE;
+    }
+</style>
+<br />
+<section class="content">
+    
+            @Html.AntiForgeryToken()
+        <input type="hidden" id="Count" value="10" />
+        <input type="hidden" id="ID" />
+        @*<input type="hidden" id="RouteID" />*@
+        @*<input type="hidden" id="GroupName" />*@
+        @*<input type="hidden" id="CustomerID" />*@
+
+
+<div class="form-horizontal">
+
+    <div class="content-header" style="padding:1px">
+        <h4>Create </h4>
+    </div>
+    <hr />
+    <div id="hfRoute">
+        <div class="row">
+            <div class="col-md-2">
+                <label for="Route">Main Route</label>
+            </div>
+            <div class="col-sm-3">
+                @Html.DropDownList("Route", new SelectList(ViewBag.MainRoute, "ID", "MainRouteName"), "Select Main Route", new { @class = "form-control", Autocomplete = "off", onchange = "GetSubCustomer()" })
+            </div>
+
+
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label for="GroupName">Group Name </label>
+            </div>
+            <div class="col-sm-3">
+                <input type="text" id="GroupName" name="GroupName" class="form-control" onchange=" GetSubCustomer()" />
+            </div>
+            <hr />
+
+
+
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="overflow-x:auto;">
+            <table class="table table-responsive " id="CustomerOrderList" style="width: 100%; height:300px"></table>
+            <span id="orderItemError" style="color:red"></span>
+        </div>
+    </div>
+    <button type="button" id="Save" class="btn btn-success" onclick="Save()"> Save </button>
+    <button type="button" class="btn btn-primary" onclick="backToList()"> Back to List </button>
+
+</div>
+</section>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+       var url = window.location.href;
+        var part = url.substring(url.lastIndexOf('/') + 1);
+       
+        if (part != "Create") {
+            $('#ID').val(part);
+            GetRootDetails(part);
+            }
+    });
+
+
+    function backToList() {
+        window.location.href = '/ManifestGroup/Index'
+    }
+
+
+    function GetRootDetails(part)
+    {
+      //  SaveData();
+
+         $.ajax({
+                url: '@Url.Action("GetGroupDetails", "ManifestGroup")',
+                type: "Get",
+                dataType: "JSON",
+             data: { ID: part},
+                success: function (result) {
+                    $('#Route').val(result.RouteID)
+                    $('#GroupName').val(result.GroupName)
+                    $("#hfRoute").find("input,select,textarea,button").prop("disabled", true);
+
+                    GetSubCustomer();
+                }
+            });
+    }
+
+
+
+
+
+    function GetSubCustomer() {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        // validate controlls
+
+
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetSubCustomer", "ManifestGroup")',
+             data: { ID: $('#Route').val(), GroupName: $('#GroupName').val()  },
+            dataType: "json",
+            success: function (result)
+            {
+                $("#CustomerOrderList").empty();
+              //  $("#Location").append("<option value=''>Select</option>");
+               var Count = 1
+
+                $("#CustomerOrderList").append("<tbody> <tr bgcolor='#7eb533' style='color: #FBF8F7' > <th> Select All <br><input type='checkbox' id='CHKSelectAll' name='CHKSelectAll' onclick='ChkSelectAllData()'></th><th>Group Name</th><th>Customer Code</th><th>Customer Name</th><th>Location</th><th></th></tr> <tbody>");
+                $.each(result.CustData, function (i, val) {
+
+                   
+                    Count = val.CustomerID;
+                  //  $("#Location").append("<option value='" + val.Area + "'>" + val.Area + "</option>");
+                    $("#CustomerOrderList").append(" <tbody> <tr id='R" + Count + "'><td><input type='hidden' id='cnt" + Count + "'/><input type='checkbox' id='CHKSelect" + Count + "'></td><td><input type='hidden' id='CustomerID" + Count + "' readonly  class='CustomerID'' /><label id='GroupName" + Count + "'  readonly class='GroupName'' ></label></td>             <td><label id='CustomerCode" + Count + "'  readonly class='CustomerCode'' ></label></td><td ><label id='CustomerName" + Count + "'  readonly class='CustomerName'' ></label></td>  <td><label id='Area" + Count + "' readonly class='Area'' ></label></td><td><input type='hidden' id='ID" + Count + "' readonly  class='ID'' /></td>   </tr> <tbody>");
+
+
+                    $('#cnt' + Count).val(Count);
+
+                    $('#CustomerID' + Count).val(val.CustomerID);
+                    $('#CustomerCode' + Count).text(val.CustID);
+                    $('#CustomerName' + Count).text(val.CustName);
+                    $('#Area' + Count).text(val.Location);
+                 
+
+                    //if (val.GroupName == $('#GroupName').val()) {
+
+                    //    $('#CHKSelect'+Count).prop('checked', true);
+                    //}
+                   
+                 //   Count++;
+
+                });
+                $.preloader.stop();
+                $.each(result.Customers, function (i, val) {
+                    debugger;
+                    Count = val.CustomerID;
+                   
+                    if (val.GroupName == $('#GroupName').val()) {
+
+                        $('#ID' + Count).val(val.ID);
+                        $('#CHKSelect'+Count).prop('checked', true);
+                    }
+
+                    $('#GroupName' + Count).text(val.GroupName);
+                    
+                });
+
+
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                $.preloader.stop();
+                /*alert(response.d);*/
+            },
+            error: function (err) {
+                $.preloader.stop();
+                /*alert(err.statusText);*/
+            }
+        });
+    }
+    function ChkSelectAllData() {
+        debugger
+        var CheValue = $("#CHKSelectAll").is(':checked') ? 1 : 0;
+        $('#CustomerOrderList tbody tr').each(function (index, e) {
+            try {
+                var inputEl = $(e).children().get(0);
+                var Count = inputEl.firstElementChild.value;
+              
+                if (CheValue == 1) {
+                    $("#CHKSelect"+Count).prop("checked",true)
+                } else {
+                    $("#CHKSelect" + Count).prop("checked", false)
+                }
+
+            } catch (e) { };
+        });
+    }
+
+
+    function Save() {
+
+        if ($('#CustomerOrderList TBODY tr').length == 0) {
+            //...do something here
+            toastr.error("Please add Some records.");
+        }
+        //if ($('#RouteID').val() == null || $('#RouteID').val() == "") {
+        //    toastr.error("RouteID is Required.");
+        //    valid = false;
+        //}
+        if ($('#GroupName').val() == null || $('#GroupName').val() == "") {
+            toastr.error("GroupName  is Required.");
+            valid = false;
+        }
+
+       
+
+        else {
+
+            //$.preloader.start({
+            //    modal: true,
+            //    src: 'sprites2.png'
+            //});
+
+
+            var recs = new Array();
+
+            $('#CustomerOrderList tbody tr').each(function (index, e) {
+                try {
+                var inputEl = $(e).children().get(0);
+                var Count = inputEl.firstElementChild.value;
+             
+                    var CheValue = $("#CHKSelect" + Count).is(':checked') ? 1 : 0;
+                   
+                if (CheValue == 1) {
+                    var Order = {
+                        RouteID: $('#Route').val(),
+                        GroupName: $('#GroupName').val(),
+                        CustomerID: $('.CustomerID', this).val(),
+
+                    }
+                    recs.push(Order);
+                }
+               
+            }catch (e) { };
+            });
+            debugger;
+            var data = {
+                manifestGroup: recs,
+            }
+
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/ManifestGroup/Save",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Message == "success") {
+                        //$('#form0').each(function () {
+                        //    this.reset();
+                        //});
+                        alert("Records Saved Succesfully");
+                        window.location.href = '/ManifestGroup/Index';
+                        $.preloader.stop();
+                    }
+                    else {
+                        toastr.error(result.Message);
+                        $.preloader.stop();
+                    }
+                    $.preloader.stop();
+                }
+            });
+        }
+    }
+
+   
+    
+
+
+
+</script>

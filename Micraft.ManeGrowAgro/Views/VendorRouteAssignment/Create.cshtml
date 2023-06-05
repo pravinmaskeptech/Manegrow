@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Vendor Route Assignment</h3>
+<hr />
+
+
+<div class="row">
+
+    <div class="col-md-1">
+        <label for="Route">Route</label>
+    </div>
+    <div class="col-sm-3" >
+
+        @Html.DropDownList("Route", new SelectList(ViewBag.Route, "Root", "Root"), "Select Root", new { @class = "form-control", Autocomplete = "off", @onchange = "GetRouteAssignData()" })
+    </div>
+
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-10">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="overflow-x:auto;">
+                        <table class="table table-responsive-sm " id="tblcust" style="width: 100%;"></table>
+                        <span id="orderItemError" style="color:red"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <div class="overflow-x:auto;">
+                        <br />
+                        <br />
+                        <br />
+                        <input type="button" id="btnSave" value="Save" class="btn btn-success" onclick="SaveList()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        //var url = window.location.href;
+        //var part = url.substring(url.lastIndexOf('/') + 1);
+        //if (part != "Create") {
+        //    $('#ID').val(part);
+        //    GetRootDetails();
+        //}
+    //    GetRouteAssignData();
+    });
+
+    function GetRouteAssignData()
+    {
+        $("#tblcust").empty();
+          $.ajax({
+                url: '@Url.Action("GetVendors", "VendorRouteAssignment")',
+                type: "Get",
+                dataType: "JSON",
+              data: {},
+                success: function (result1) {
+                    try {
+                        if (result1.Message == "success")
+                        {
+                            $.preloader.start({
+                                modal: true,
+                                src: 'sprites2.png'
+                            });
+                             $.ajax({
+                url: '@Url.Action("GetRouteAssignData", "VendorRouteAssignment")',
+                type: "Get",
+                dataType: "JSON",
+                                 data: { Root: $('#Route').val()},
+                success: function (result) {
+                    try {
+                        if (result.Count != 0) {
+                            var Count = 1;
+                            $("#tblcust").append("<tbody> <tr bgcolor='#7eb533' style='color: #FBF8F7' ><th></th><th>Customer Name</th><th>Vendor Name</th></tr> <tbody>");
+                            $.each(result, function (i, Temp) {
+                                $("#tblcust").append(" <tbody> <tr id='R" + Count + "'><td><input type='hidden' id='CustomerID" + Count + "' readonly  class='CustomerID'' /></td><td ><label id='CustomerName" + Count + "' style='width:250px' readonly class='CustomerName'' ></label</td> <td> <select id='VendorName" + Count + "' class='VendorName form-control''> </select></td>   </tr> <tbody>");
+
+                                $("#CustomerID" + Count + "").val(Temp.ID);
+                                $("#CustomerName" + Count + "").text(Temp.CustName);
+
+                                $("#VendorName" + Count).append("<option value=''>Select</option>");
+
+                                $.each(result1.vendor, function (i, val) {
+                                    $("#VendorName" + Count).append("<option value='" + val.ID + "'>" + val.VendorName + "</option>");
+                                });
+
+                                $("#VendorName" + Count + "").val(Temp.VendorID);
+                               // $("#cnt" + Count + "").val(Count);
+
+                                Count++
+
+                            });
+                            $.preloader.stop();
+                        } else {
+                            toastr.error('Customer Not Found...');
+                            $.preloader.stop();
+                        }
+
+                    }
+                    catch (e) {
+                        $.preloader.stop();
+                    }
+                }
+            });
+
+                        } else {
+                            toastr.error("Venders not found..");
+                            $.preloader.stop();
+                        }
+
+
+
+                    }
+                    catch (e) {
+                        $.preloader.stop();
+                    }
+                }
+            });
+
+    }
+
+    function SaveList() {
+        var list = [];
+        $('#tblcust tbody tr').each(function (index, ele) {
+
+            if ($('.VendorName', this).val() == null) {
+
+            } else {
+
+                var orderItem = {
+                    VendorName: $(".VendorName option:selected", this).text(),
+                    VendorID: $('.VendorName', this).val(),
+
+                    CustomerID: $('.CustomerID', this).val(),
+                    CustomerName: $('.CustomerName', this).val(),
+
+                }
+                list.push(orderItem);
+
+            }
+        })
+
+
+        if (parseInt(list.length) != 0) {
+            var data = {
+                Root: list
+            }
+            debugger
+            $(this).val('Please wait...');
+            $.ajax({
+                type: 'POST',
+                url: '/VendorRouteAssignment/Save',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (data) {
+
+                    if (data.Message == "success") {
+                        toastr.success("Successfully saved..");
+                        window.location.href = "/VendorRouteAssignment/Create";
+                    }
+                    else {
+                        toastr.error(data.Message);
+                    }
+                    // $('#submit').val('Save');
+                },
+                error: function (error) {
+                    console.log(error);
+                    //     $('#submit').val('Save');
+                }
+            });
+        }
+
+
+
+
+
+    }
+</script>
+
+

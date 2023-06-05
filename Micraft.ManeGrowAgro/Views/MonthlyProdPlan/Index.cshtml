@@ -1,0 +1,962 @@
+﻿@model IEnumerable<Micraft.ManeGrowAgro.Models.MonthlyProdPlan>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #tbl11 .form-control {
+        width: 70px;
+        padding:0;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12">
+                <h5 class="text-dark mr-2"><b>Monthly Production Plan</b></h5>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <input type="hidden" id="ID" />
+        <input type="hidden" id="Count" value="1000"/>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                <thead>
+                                    <tr class="text-uppercase">
+                                        <th>Year</th>
+                                        <th>Month</th>
+                                        <th>Room No</th>
+                                        <th>Total</th>
+                                          <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/. col -->
+
+        </div>
+        <!--/. row -->
+        <!--Add New Modal-->
+        <div class="modal" id="AddNewModal">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <center><h4 class="modal-title"> Add Monthly Production Plan</h4></center>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        
+                        <div class="row">
+                            <div class="col-md-2"> Year</div>
+                            <div class="col-md-6">
+                                <select name="Year" id="Year" class="Year form-control" onchange="CheckDuplocatePlan()"> 
+                                    <option value="">Select Year</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                </select>
+                            </div>
+                            </div><br />
+                            <div class="row">
+                                <div class="col-md-2">Month</div>
+                                <div class="col-md-6">
+                                    <select name="Month" id="Month" class="Month form-control"  onchange="CheckDuplocatePlan()">
+                                        <option value="">Select Month</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                            </div><br />
+                           
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-6"><input type="file" id="ExcelAttachment" name="ExcelAttachment" class="form-control" placeholder="Select file" /></div>
+                                <div class="col-md-4" style="align-items:center;"><input type="button" value="Upload" class="btn btn-default btn-sm" onclick="UploadExcel();" /></div>
+                            </div>
+                            <br />
+                            <br />
+                            <form>
+                                <div id="orderItems">
+                                    <div class="table-responsive">
+                                        <table class="table" style="width: 100%; white-space:nowrap;" id="tbl11">
+                                            <tbody>
+                                                <tr style="background-color:#3c8dbc; color:white">
+                                                    <td>Room No</td>
+                                                    <td>1</td>
+                                                    <td>2</td>
+                                                    <td>3</td>
+                                                    <td>4</td>
+                                                    <td>5</td>
+                                                    <td>6</td>
+                                                    <td>7</td>
+                                                    <td>8</td>
+                                                    <td>9</td>
+                                                    <td>10</td>
+
+                                                    <td>11</td>
+                                                    <td>12</td>
+                                                    <td>13</td>
+                                                    <td>14</td>
+                                                    <td>15</td>
+                                                    <td>16</td>
+                                                    <td>17</td>
+                                                    <td>18</td>
+                                                    <td>19</td>
+                                                    <td>20</td>
+                                                    <td>21</td>
+                                                    <td>22</td>
+                                                    <td>23</td>
+                                                    <td>24</td>
+                                                    <td>25</td>
+                                                    <td>26</td>
+                                                    <td>27</td>
+                                                    <td>28</td>
+                                                    <td>29</td>
+                                                    <td>30</td>
+                                                    <td>31</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr class="mycontainer" id="mainrow">
+
+
+                                                    <td>
+                                                        <input type="number" id="RoomNo" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47" onchange="CheckDuplicateRoomNo()">
+                                                    </td>
+
+                                                    <td>
+                                                        <input type="number" id="one" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="two" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="three" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="four" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="five" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="six" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="seven" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="eight" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="nine" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="ten" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+
+
+
+                                                    <td>
+                                                        <input type="number" id="eleven" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="twelve" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="thirteen" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="fourteen" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="fifteen" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="sixteen" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="seventeen" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="eighteen" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="ninenteen" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="twenty" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+
+
+
+
+                                                    <td>
+                                                        <input type="number" id="twentyone" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="twentytwo" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="twentythree" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="twentyfour" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="twentyfive" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="twentysix" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="twentyseven" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="twentyeight" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="twentynine" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="thirty" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="thirtyone" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                    </td>
+                                                    <td>
+                                                        <input type="button" id="AddPlan" value="add" style="width:80px" class="btn btn-success" onclick="AddData()" />
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="ScrollStyle">
+                                        <table class="table table-responsive" id="orderdetailsItems" style="width: 100%; overflow-x:auto; white-space:nowrap;"></table>
+                                    </div>
+                                </div>
+                                <div class="row">                                    
+                                    <div class="col-6">
+                                        <div id="PnlTotal" style="display:none">
+                                        <div class="col-4">
+                                            <label> Total</label>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="text" id="txtTotal" name="txtTotal" class="form-control" />
+                                        </div>
+                                        </div>
+                                    </div>
+                                        <div class="col-6 text-center mb-3">
+                                            <input type="button" id="SavePlan" value="Save" style="width:80px" class="btn btn-success" />
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                               
+                            </form>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <!--View Modal-->
+        <div class="modal" id="EditModal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Customer Type</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form>
+                            <div class="row">
+                                <input type="hidden" id="TypeId" />
+
+                                <div class="col-12 mb-3">
+                                    <label>State</label>
+                                    <input type="text" id="eType" class="form-control" placeholder="Customer Type">
+                                </div>
+                                <!--/. col -->
+                                <div class="col-12 mb-3">
+                                    <label>IsActive</label><br>
+                                    <label class="switch">
+                                        <input type="checkbox" checked id="eIsActive">
+                                        <span class="slider round"></span>
+                                    </label>
+
+                                </div>
+                                <!--/. col -->
+                            </div>
+                            <!--/. row -->
+                            <div class="col-12 text-center mb-3">
+                                <button class="btn btn-primary" type="button" id="Update">Update</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            </div>
+                            <!--/. col -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- /.container-fluid -->
+</section>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+
+
+<script>
+
+    $(document).ready(function () {
+        
+        try {
+            //var today = new Date();
+            //var year = today.getFullYear();
+            //var month = today.getMonth() + 1;
+            //var day = today.getDate();
+
+            //$('#Month').val(month);
+            //$('#Year').val(year);
+
+
+            $('#example').DataTable({
+                "paging": true,
+                "searching": true,
+                dom: 'Bfrtip',
+                "bServerSide": true,
+                "sAjaxSource": '@Url.Action("GetData", "MonthlyProdPlan")',
+                "sServerMethod": "POST",
+               buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
+                    {
+                        text: 'Add New',
+                        action: function (e, dt, node, config) {
+                            window.location.href = '/MonthlyProdPlan/Create'
+                         
+                        }
+                    },
+
+                ],
+                language: {
+                    searchPlaceholder: "Search",
+                    search: ""
+                },
+                "aoColumns": [
+                   {
+                       "mData": "Year"
+                   },
+                   {
+                     "mData": "Month"
+                   },
+                   {
+                       "mData": "RoomNo"
+                    },
+                   {
+                       "mData": "Total"
+                   },
+                    {
+                        "mData": function (o) {
+                            /*<button type='button' id=" + o.ID + " class='btn btn-primary btn-sm mr-2' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button>*/
+                            return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.ID + " onclick='Delete(this.id);' class='btn btn-danger btn-sm'><i class='fas fa-trash'></i></button></div>"
+                        }
+                    },
+                  ],
+            });
+        }
+        catch (e) {
+        }
+    });
+    //    $("#AddNew").click(function () {
+    //        var Type = $("#Type").val();
+    //        var IsActive = true;
+    //        if ($('#IsActive').is(":checked")) {
+    //            IsActive = true;
+    //        } else {
+    //            IsActive = false;
+    //        }
+
+    //        if (Type == null || Type == "") {
+    //            swal("Error", "Customer type is required", "error");
+    //            return;
+    //        }
+
+    //        var records = {
+    //            "Type": Type,
+    //            "IsActive": IsActive
+    //        };
+    //        $.ajax({
+    //            url: "/MonthlyProdPlan/AddRecord",
+    //            type: "POST",
+    //            dataType: "json",
+    //            data: JSON.stringify(records),
+    //            contentType: "Application/json",
+    //            success: function (data) {
+    //                //swal("Success", "Record Added Success", "success");
+    //                RefreshData();
+    //                if (data == 1) {
+    //                    swal("Success", "Record Added Success", "success");
+    //                    RefreshData();
+    //                    $("#AddNewModal").modal("hide");
+    //                } else {
+    //                    swal("Error", "Something went wrong while adding record", "error");
+    //                }
+    //            },
+    //            error: function (ex) {
+    //                console.log("error");
+    //                console.log(ex);
+    //            }
+    //        });
+
+    //    });
+
+    //$("#Update").click(function () {
+    //        var Type = $("#eType").val();
+    //        var IsActive = true;
+    //        if ($('#eIsActive').is(":checked")) {
+    //            IsActive = true;
+    //        } else {
+    //            IsActive = false;
+    //        }
+
+    //        if (Type == null || Type == "") {
+    //            swal("Error", "Customer type is required", "error");
+    //            return;
+    //        }
+    //    var TypeId = $("#TypeId").val();
+    //        var records = {
+    //            "Type": Type,
+    //            "IsActive": IsActive,
+    //            "ID": TypeId
+    //        };
+    //        $.ajax({
+    //            url: "/MonthlyProdPlan/EditRecord",
+    //            type: "POST",
+    //            dataType: "json",
+    //            data: JSON.stringify(records),
+    //            contentType: "Application/json",
+    //            success: function (data) {
+    //                //swal("Success", "Record Added Success", "success");
+    //                RefreshData();
+    //                if (data == 1) {
+    //                    swal("Success", "Record Updated Success", "success");
+    //                    RefreshData();
+    //                    $("#EditModal").modal("hide");
+    //                } else {
+    //                    swal("Error", "Something went wrong while updating record", "error");
+    //                }
+    //            },
+    //            error: function (ex) {
+    //                console.log("error");
+    //                console.log(ex);
+    //            }
+    //        });
+    //    });
+
+        //function RefreshData() {
+        //    var table = $('#example').DataTable();
+        //    table.ajax.reload(function (json) {
+        //    });
+        //}
+
+    
+
+    function Delete(id) {      
+        if (confirm("Are you sure you want to delete this record?")) {
+            $.ajax({
+                url: '/MonthlyProdPlan/DeleteConfirmed',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (result) {
+                    if (result.Message == "success") {                        
+                        swal("Success", "Record Delete Successfully", "success");
+                        window.location.href = "/MonthlyProdPlan/Index";
+                    } else {
+                        toastr.error(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    console.log("error");
+                    console.log(ex);
+                }
+            });
+        } else {
+            false;
+        }
+
+        }
+
+        function Edit(id) {
+
+            window.location.href = '/MonthlyProdPlan/Create/'+id
+    }
+
+    $("#SavePlan").click(function () {
+        var temp = true;
+        if ($('#Year').val() == "") {
+            temp = false;
+            toastr.error("Please select Year..");
+        }
+
+        var rowCount = $('#tbl11 tr').length;
+        if (rowCount <= 2) {
+            temp = false;
+            toastr.error("Please Add Data To List..");
+        }
+
+        var LST = [];
+        if (temp == true) {
+            
+
+            $('#tbl11 tbody tr').each(function (index, ele) {
+                if (($('.one', this).val() || "") == "" ||
+                    $('.RoomNo', this).val() == "" ||
+                    $('.RoomNo', this).val() == "Room No" ||
+                    isNaN($('.RoomNo', this).val())) {
+                    
+                } else {
+                    var orderItem = {
+                        one: $('.one', this).val(),
+                        two: $('.two', this).val(),
+                        three: $('.three', this).val(),
+                        four: $('.four', this).val(),
+                        five: $('.five', this).val(),
+                        six: $('.six', this).val(),
+                        seven: $('.seven', this).val(),
+                        eight: $('.eight', this).val(),
+                        nine: $('.nine', this).val(),
+                        ten: $('.ten', this).val(),
+                        eleven: $('.eleven', this).val(),
+                        twelve: $('.twelve', this).val(),
+                        thirteen: $('.thirteen', this).val(),
+                        fourteen: $('.fourteen', this).val(),
+                        fifteen: $('.fifteen', this).val(),
+                        sixteen: $('.sixteen', this).val(),
+                        seventeen: $('.seventeen', this).val(),
+                        eighteen: $('.eighteen', this).val(),
+                        ninenteen: $('.ninenteen', this).val(),
+                        twenty: $('.twenty', this).val(),
+                        twentyone: $('.twentyone', this).val(),
+                        twentytwo: $('.twentytwo', this).val(),
+                        twentythree: $('.twentythree', this).val(),
+                        twentyfour: $('.twentyfour', this).val(),
+                        twentyfive: $('.twentyfive', this).val(),
+                        twentysix: $('.twentysix', this).val(),
+                        twentyseven: $('.twentyseven', this).val(),
+                        twentyeight: $('.twentyeight', this).val(),
+                        twentynine: $('.twentynine', this).val(),
+                        thirty: $('.thirty', this).val(),
+                        thirtyone: $('.thirtyone', this).val(),
+                        Month: $('#Month').val(),
+                        ID: $('#ID').val(),
+                        Year: $('#Year').val(),
+                        RoomNo: $('.RoomNo', this).val(),                       
+                        
+                    }
+                    LST.push(orderItem);
+                }
+            })
+
+
+        var data = {
+            OrderDetails: LST
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/MonthlyProdPlan/SaveMonthlyPlan',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.Message == "success") {
+                    $('#ID').val('');
+                    toastr.success("Successfully saved..");
+                    window.location.href = "/MonthlyProdPlan/Index";
+                }
+                else {
+                    toastr.error(result.Messag);
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+    });
+
+        function UploadExcel() {
+        var flag = true;
+        if ($("#Year").val() == "" || $("#Year").val() == null) {
+            toastr.error("Please Select Year");
+            flag = false;
+        }
+
+        if ($("#Month").val() == "" || $("#Month").val() == null) {            
+            toastr.error("Please Select Month");
+            flag = false;
+            }
+
+          
+
+        if (flag == true) {
+            $.preloader.start({
+                modal: true,
+                src: 'sprites2.png'
+            });
+
+            var fileUpload = $("#ExcelAttachment").get(0);
+            var files = fileUpload.files;
+            var fileData = new FormData();
+
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            fileData.append('Year', $("#Year").val());
+            fileData.append('Month', $("#Month").val());
+            fileData.append('RoomNo', $("#RoomNo").val());
+
+            $.ajax({
+                url: '@Url.Action("UploadExcel", "MonthlyProdPlan")',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+                    if (result == "success") {
+                        $('#ExcelAttachment').val('');
+                        swal("Success!", "Data Uploaded Successfully", "success");
+                        $.preloader.stop();
+                        window.setTimeout(function () { location.reload() }, 1000);
+                    }
+                    else {
+                        $.preloader.stop();
+                        swal("Error!", result, "error");
+                    }
+                },
+                error: function (err) {
+                    $.preloader.stop();
+                    swal("Error!", err.statusText, "error");
+                }
+            });
+        }
+    }
+
+    function AddData() {
+        
+        var temp = true;
+        if ($('#Year').val() == "") {
+            temp = false;
+            toastr.error("Please select Year..");
+        }
+        if ($('#Month').val() == "" || $('#Month').val() == null) {
+            temp = false;
+            toastr.error("Please select Month..");
+        }
+
+        if ($('#RoomNo').val() == "" || $('#RoomNo').val() == 0) {
+            temp = false;
+            toastr.error("Please Enter RoomNo..");
+        }
+
+        if ($('#one').val() == "") { temp = false; toastr.error("Please Enter plan one .."); }
+        if ($('#two').val() == "") { temp = false; toastr.error("Please Enter plan two .."); }
+        if ($('#three').val() == "") { temp = false; toastr.error("Please Enter plan three .."); }
+        if ($('#four').val() == "") { temp = false; toastr.error("Please Enter plan four .."); }
+        if ($('#five').val() == "") { temp = false; toastr.error("Please Enter plan five .."); }
+        if ($('#six').val() == "") { temp = false; toastr.error("Please Enter plan six .."); }
+        if ($('#seven').val() == "") { temp = false; toastr.error("Please Enter plan seven .."); }
+        if ($('#eight').val() == "") { temp = false; toastr.error("Please Enter plan eight .."); }
+        if ($('#nine').val() == "") { temp = false; toastr.error("Please Enter plan nine .."); }
+        if ($('#ten').val() == "") { temp = false; toastr.error("Please Enter plan ten .."); }
+        if ($('#eleven').val() == "") { temp = false; toastr.error("Please Enter plan eleven .."); }
+        if ($('#twelve').val() == "") { temp = false; toastr.error("Please Enter plan twelve .."); }
+        if ($('#thirteen').val() == "") { temp = false; toastr.error("Please Enter plan thirteen .."); }
+        if ($('#fourteen').val() == "") { temp = false; toastr.error("Please Enter plan fourteen .."); }
+        if ($('#fifteen').val() == "") { temp = false; toastr.error("Please Enter plan fifteen .."); }
+        if ($('#sixteen').val() == "") { temp = false; toastr.error("Please Enter plan sixteen .."); }
+        if ($('#seventeen').val() == "") { temp = false; toastr.error("Please Enter plan seventeen .."); }
+        if ($('#eighteen').val() == "") { temp = false; toastr.error("Please Enter plan eighteen .."); }
+        if ($('#ninenteen').val() == "") { temp = false; toastr.error("Please Enter plan ninenteen .."); }
+        if ($('#twenty').val() == "") { temp = false; toastr.error("Please Enter plan twenty .."); }
+        if ($('#twentyone').val() == "") { temp = false; toastr.error("Please Enter plan twentyone .."); }
+        if ($('#twentytwo').val() == "") { temp = false; toastr.error("Please Enter plan twentytwo .."); }
+        if ($('#twentythree').val() == "") { temp = false; toastr.error("Please Enter plan twentythree .."); }
+        if ($('#twentyfour').val() == "") { temp = false; toastr.error("Please Enter plan twentyfour .."); }
+        if ($('#twentyfive').val() == "") { temp = false; toastr.error("Please Enter plan twentyfive .."); }
+        if ($('#twentysix').val() == "") { temp = false; toastr.error("Please Enter plan twentysix .."); }
+        if ($('#twentyseven').val() == "") { temp = false; toastr.error("Please Enter plan twentyseven .."); }
+        if ($('#twentyeight').val() == "") { temp = false; toastr.error("Please Enter plan twentyeight .."); }
+        if ($('#twentynine').val() == "") { temp = false; toastr.error("Please Enter plan twentynine .."); }
+        if ($('#thirty').val() == "") { temp = false; toastr.error("Please Enter plan thirty .."); }
+        if ($('#thirtyone').val() == "") { temp = false; toastr.error("Please Enter plan thirtyone .."); }
+
+
+
+        $('#tbl11 tbody tr').each(function (index, e) {
+            
+            try {
+                if (cntt > 2) {
+
+                    var PrdName = $(e).children().get(0);
+
+                    if ($('#RoomNo').val() == PrdName.firstElementChild.value) {
+                        temp = false;
+                        toastr.error('RoomNo Already Added');
+                        $('#RoomNo').val('');
+                        $('#RoomNo').focus();
+                    }
+
+                } else {
+                    cntt++;
+                }
+            } catch (e) { }
+
+        });
+        if (temp == true) {
+
+            $.ajax({
+                url: "/MonthlyProdPlan/CheckDuplicateRoomNo",
+                type: "GET",
+                dataType: "JSON",
+                data: { RoomNo: $('#RoomNo').val(), Month: $('#Month').val(), ID: $('#ID').val() },
+                success: function (result) {
+                    if (result == 1) {
+                        temp = false;
+                        toastr.error('RoomNo Already Added');
+                        $('#RoomNo').val('');
+                        $('#RoomNo').focus();
+                    } else {
+                                                
+                   
+
+
+
+        
+
+        if (temp == true) {
+            var Count= $('#Count').val()
+            $("#tbl11").append(" <tbody> <tr id='R" + Count + "'>" +
+                "<td><input type='text' id='RoomNo" + Count + "' readonly  style='width:70px'  class='RoomNo form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='one" + Count + "' readonly  style='width:70px'  class='one form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='two" + Count + "' readonly  style='width:70px'  class='two form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='three" + Count + "' readonly  style='width:70px'  class='three	tbl11 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='four" + Count + "' readonly  style='width:70px'  class='four form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='five" + Count + "' readonly  style='width:70px'  class='five form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='six" + Count + "' readonly  style='width:70px'  class='six	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='seven" + Count + "' readonly  style='width:70px'  class='seven	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='eight" + Count + "' readonly  style='width:70px'  class='eight	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='nine" + Count + "' readonly  style='width:70px'  class='nine	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='ten" + Count + "' readonly  style='width:70px'  class='ten	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='eleven" + Count + "' readonly  style='width:70px'  class='eleven	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twelve" + Count + "' readonly  style='width:70px'  class='twelve	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='thirteen" + Count + "' readonly  style='width:70px'  class='thirteen	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='fourteen" + Count + "' readonly  style='width:70px'  class='fourteen	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='fifteen" + Count + "' readonly  style='width:70px'  class='fifteen	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='sixteen" + Count + "' readonly  style='width:70px'  class='sixteen	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='seventeen" + Count + "' readonly  style='width:70px'  class='seventeen	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='eighteen" + Count + "' readonly  style='width:70px'  class='eighteen	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='ninenteen" + Count + "' readonly  style='width:70px'  class='ninenteen	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twenty" + Count + "' readonly  style='width:70px'  class='twenty	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twentyone" + Count + "' readonly  style='width:70px'  class='twentyone	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twentytwo" + Count + "' readonly  style='width:70px'  class='twentytwo	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twentythree" + Count + "' readonly  style='width:70px'  class='twentythree	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twentyfour" + Count + "' readonly  style='width:70px'  class='twentyfour	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twentyfive" + Count + "' readonly  style='width:70px'  class='twentyfive	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twentysix" + Count + "' readonly  style='width:70px'  class='twentysix	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twentyseven" + Count + "' readonly  style='width:70px'  class='twentyseven	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twentyeight" + Count + "' readonly  style='width:70px'  class='twentyeight	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='twentynine" + Count + "' readonly  style='width:70px'  class='twentynine	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='thirty" + Count + "' readonly  style='width:70px'  class='thirty	 form-control'' disabled='disabled'/></td>  " +
+                "<td><input type='text' id='thirtyone" + Count + "' readonly  style='width:70px'  class='thirtyone	 form-control'' disabled='disabled'/></td> "+ +
+                "<td  style='display:none'><input type='hidden' id='Months" + Count + "' readonly  style='width:70px'  class='thirtyone	 form-control'' disabled='disabled'/></td> "+
+
+                " </tr > <tbody>");
+
+           
+            $('#Months' + Count).val($('#Month').val());
+            $('#RoomNo' + Count).val($('#RoomNo').val());
+            $('#one' + Count).val($('#one').val());
+            $('#two' + Count).val($('#two').val());
+            $('#three' + Count).val($('#three').val());
+            $('#four' + Count).val($('#four').val());
+            $('#five' + Count).val($('#five').val());
+            $('#six' + Count).val($('#six').val());
+            $('#seven' + Count).val($('#seven').val());
+            $('#eight' + Count).val($('#eight').val());
+            $('#nine' + Count).val($('#nine').val());
+            $('#ten' + Count).val($('#ten').val());
+            $('#eleven' + Count).val($('#eleven').val());
+            $('#twelve' + Count).val($('#twelve').val());
+            $('#thirteen' + Count).val($('#thirteen').val());
+            $('#fourteen' + Count).val($('#fourteen').val());
+            $('#fifteen' + Count).val($('#fifteen').val());
+            $('#sixteen' + Count).val($('#sixteen').val());
+            $('#seventeen' + Count).val($('#seventeen').val());
+            $('#eighteen' + Count).val($('#eighteen').val());
+            $('#ninenteen' + Count).val($('#ninenteen').val());
+            $('#twenty' + Count).val($('#twenty').val());
+            $('#twentyone' + Count).val($('#twentyone').val());
+            $('#twentytwo' + Count).val($('#twentytwo').val());
+            $('#twentythree' + Count).val($('#twentythree').val());
+            $('#twentyfour' + Count).val($('#twentyfour').val());
+            $('#twentyfive' + Count).val($('#twentyfive').val());
+            $('#twentysix' + Count).val($('#twentysix').val());
+            $('#twentyseven' + Count).val($('#twentyseven').val());
+            $('#twentyeight' + Count).val($('#twentyeight').val());
+            $('#twentynine' + Count).val($('#twentynine').val());
+            $('#thirty' + Count).val($('#thirty').val());
+            $('#thirtyone' + Count).val($('#thirtyone').val());
+
+
+            $('#RoomNo').val('')
+            $('#Month').prop('disabled',true)
+            $('#one').val('');
+            $('#two').val('');
+            $('#three').val('');
+            $('#four').val('');
+            $('#five').val('');
+            $('#six').val('');
+            $('#seven').val('');
+            $('#eight').val('');
+            $('#nine').val('');
+            $('#ten').val('');
+            $('#eleven').val('');
+            $('#twelve').val('');
+            $('#thirteen').val('');
+            $('#fourteen').val('');
+            $('#fifteen').val('');
+            $('#sixteen').val('');
+            $('#seventeen').val('');
+            $('#eighteen').val('');
+            $('#ninenteen').val('');
+            $('#twenty').val('');
+            $('#twentyone').val('');
+            $('#twentytwo').val('');
+            $('#twentythree').val('');
+            $('#twentyfour').val('');
+            $('#twentyfive').val('');
+            $('#twentysix').val('');
+            $('#twentyseven').val('');
+            $('#twentyeight').val('');
+            $('#twentynine').val('');
+            $('#thirty').val('');
+            $('#thirtyone').val('');
+
+
+            $('#Count').val(parseInt($('#Count').val()) + 1);
+            $('#RoomNo').focus();
+
+                        }
+                    }
+                }
+            });
+        }
+    }
+    
+    function CheckDuplicateRoomNo() {
+        var temp = true;
+      
+       // var rowCount = $('#tbl11 tr').length;
+       var cntt=1
+        
+        $('#tbl11 tbody tr').each(function (index, e) {
+           
+            try {
+                if (cntt > 2) {
+
+                    var PrdName = $(e).children().get(0);
+
+                    if ($('#RoomNo').val() == PrdName.firstElementChild.value) {
+                        temp = false;
+                        toastr.error('RoomNo Already Added');
+                        $('#RoomNo').val('');
+                        $('#RoomNo').focus();
+                    }
+
+                } else {
+                    cntt++;
+                }
+            } catch (e) { }
+           
+        });
+        if (temp == true) {
+           
+            $.ajax({
+                url: "/MonthlyProdPlan/CheckDuplicateRoomNo",
+                type: "GET",
+                dataType: "JSON",
+                data: { RoomNo : $('#RoomNo').val(), Month : $('#Month').val()},                
+                success: function (result) {
+                    if (result==1) {
+                        temp = false;
+                        toastr.error('RoomNo Already Added');
+                        $('#RoomNo').val('');
+                        $('#RoomNo').focus();
+                    }
+                }
+            });
+        }
+    }
+    function CheckDuplocatePlan() {
+        $.ajax({
+            url: '/MonthlyProdPlan/CheckDuplocatePlan',
+            type: "GET",
+            dataType: "JSON",
+            data: { ID: $('#ID').val(), Year: $('#Year').val(), Month: $('#Month').val(), RoomNo: $('#RoomNo').val() },
+            success: function (result) {
+                if (result.Message == "success") {
+                    swal("Success", "Record Delete Successfully", "success");
+                    window.location.href = "/MonthlyProdPlan/Index";
+                } else {
+                    toastr.error(result.Message);
+                }
+            },
+            error: function (ex) {
+                console.log("error");
+                console.log(ex);
+            }
+        });
+    }
+</script>

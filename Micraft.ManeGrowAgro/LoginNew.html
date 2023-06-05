@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Login Page </title>
+    <style>
+        Body {
+            font-family: Calibri, Helvetica, sans-serif;
+            background-color: #29742f;
+        }
+
+        button {
+            background-color: #4CAF50;
+            width: 100%;
+            color: white;
+            padding: 15px;
+            margin: 10px 0px;
+            border: none;
+            cursor: pointer;
+            font-size:30px
+        }
+
+        form {
+            border: 3px solid #f1f1f1;
+        }
+
+        input[type=text], input[type=password] {
+            width: 100%;
+            margin: 8px 0;
+            padding: 12px 20px;
+            display: inline-block;
+            border: 2px solid green;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            opacity: 0.7;
+        }
+
+        .cancelbtn {
+            width: auto;
+            padding: 10px 18px;
+            margin: 10px 5px;
+        }
+
+
+        .container {
+            padding: 25px;
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+    
+   
+    <form>
+        <br />
+        <div class="col-12 mb-5">
+
+            <center>  <img src="/dist/img/logo.png" class="img-fluid mb-3" style="width : 240px;"></center>
+        </div>
+        <br />
+        <div class="container">
+            <button type="button" onclick="RedirectToLogin()">Login</button>
+        </div>
+    </form>
+</body>
+</html>  
+
+
+<receiver android:name=".DeepLinkReceiver">
+    <intent-filter>
+        <data android:scheme="example" android:host="www.myapp.com" />
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <category android:name="android.intent.category.DEFAULT" />
+    </intent-filter>
+</receiver>
+<script src="Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document).ready(function () {
+           
+            window.open("https://manegrow.micraft.co.in", '_system')
+        });
+    });
+    function RedirectToLogin() {
+        window.open("https://manegrow.micraft.co.in", '_system')
+    }
+</script>

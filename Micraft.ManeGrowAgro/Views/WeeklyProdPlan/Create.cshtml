@@ -1,0 +1,567 @@
+﻿@model Micraft.ManeGrowAgro.Models.WeeklyProdPlan
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #tbl11 .form-control {
+        width: 70px;
+        padding: 0;
+    }
+</style>
+
+<!-- /.content-header -->
+<!-- Main content -->
+<br />
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                <div class="content-header" style="padding:1px">
+                                    <h4>Weekly Prod Plan</h4>
+                                </div>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                              
+                            <div class="modal-body">
+
+                                <input type="hidden" id="ID" />
+
+                                <div class="row">
+                                    <div class="col-md-2 col-12">
+                                        <lable>From Date</lable>
+                                    </div>
+                                    <div class="col-md-2 col-12">
+                                        <input type="text" class="form-control" id="FromDate">
+                                    </div>
+                                    <div class="col-md-2 col-12">
+                                        <lable>To Date</lable>
+                                    </div>
+                                    <div class="col-md-2 col-12">
+                                        <input readonly type="text" class="form-control" id="ToDate">
+                                    </div>
+
+                                    <button type="button" class="btn btn-primary" onclick="btngoclick();">Go</button>
+
+                                </div>
+
+                                <div class="col-md-1">
+                                    <div class="form-group">
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                <div id="orderItems">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered dt-responsive" style="width: 100%" id="tbl11">
+                                            
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-12" id="pnlexample">
+                                    <br /><br />
+
+                                    <div class="table-responsive">
+                                        <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                            
+                                            <tbody>
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                    <br />
+                                    <button type="button" class="btn btn-success" onclick="Save()" id="btnsave"> Save </button>
+                                    <button type="button" class="btn btn-primary" onclick="backToList()" id="btngoback"> Back to List </button>
+                                </div>
+
+                            </div>
+                               
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="hfdayname" name="hfdayname" />
+
+</section>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        try {
+            var url = window.location.href
+            var array = url.split('/');
+            var lastsegment = array[array.length - 1];
+            if (lastsegment != "Create") {
+                $('#ID').val(lastsegment);
+                Edit(lastsegment)
+
+            }
+            $('#FromDate').datepicker({
+                dateFormat: 'dd-mm-yy', onSelect: function (selected, evnt) {
+                    getnextsevendays();
+                    /*getmonthlydata();*/
+                }})
+            //$('#ToDate').datepicker({
+            //    dateFormat: 'dd-mm-yy', onSelect: function (selected, evnt) {
+            //        Validate();
+            //    }})
+
+            $("#tbl11").hide();
+            $("#pnlexample").hide();
+            $("#btnsave").hide();
+            $("#btngoback").hide();
+
+        }
+        catch (e) {
+        }
+    });
+
+    function backToList() {
+        window.location.href = '/WeeklyProdPlan/Index'
+    }
+
+    function btngoclick() {
+
+        var val = true;
+
+        if ($("#FromDate").val() == null || $("#FromDate").val() == "") {
+            val = false;
+            toastr.error("Please Enter From Date.");
+        }
+
+        if (val == true) {
+        $("#FromDate").datepicker("option", "disabled", true);
+
+        $("#tbl11").show();
+        $("#pnlexample").show();
+        $("#btnsave").show();
+        $("#btngoback").show();
+        }
+
+    }
+  
+
+    function AddData() {
+       
+        var val = true;
+
+        if ($('#RoomNo').val() == null || $('#RoomNo').val() == "") {
+            val = false;
+            toastr.error("Please Enter RoomNo.");
+        }
+
+        if ($('#Monday').val() == "") {
+            val = false;
+            toastr.error("Please Enter Monday Prod.");
+        }
+
+        if ($('#Tuesday').val() == "") {
+            val = false;
+            toastr.error("Please Enter Tuesday Prod.");
+        }
+
+        if ($('#Wednesday').val() == "") {
+            val = false;
+            toastr.error("Please Enter Wednesday Plan.");
+        }
+
+        if ($('#Thursday').val() == "") {
+            val = false;
+            toastr.error("Please Enter Thursday Plan.");
+        }
+
+        if ($('#Friday').val() == "") {
+            val = false;
+            toastr.error("Please Enter Friday Plan.");
+        }
+
+        if ($('#Saturday').val() == "") {
+            val = false;
+            toastr.error("Please Enter Saturday Plan.");
+        }
+
+        if ($('#Sunday').val() == "") {
+            val = false;
+            toastr.error("Please Enter Sunday Plan.");
+        }
+
+        if (val == true) {
+
+            var dayname = $('#hfdayname').val();
+
+            if (dayname == "Monday") {
+
+                $("#example").append("<tr> <td>" + $("#RoomNo").val() + "</td> <td>" + $("#Monday").val() + "</td><td>" + $("#Tuesday").val() + "</td><td>" + $("#Wednesday").val() + "</td><td>" + $("#Thursday").val() + "</td><td>" + $("#Friday").val() + "</td><td>" + $("#Saturday").val() + "</td><td>" + $("#Sunday").val() + "</td><td> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>  </tr>");
+
+            }
+            else if (dayname == "Tuesday") {
+
+                $("#example").append("<tr> <td>" + $("#RoomNo").val() + "</td> <td>" + $("#Tuesday").val() + "</td><td>" + $("#Wednesday").val() + "</td><td>" + $("#Thursday").val() + "</td><td>" + $("#Friday").val() + "</td><td>" + $("#Saturday").val() + "</td><td>" + $("#Sunday").val() + "</td><td>" + $("#Monday").val() + "</td><td> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>  </tr>");
+
+            }
+            else if (dayname == "Wednesday") {
+
+                $("#example").append("<tr> <td>" + $("#RoomNo").val() + "</td> <td>" + $("#Wednesday").val() + "</td><td>" + $("#Thursday").val() + "</td><td>" + $("#Friday").val() + "</td><td>" + $("#Saturday").val() + "</td><td>" + $("#Sunday").val() + "</td><td>" + $("#Monday").val() + "</td><td>" + $("#Tuesday").val() + "</td><td> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>  </tr>");
+
+            }
+            else if (dayname == "Thursday") {
+
+                $("#example").append("<tr> <td>" + $("#RoomNo").val() + "</td><td>" + $("#Thursday").val() + "</td><td>" + $("#Friday").val() + "</td><td>" + $("#Saturday").val() + "</td><td>" + $("#Sunday").val() + "</td><td>" + $("#Monday").val() + "</td><td>" + $("#Tuesday").val() + "</td> <td>" + $("#Wednesday").val() + "</td><td> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>  </tr>");
+
+            }
+            else if (dayname == "Friday") {
+
+                $("#example").append("<tr> <td>" + $("#RoomNo").val() + "</td><td>" + $("#Friday").val() + "</td><td>" + $("#Saturday").val() + "</td><td>" + $("#Sunday").val() + "</td><td>" + $("#Monday").val() + "</td><td>" + $("#Tuesday").val() + "</td> <td>" + $("#Wednesday").val() + "</td><td>" + $("#Thursday").val() + "</td><td> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>  </tr>");
+
+            }
+            else if (dayname == "Saturday") {
+
+                $("#example").append("<tr> <td>" + $("#RoomNo").val() + "</td><td>" + $("#Saturday").val() + "</td><td>" + $("#Sunday").val() + "</td><td>" + $("#Monday").val() + "</td><td>" + $("#Tuesday").val() + "</td> <td>" + $("#Wednesday").val() + "</td><td>" + $("#Thursday").val() + "</td> <td>" + $("#Friday").val() + "</td> <td> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>  </tr>");
+
+            }
+            else if (dayname == "Sunday") {
+
+                $("#example").append("<tr> <td>" + $("#RoomNo").val() + "</td><td>" + $("#Sunday").val() + "</td><td>" + $("#Monday").val() + "</td><td>" + $("#Tuesday").val() + "</td> <td>" + $("#Wednesday").val() + "</td><td>" + $("#Thursday").val() + "</td> <td>" + $("#Friday").val() + "</td> <td>" + $("#Saturday").val() + "</td> <td> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>  </tr>");
+
+            }
+
+            $('#RoomNo').val('');
+            $('#Monday').val('');
+            $('#Tuesday').val('');
+            $('#Wednesday').val('');
+            $('#Thursday').val('');
+            $('#Friday').val('');
+            $('#Saturday').val('');
+            $('#Sunday').val('');
+
+            $('#M1').val('');
+            $('#M2').val('');
+            $('#M3').val('');
+            $('#M4').val('');
+            $('#M5').val('');
+            $('#M6').val('');
+            $('#M7').val('');
+
+        }
+
+    }
+
+    function getnextsevendays() {
+
+            $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+            });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetNextSevenDays", "WeeklyProdPlan")',
+            data: { STARTDATE: $('#FromDate').val() },
+            dataType: "json",
+            success: function (tbldata)
+            {
+                $('#hfdayname').val(tbldata.DayName);
+
+                    if (tbldata.DayName == "Monday") {
+                        /*<th>Year</th> <th>Month</th>*/
+                        $("#example").empty().append("<thead style='font-size:12px!important'> <tr>  <th>Room No.</th> <th>Mon-" + tbldata.D1 + "</th><th>Tue-" + tbldata.D2 + "</th><th>Wed-" + tbldata.D3 + "</th><th>Thu-" + tbldata.D4 + "</th><th>Fri-" + tbldata.D5 + "</th><th>Sat-" + tbldata.D6 + "</th><th>Sun-" + tbldata.D7 + "</th> <th> </th> </tr> </thead>");
+
+                        $("#tbl11").empty().append("<thead style='background-color: #d8e9c1;font-size:12px!important'><tr> <th>Room No</th> <th colspan='2' style='text-align:center'>Mon</th> <th colspan='2' style='text-align:center'>Tue</th> <th colspan='2' style='text-align:center'>Wed</th> <th colspan='2' style='text-align:center'>Thu</th>  <th colspan='2' style='text-align:center'>Fri</th> <th colspan='2' style='text-align:center'>Sat</th> <th colspan='2' style='text-align:center'>Sun</th>  <th>&nbsp;</th> </tr>  </thead> </thead>");
+                        $("#tbl11").append("<tr class='mycontainer' id='mainrow'> <td> <select style='width:100px' class='form-control' id='RoomNo' onchange='roomchange();'> <option value=''>Select</option> </select> </td> <td><input type='number' id='M1' class='M1 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='Monday' class='Monday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='M2' class='M2 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Tuesday' class='Tuesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M3' class='M3 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Wednesday' class='Wednesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M4' class='M4 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Thursday' class='Thursday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M5' class='M5 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Friday' class='Friday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M6' class='M6 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Saturday' class='Saturday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M7' class='M7 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Sunday' class='Sunday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='button' id='AddPlan' value='add' style='width:80px' class='btn btn-success' onclick='AddData()' /></td>  </tr>");
+
+                    }
+                    else if (tbldata.DayName == "Tuesday") {
+
+                        $("#example").empty().append("<thead style='font-size:12px!important'> <tr> <th>Room No.</th> <th>Tue-" + tbldata.D1 + "</th><th>Wed-" + tbldata.D2 + "</th><th>Thu-" + tbldata.D3 + "</th><th>Fri-" + tbldata.D4 + "</th><th>Sat-" + tbldata.D5 + "</th><th>Sun-" + tbldata.D6 + "</th> <th>Mon-" + tbldata.D7 + "</th> <th> </th> </tr> </thead>");
+
+                        $("#tbl11").empty().append("<thead style='background-color: #d8e9c1;font-size:12px!important'><tr> <th>Room No</th>  <th colspan='2' style='text-align:center'>Tue</th> <th colspan='2' style='text-align:center'>Wed</th> <th colspan='2' style='text-align:center'>Thu</th>  <th colspan='2' style='text-align:center'>Fri</th> <th colspan='2' style='text-align:center'>Sat</th> <th colspan='2' style='text-align:center'>Sun</th> <th colspan='2' style='text-align:center'>Mon</th>  <th>&nbsp;</th> </tr>  </thead> </thead>");
+                        $("#tbl11").append("<tr class='mycontainer' id='mainrow'> <td> <select style='width:100px' class='form-control' id='RoomNo' onchange='roomchange();'> <option value=''>Select</option> </select> </td>  <td><input type='number' id='M2' class='M2 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Tuesday' class='Tuesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M3' class='M3 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Wednesday' class='Wednesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M4' class='M4 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Thursday' class='Thursday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M5' class='M5 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Friday' class='Friday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M6' class='M6 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Saturday' class='Saturday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M7' class='M7 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Sunday' class='Sunday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='M1' class='M1 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='Monday' class='Monday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td>     <td><input type='button' id='AddPlan' value='add' style='width:80px' class='btn btn-success' onclick='AddData()' /></td>  </tr>");
+
+                    }
+                    else if (tbldata.DayName == "Wednesday") {
+
+                        $("#example").empty().append("<thead style='font-size:12px!important'> <tr>  <th>Room No.</th> <th>Wed-" + tbldata.D1 + "</th><th>Thu-" + tbldata.D2 + "</th><th>Fri-" + tbldata.D3 + "</th><th>Sat-" + tbldata.D4 + "</th><th>Sun-" + tbldata.D5 + "</th> <th>Mon-" + tbldata.D6 + "</th><th>Tue-" + tbldata.D7 + "</th> <th> </th> </tr> </thead>");
+
+                        $("#tbl11").empty().append("<thead style='background-color: #d8e9c1;font-size:12px!important'><tr> <th>Room No</th>  <th colspan='2' style='text-align:center'>Wed</th> <th colspan='2' style='text-align:center'>Thu</th>  <th colspan='2' style='text-align:center'>Fri</th> <th colspan='2' style='text-align:center'>Sat</th> <th colspan='2' style='text-align:center'>Sun</th><th colspan='2' style='text-align:center'>Mon</th> <th colspan='2' style='text-align:center'>Tue</th>  <th>&nbsp;</th> </tr>  </thead> </thead>");
+                        $("#tbl11").append("<tr class='mycontainer' id='mainrow'> <td> <select style='width:100px' class='form-control' id='RoomNo' onchange='roomchange();'> <option value=''>Select</option> </select> </td> <td><input type='number' id='M3' class='M3 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Wednesday' class='Wednesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M4' class='M4 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Thursday' class='Thursday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M5' class='M5 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Friday' class='Friday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M6' class='M6 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Saturday' class='Saturday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M7' class='M7 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Sunday' class='Sunday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='M1' class='M1 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='Monday' class='Monday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='M2' class='M2 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Tuesday' class='Tuesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td>  <td><input type='button' id='AddPlan' value='add' style='width:80px' class='btn btn-success' onclick='AddData()' /></td>  </tr>");
+
+                    }
+                    else if (tbldata.DayName == "Thursday") {
+
+                        $("#example").empty().append("<thead style='font-size:12px!important'> <tr> <th>Room No.</th> <th>Thu-" + tbldata.D1 + "</th><th>Fri-" + tbldata.D2 + "</th><th>Sat-" + tbldata.D3 + "</th><th>Sun-" + tbldata.D4 + "</th> <th>Mon-" + tbldata.D5 + "</th><th>Tue-" + tbldata.D6 + "</th><th>Wed-" + tbldata.D7 + "</th> <th> </th> </tr> </thead>");
+
+                        $("#tbl11").empty().append("<thead style='background-color: #d8e9c1;font-size:12px!important'><tr> <th>Room No</th>  <th colspan='2' style='text-align:center'>Thu</th>  <th colspan='2' style='text-align:center'>Fri</th> <th colspan='2' style='text-align:center'>Sat</th> <th colspan='2' style='text-align:center'>Sun</th> <th colspan='2' style='text-align:center'>Mon</th> <th colspan='2' style='text-align:center'>Tue</th> <th colspan='2' style='text-align:center'>Wed</th>  <th>&nbsp;</th> </tr>  </thead> </thead>");
+                        $("#tbl11").append("<tr class='mycontainer' id='mainrow'> <td> <select style='width:100px' class='form-control' id='RoomNo' onchange='roomchange();'> <option value=''>Select</option> </select> </td> <td><input type='number' id='M4' class='M4 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Thursday' class='Thursday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M5' class='M5 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Friday' class='Friday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M6' class='M6 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Saturday' class='Saturday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M7' class='M7 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Sunday' class='Sunday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='M1' class='M1 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='Monday' class='Monday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='M2' class='M2 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Tuesday' class='Tuesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M3' class='M3 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Wednesday' class='Wednesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td>  <td><input type='button' id='AddPlan' value='add' style='width:80px' class='btn btn-success' onclick='AddData()' /></td>  </tr>");
+
+                    }
+                    else if (tbldata.DayName == "Friday") {
+
+                        $("#example").empty().append("<thead style='font-size:12px!important'> <tr> <th>Room No.</th> <th>Fri-" + tbldata.D1 + "</th><th>Sat-" + tbldata.D2 + "</th><th>Sun-" + tbldata.D3 + "</th> <th>Mon-" + tbldata.D4 + "</th><th>Tue-" + tbldata.D5 + "</th><th>Wed-" + tbldata.D6 + "</th><th>Thu-" + tbldata.D7 + "</th> <th> </th> </tr> </thead>");
+
+                        $("#tbl11").empty().append("<thead style='background-color: #d8e9c1;font-size:12px!important'><tr> <th>Room No</th>  <th colspan='2' style='text-align:center'>Fri</th> <th colspan='2' style='text-align:center'>Sat</th> <th colspan='2' style='text-align:center'>Sun</th> <th colspan='2' style='text-align:center'>Mon</th> <th colspan='2' style='text-align:center'>Tue</th> <th colspan='2' style='text-align:center'>Wed</th> <th colspan='2' style='text-align:center'>Thu</th>   <th>&nbsp;</th> </tr>  </thead> </thead>");
+                        $("#tbl11").append("<tr class='mycontainer' id='mainrow'> <td> <select style='width:100px' class='form-control' id='RoomNo' onchange='roomchange();'> <option value=''>Select</option> </select> </td> <td><input type='number' id='M5' class='M5 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Friday' class='Friday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M6' class='M6 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Saturday' class='Saturday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M7' class='M7 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Sunday' class='Sunday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M1' class='M1 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='Monday' class='Monday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='M2' class='M2 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Tuesday' class='Tuesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M3' class='M3 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Wednesday' class='Wednesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M4' class='M4 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Thursday' class='Thursday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td>    <td><input type='button' id='AddPlan' value='add' style='width:80px' class='btn btn-success' onclick='AddData()' /></td>  </tr>");
+
+                    }
+                    else if (tbldata.DayName == "Saturday") {
+
+                        $("#example").empty().append("<thead style='font-size:12px!important'> <tr> <th>Room No.</th> <th>Sat-" + tbldata.D1 + "</th><th>Sun-" + tbldata.D2 + "</th> <th>Mon-" + tbldata.D3 + "</th><th>Tue-" + tbldata.D4 + "</th><th>Wed-" + tbldata.D5 + "</th><th>Thu-" + tbldata.D6 + "</th><th>Fri-" + tbldata.D7 + "</th> <th> </th> </tr> </thead>");
+
+                        $("#tbl11").empty().append("<thead style='background-color: #d8e9c1;font-size:12px!important'><tr> <th>Room No</th>  <th colspan='2' style='text-align:center'>Sat</th> <th colspan='2' style='text-align:center'>Sun</th> <th colspan='2' style='text-align:center'>Mon</th> <th colspan='2' style='text-align:center'>Tue</th> <th colspan='2' style='text-align:center'>Wed</th> <th colspan='2' style='text-align:center'>Thu</th>  <th colspan='2' style='text-align:center'>Fri</th>  <th>&nbsp;</th> </tr>  </thead> </thead>");
+                        $("#tbl11").append("<tr class='mycontainer' id='mainrow'> <td> <select style='width:100px' class='form-control' id='RoomNo' onchange='roomchange();'> <option value=''>Select</option> </select> </td> <td><input type='number' id='M6' class='M6 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Saturday' class='Saturday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M7' class='M7 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Sunday' class='Sunday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M1' class='M1 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='Monday' class='Monday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='M2' class='M2 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Tuesday' class='Tuesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M3' class='M3 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Wednesday' class='Wednesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M4' class='M4 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Thursday' class='Thursday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M5' class='M5 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Friday' class='Friday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td>   <td><input type='button' id='AddPlan' value='add' style='width:80px' class='btn btn-success' onclick='AddData()' /></td>  </tr>");
+
+                    }
+                    else if (tbldata.DayName == "Sunday") {
+
+                        $("#example").empty().append("<thead style='font-size:12px!important'> <tr> <th>Room No.</th> <th>Sun-" + tbldata.D1 + "</th> <th>Mon-" + tbldata.D2 + "</th><th>Tue-" + tbldata.D3 + "</th><th>Wed-" + tbldata.D4 + "</th><th>Thu-" + tbldata.D5 + "</th><th>Fri-" + tbldata.D6 + "</th><th>Sat-" + tbldata.D7 + "</th> <th> </th> </tr> </thead>");
+
+                        $("#tbl11").empty().append("<thead style='background-color: #d8e9c1;font-size:12px!important'><tr> <th>Room No</th>  <th colspan='2' style='text-align:center'>Sun</th> <th colspan='2' style='text-align:center'>Mon</th> <th colspan='2' style='text-align:center'>Tue</th> <th colspan='2' style='text-align:center'>Wed</th> <th colspan='2' style='text-align:center'>Thu</th>  <th colspan='2' style='text-align:center'>Fri</th> <th colspan='2' style='text-align:center'>Sat</th>  <th>&nbsp;</th> </tr>  </thead> </thead>");
+                        $("#tbl11").append("<tr class='mycontainer' id='mainrow'> <td> <select style='width:100px' class='form-control' id='RoomNo' onchange='roomchange();'> <option value=''>Select</option> </select> </td> <td><input type='number' id='M7' class='M7 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Sunday' class='Sunday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M1' class='M1 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='Monday' class='Monday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td> <td><input type='number' id='M2' class='M2 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Tuesday' class='Tuesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M3' class='M3 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Wednesday' class='Wednesday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M4' class='M4 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Thursday' class='Thursday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M5' class='M5 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Friday' class='Friday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='M6' class='M6 form-control' disabled='disabled' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td><td><input type='number' id='Saturday' class='Saturday form-control' onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'></td>   <td><input type='button' id='AddPlan' value='add' style='width:80px' class='btn btn-success' onclick='AddData()' /></td>  </tr>");
+
+                    }
+
+                $("#ToDate").val(tbldata.Todate);
+
+                GetRoomNumbers();
+
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                //alert(response.d);
+            },
+            error: function (err) {
+                $.preloader.stop();
+                //alert(err.statusText);
+            }
+        });
+    }
+
+    function GetRoomNumbers() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetRoomNumbers", "WeeklyProdPlan")',
+            data: { },
+            dataType: "json",
+            success: function (tbldata)
+            {
+                $.each(tbldata, function (i, val) {
+
+                    $("#RoomNo").append("<option value=" + val.RoomNo+">" + val.RoomNo + "</option>");
+
+                });
+
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                //alert(response.d);
+            },
+            error: function (err) {
+                $.preloader.stop();
+                //alert(err.statusText);
+            }
+        });
+    }
+
+      function getmonthlydata() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetMonthlyData", "WeeklyProdPlan")',
+            data: { STARTDATE: $('#FromDate').val(), ENDDATE: $('#ToDate').val(), ROOMNO: $('#RoomNo').val()},
+            dataType: "json",
+            success: function (days)
+            {
+                var dayname=$('#hfdayname').val();
+
+
+                if (dayname == "Monday") {
+
+                    $('#M1').val(days.D1);
+                    $('#M2').val(days.D2);
+                    $('#M3').val(days.D3);
+                    $('#M4').val(days.D4);
+                    $('#M5').val(days.D5);
+                    $('#M6').val(days.D6);
+                    $('#M7').val(days.D7);
+
+                }
+                else if (dayname == "Tuesday") {
+
+                   
+                    $('#M2').val(days.D1);
+                    $('#M3').val(days.D2);
+                    $('#M4').val(days.D3);
+                    $('#M5').val(days.D4);
+                    $('#M6').val(days.D5);
+                    $('#M7').val(days.D6);
+                    $('#M1').val(days.D7);
+                   
+                }
+                else if (dayname == "Wednesday") {
+
+                    $('#M3').val(days.D1);
+                    $('#M4').val(days.D2);
+                    $('#M5').val(days.D3);
+                    $('#M6').val(days.D4);
+                    $('#M7').val(days.D5);
+                    $('#M1').val(days.D6);
+                    $('#M2').val(days.D7);
+                }
+                else if (dayname == "Thursday") {
+
+                    $('#M4').val(days.D1);
+                    $('#M5').val(days.D2);
+                    $('#M6').val(days.D3);
+                    $('#M7').val(days.D4);
+                    $('#M1').val(days.D5);
+                    $('#M2').val(days.D6);
+                    $('#M3').val(days.D7);
+                }
+                else if (dayname == "Friday") {
+
+                   
+                    $('#M5').val(days.D1);
+                    $('#M6').val(days.D2);
+                    $('#M7').val(days.D3);
+                    $('#M1').val(days.D4);
+                    $('#M2').val(days.D5);
+                    $('#M3').val(days.D6);
+                    $('#M4').val(days.D7);
+                    
+                }
+                else if (dayname == "Saturday") {
+
+                    $('#M6').val(days.D1);
+                    $('#M7').val(days.D2);
+                    $('#M1').val(days.D3);
+                    $('#M2').val(days.D4);
+                    $('#M3').val(days.D5);
+                    $('#M4').val(days.D6);
+                    $('#M5').val(days.D7);
+                }
+                else if (dayname == "Sunday") {
+
+                    
+                    $('#M7').val(days.D1);
+                    $('#M1').val(days.D2);
+                    $('#M2').val(days.D3);
+                    $('#M3').val(days.D4);
+                    $('#M4').val(days.D5);
+                    $('#M5').val(days.D6);
+                    $('#M6').val(days.D7);
+                }
+
+
+                //days.D1
+               
+
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                $.preloader.stop();
+                //alert(response.d);
+            },
+            error: function (err) {
+                $.preloader.stop();
+                //alert(err.statusText);
+            }
+        });
+    }
+
+
+    function Save() {
+        if ($('#example TBODY tr').length == 0) {
+            //...do something here
+            toastr.error("Please add Some records.");
+        }
+        else {
+
+            $.preloader.start({
+                modal: true,
+                src: 'sprites2.png'
+            });
+
+            var recs = new Array();
+
+            $("#example TBODY TR").each(function () {
+                var row = $(this);
+                var WeeklyProdPlan = {};
+                WeeklyProdPlan.RoomNo = row.find("TD").eq(0).html();
+                WeeklyProdPlan.Day1 = row.find("TD").eq(1).html();
+                WeeklyProdPlan.Day2 = row.find("TD").eq(2).html();
+                WeeklyProdPlan.Day3 = row.find("TD").eq(3).html();
+                WeeklyProdPlan.Day4 = row.find("TD").eq(4).html();
+                WeeklyProdPlan.Day5 = row.find("TD").eq(5).html();
+                WeeklyProdPlan.Day6 = row.find("TD").eq(6).html();
+                WeeklyProdPlan.Day7 = row.find("TD").eq(7).html();
+                recs.push(WeeklyProdPlan);
+            });
+
+            var data = {
+                recs: recs, FROMDATE: $('#FromDate').val(), TODATE: $('#ToDate').val()
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/WeeklyProdPlan/Save",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Message == "success") {
+                        $('#FromDate').val('');
+                        $('#ToDate').val('');
+                        $("#tbl11").hide();
+                        $("#pnlexample").hide();
+                        $("#btnsave").hide();
+                        $("#btngoback").hide();
+                        $("#FromDate").datepicker("option", "disabled", false);
+                        $('#example tbody').empty();
+                        toastr.success("Saved.");
+                    }
+                    else {
+                        toastr.error(result.Message);
+                        $.preloader.stop();
+                    }
+                    $.preloader.stop();
+                }
+            });
+        }
+    }
+
+    $("#example").on('click', '.btnDelete', function () {
+        $(this).closest('tr').remove();
+    });
+
+    function roomchange() {
+        getmonthlydata();
+    }
+
+</script>

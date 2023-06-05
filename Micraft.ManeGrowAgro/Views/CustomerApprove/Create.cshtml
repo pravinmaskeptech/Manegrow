@@ -1,0 +1,440 @@
+﻿@model Micraft.ManeGrowAgro.Models.CustomerMaster
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .ui-autocomplete {
+        overflow: auto;
+        max-height: max-content;
+    }
+
+    ul.ui-autocomplete {
+        z-index: 1100;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <h4>Customer Approve</h4>
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.CustTypeID)
+                                    @Html.DropDownList("CustTypeID", new SelectList(ViewBag.CustType, "ID", "Type"),"--Select--", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.CustTypeID, "", new { @class = "text-danger" })
+
+                                </div>
+
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.CustID)
+                                    @Html.EditorFor(model => model.CustID, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CustID, "", new { @class = "text-danger" })
+
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.CustName)
+                                    @Html.EditorFor(model => model.CustName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CustName, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.City)
+                                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.State)
+                                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+
+                                    @Html.LabelFor(model => model.PinCode)
+                                    @Html.EditorFor(model => model.PinCode, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PinCode, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Area)
+                                    @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Address)
+                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.MobileNumber)
+                                    @Html.EditorFor(model => model.MobileNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.MobileNumber, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.AdharNumber)
+                                    @Html.EditorFor(model => model.AdharNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.AdharNumber, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.PanNumber)
+                                    @Html.EditorFor(model => model.PanNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PanNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.ContactPerson)
+                                    @Html.EditorFor(model => model.ContactPerson, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ContactPerson, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.ContactNumber)
+                                    @Html.EditorFor(model => model.ContactNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ContactNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.GSTNumber)
+                                    @Html.EditorFor(model => model.GSTNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.GSTNumber, "", new { @class = "text-danger" })
+
+                                </div>
+
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.SalesPersonID)
+                                    @*@Html.EditorFor(model => model.SalesPersonID, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @Html.DropDownList("SalesPersonID", new SelectList(ViewBag.SalesPerson, "ID", "Name"),"--Select--", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.SalesPersonID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.EmailAddress)
+                                    @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-3 col-12 mb-3">
+
+                                    @Html.LabelFor(model => model.ProfilePhoto)
+                                    @*@Html.EditorFor(model => model.ProfilePhoto, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    <input type="file" id="ProfilePhoto" name="ProfilePhoto" class="form-control" placeholder="" data-bv-notempty="true" data-bv-notempty-message="The LeadTime is required and cannot be empty">
+                                    @*@Html.ValidationMessageFor(model => model.ProfilePhoto, "", new { @class = "text-danger" })*@
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.AdharUpload)
+                                    <input type="file" id="AdharUpload" name="AdharUpload" class="form-control" placeholder="Adhar Upload">
+                                    @*@Html.EditorFor(model => model.AdharUpload, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AdharUpload, "", new { @class = "text-danger" })*@
+                                </div>
+
+
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.PanUpload)
+                                    <input type="file" id="PanUpload" name="PanUpload" class="form-control" placeholder="PAN Upload">
+                                    @*@Html.EditorFor(model => model.PanUpload, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PanUpload, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Username)
+                                    @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                                </div>
+
+
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Password)
+                                    @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-3 col-12 mb-3">
+                                @Html.LabelFor(model => model.IsApproved)
+                                @Html.CheckBox("IsApproved", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.IsApproved, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Create" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+                        }
+
+                        <div>
+                            @Html.ActionLink("Back to List", "Index")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+<script>
+    $(document).ready(function () {
+
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+        GetCustID();
+        $("#CustTypeID").change(function () {
+            GetCustID();
+        });
+        function GetCustID() {
+            var CustTypeID = $("#CustTypeID :selected").val();
+
+            console.log(CustTypeID);
+            $.ajax({
+                url: "/Home/GenerateCustomerID",
+                type: "Post",
+                dataType: "json",
+                data: { CustID: CustTypeID },
+                success: function (data) {
+                    $("#CustID").val(data);
+                },
+                error: function (ex) {
+                    console.log("error");
+                    console.log(ex);
+                }
+            });
+        }
+
+
+        $(function () {
+            $("#PinCode").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/CustomerMasters/PincodeAutoComplete',
+                        data: "{ 'prefix': '" + request.term + "','city': '" + $("#City").val() + "'}",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    $("#Area").val(i.item.val);
+                },
+                minLength: 0
+            }).focus(function () {
+                $(this).autocomplete("search");
+            });
+        });
+
+        $(function () {
+            $("#City").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/CustomerMasters/AutoCity',
+                        data: "{ 'prefix': '" + request.term + "'}",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    $("#State").val(i.item.val);
+                },
+                minLength: 0
+            }).focus(function () {
+                $(this).autocomplete("search");
+            });
+        });
+
+        $('#ProfilePhoto').on('change', function () {
+
+            // Checking whether FormData is available in browser
+            if (window.FormData !== undefined) {
+
+                var fileUpload = $("#ProfilePhoto").get(0);
+                var files = fileUpload.files;
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                // Adding one more key to FormData object
+                fileData.append('username', 'Bandu');
+
+                $.ajax({
+                    url: '/CustomerMasters/UploadFiles',
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fileData,
+                    success: function (result) {
+                        alert(result);
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            } else {
+                alert("FormData is not supported.");
+            }
+        });
+
+        $('#AdharUpload').on('change', function () {
+
+            // Checking whether FormData is available in browser
+            if (window.FormData !== undefined) {
+
+                var fileUpload = $("#AdharUpload").get(0);
+                var files = fileUpload.files;
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                // Adding one more key to FormData object
+                fileData.append('username', 'Bandu');
+
+                $.ajax({
+                    url: '/CustomerMasters/UploadFiles',
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fileData,
+                    success: function (result) {
+                        alert(result);
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            } else {
+                alert("FormData is not supported.");
+            }
+        });
+
+        $('#PanUpload').on('change', function () {
+
+            // Checking whether FormData is available in browser
+            if (window.FormData !== undefined) {
+
+                var fileUpload = $("#PanUpload").get(0);
+                var files = fileUpload.files;
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                // Adding one more key to FormData object
+                fileData.append('username', 'Bandu');
+
+                $.ajax({
+                    url: '/CustomerMasters/UploadFiles',
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fileData,
+                    success: function (result) {
+                        alert(result);
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            } else {
+                alert("FormData is not supported.");
+            }
+        });
+
+
+    });
+</script>

@@ -1,0 +1,83 @@
+﻿@model Micraft.ManeGrowAgro.Models.City
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+
+                        @using (Html.BeginForm("Create", "Cities", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <h4>Add City</h4>
+                            <hr />
+                            @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                            @Html.HiddenFor(model => model.ID)
+
+                            <div class="row">
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.State)
+                                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "State is required and cannot be empty" } })
+                                </div>
+
+                                <div class="col-md-3 col-12 mb-3">
+                                    @Html.LabelFor(model => model.CityName)
+                                    @Html.EditorFor(model => model.CityName, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "City Name is required and cannot be empty" } })
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <input type="submit" id="edit" value="Save" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                            </div>
+                        </div>
+                        }
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+
+    $(document).ready(function () {
+        $("#form0").bootstrapValidator();
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+    });
+
+
+</script>

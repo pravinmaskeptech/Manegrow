@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    @Html.AntiForgeryToken()
+    using (Html.BeginForm("Logut", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+
+        <li class="dropdown-item" onclick="SubmitForm()"><a href="">Log off</a></li>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown-item">@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li class="dropdown-item">@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
+
+<script>
+
+    function SubmitForm() {
+
+         $.ajax({
+                url: '@Url.Action("Login", "Account")',
+                type: "Get",
+                dataType: "JSON",
+                data: {
+                    returnUrl: "Log OFF" },
+                success: function (result) {
+                 
+                }
+         });
+
+        window.location.href = "/Account/Login"
+    }
+
+
+
+</script>
+
+

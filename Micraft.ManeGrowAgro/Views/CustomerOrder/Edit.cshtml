@@ -1,0 +1,910 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+ 
+    #example .form-control {
+        width: 60px;
+        padding: 0;
+    }
+
+    #real.UOM form-control {
+        width: 60px;
+        padding: 0;
+    }
+
+</style>
+<input type="hidden" id="ID" name="ID" />
+
+@*@ViewBag.Id*@
+<!-- /.content-header -->
+<!-- Main content -->
+<br />
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            onSubmit = "return false"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                <div class="content-header" style="padding:1px">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <h4>Customer Order</h4>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="button" id="btnNewOrder" class="btn btn-success" value="New Order" onclick="NewOrder()"/>
+                                        </div>
+                                        </div>
+                                    </div>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <div class="modal-body">
+                                @*<div class="row">
+                                    <div class="col-md-2 col-12">
+                                        <lable>Order Id</lable>
+                                    </div>
+
+                                    <div class="col-md-2 col-12">
+                                        <input type="text" readonly class="form-control" placeholder="Order Id" value="@ViewBag.Id" id="OrderId" name="OrderId" />
+                                    </div>
+                                </div>
+                                <br />*@
+                                <div class="row" id="rd">
+
+                                    <div class="col-md-3 col-12">
+                                        <lable>Order Date</lable>
+                                        <input type="text" class="form-control" id="mydate">
+                                    </div>
+
+
+
+                                    <div class="col-md-3 col-12">
+                                        <lable>Product Category</lable>
+                                        @Html.DropDownList("ProductType", new SelectList(ViewBag.ProductTypes, "ID", "Type"), "Select", new { @class = "form-control" })
+                                        @Html.ValidationMessage("ProductType", "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="col-md-3 col-12">
+                                        <lable>Customer</lable>
+                                        @Html.DropDownList("ShortName", new SelectList(ViewBag.ShortNames, "ShortName", "ShortName"), "Select", new { @class = "form-control", onchange = "GetLocations();GetCustomerCode();" })
+                                        @Html.ValidationMessage("ShortName", "", new { @class = "text-danger" })
+                                    </div>
+
+                                    
+
+                                    <div class="col-md-3 col-12">
+                                        <lable>Location</lable>
+                                        <select id="Location" name="Location" onchange="GetCustomerCode()" class="form-control">
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row" id="rd">
+                                    <div class="col-md-3 col-12">
+                                        <lable>Expected Delivery Date</lable>
+                                        <input type="text" class="form-control" id="ExpectedDeliveryDate">
+                                    </div>
+
+
+                                    <div class="col-md-3 col-12">
+                                        <lable>Expected Delivery Time</lable>
+                                        <select id="ExpectedDeliveryTime" name="ExpectedDeliveryTime" onchange="GetCustomerCode()" class="form-control">
+                                            <option value="">Select Time</option>
+                                            <option value="12:00 AM">12:00 AM</option>
+                                            <option value="1:00 AM">1:00 AM</option>
+                                            <option value="2:00 AM">2:00 AM</option>
+                                            <option value="3:00 AM">3:00 AM</option>
+                                            <option value="4:00 AM">4:00 AM</option>
+                                            <option value="5:00 AM">5:00 AM</option>
+                                            <option value="6:00 AM">6:00 AM</option>
+                                            <option value="7:00 AM">7:00 AM</option>
+                                            <option value="8:00 AM">8:00 AM</option>
+                                            <option value="9:00 AM">9:00 AM</option>
+                                            <option value="10:00 AM">10:00 AM</option>
+                                            <option value="11:00 AM">11:00 AM</option>
+                                            <option value="12:00 PM">12:00 PM</option>
+                                            <option value="1:00 PM">1:00 PM</option>
+                                            <option value="2:00 PM">2:00 PM</option>
+                                            <option value="3:00 PM">3:00 PM</option>
+                                            <option value="4:00 PM">4:00 PM</option>
+                                            <option value="5:00 PM">5:00 PM</option>
+                                            <option value="6:00 PM">6:00 PM</option>
+                                            <option value="7:00 PM">7:00 PM</option>
+                                            <option value="8:00 PM">8:00 PM</option>
+                                            <option value="9:00 PM">9:00 PM</option>
+                                            <option value="10:00 PM">10:00 PM</option>
+                                            <option value="11:00 PM">11:00 PM</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3 col-12">
+                                        <lable>Remark</lable>
+                                        <input type="text" id="Remark" name="Remark"  class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-2 col-12">
+                                        <br />
+                                        <input type="text" readonly class="form-control" placeholder="Customer Code" id="CustId" name="CustId" />
+                                    </div>
+
+                                    @*<div class="col-md-1 col-12">
+                                        <br />
+                                        <button type="button" class="btn btn-primary" id="btnGo" onclick="btnGoClick()">Go</button>
+                                    </div>*@
+
+                                </div>
+                                <br />
+                                <hr />
+                                <div class="row" id="focushere">
+
+                                    <div class="col-md-12">
+                                        <br />
+
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                                <thead style="background-color: #d8e9c1">
+                                                    <tr class="text-uppercase">
+                                                        <th>Product</th>
+                                                        <th>Qty</th>
+                                                        <th width="20%">UOM</th>
+                                                        <th>Weight (Kg)</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <select id="product" name="product" class="form-control" onchange="CalculateWeight()" style="width:100%;min-width:100px">
+                                                                <option value="">Select</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number" id="Qty" name="Qty" class="form-control" style="width:100%;min-width:100px;max-width:150px" onchange="CalculateWeight()"/></td>
+                                                        <td><label id="lbluom"></label></td>
+                                                        <td><label id="lblweight"></label></td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary" id="btnad" onclick="btnadd()">Add</button>
+
+                                                            <button type="button" class="btn btn-primary" id="btnup" onclick="btnadd()"> Update <i class="fa fa-plus"></i>  </button>
+
+                                                            <button type="button" class="btn btn-outline-danger" id="btnreset" onclick="Reset()"> Cancel <i class="fa fa-refresh"></i>  </button>
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="col-md-12">
+                                        <br />
+                                        <div class="table-responsive">
+                                            <table id="real" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                                <thead style="background-color: #d8e9c1">
+                                                    <tr class="text-uppercase">
+                                                        <th hidden>P Id</th>
+                                                        <th>Product</th>
+                                                        <th>Qty</th>
+                                                        <th>UOM</th>
+                                                        <th>Weight</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                        <button type="button" class="btn btn-success" onclick="Save()"> Save </button>
+                                        <a href="@Url.Action("Index", "CustomerOrder")" class="btn btn-primary"> Back to List </a>
+                                        
+                                        @*<button type="button" class="btn btn-outline-danger" onclick="Clear()"> Clear </button>*@
+                                    </div>
+
+                                </div>
+
+
+                                <br />
+
+                            </div>
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        try {
+
+            $('#mydate').datepicker({
+                dateFormat: 'dd-mm-yy',
+                autoclose: true,
+                minDate: 0
+            });
+            $("#product").prop("disabled", true);
+              $('#mydate').val('@DateTime.Now.ToString("dd-MM-yyyy")');
+
+            $('#ExpectedDeliveryDate').datepicker({
+                dateFormat: 'dd-mm-yy',
+                autoclose: true,
+                minDate: 0
+            });
+
+            $('#btnup').hide();
+            $('#btnreset').hide();
+
+
+
+            var url = window.location.href;
+            var part = url.substring(url.lastIndexOf('/') + 1);
+            if (part != "Edit") {
+                $.preloader.start({
+                    modal: true,
+                    src: 'sprites2.png'
+                });
+                GetEditData(part);
+            }
+        }
+        catch (e) {
+        }
+    });
+
+    function GetEditData(ID) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetEditData", "CustomerOrder")',
+            data: { ID:ID },
+            dataType: "json",
+            success: function (result)
+            {
+                if (result.Message == "success") {
+
+                    $("#ShortName").val(result.order.CustomerShortCode);
+
+
+                    $("#ProductType").val(result.order.CategoryName);
+                    try {
+                        var value = new Date(parseInt(result.order.Date.substr(6)));
+                        var month = ("0" + (value.getMonth() + 1)).slice(-2);
+                        var day = ("0" + value.getDate()).slice(-2);
+                        var ret = day + "-" + month + "-" + value.getFullYear();
+                        $("#mydate").val(ret);
+                    } catch (ee) {}
+
+                    try {
+                        var value = new Date(parseInt(result.order.ExpectedDeliveryDate.substr(6)));
+                        var month = ("0" + (value.getMonth() + 1)).slice(-2);
+                        var day = ("0" + value.getDate()).slice(-2);
+                        var ret = day + "-" + month + "-" + value.getFullYear();
+                        $("#ExpectedDeliveryDate").val(ret);
+                    } catch (ee) { }
+                    $("#ExpectedDeliveryTime").val(result.order.ExpectedDeliveryTime);
+                    $("#Remark").val(result.order.Remark);
+                    $("#CustId").val(result.order.CustomerCode);
+
+                    GetLocations(result.order.Location);
+
+
+                    $.preloader.stop();
+                }
+
+            },
+            failure: function (response) {
+                $.preloader.stop();
+                alert(response.d);
+            },
+            error: function (err) {
+                $.preloader.stop();
+                alert(err.statusText);
+            }
+        });
+    }
+
+
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    function btnGoClick() {
+
+        var valid = true;
+
+        if ($('#mydate').val == null || $('#mydate').val() == "") {
+            toastr.error("Date is Required.");
+            valid = false;
+        }
+        if ($('#ExpectedDeliveryDate').val == null || $('#ExpectedDeliveryDate').val() == "") {
+            toastr.error("Expected Delivery Date is Required.");
+            valid = false;
+        }
+
+
+
+        if ($('#ExpectedDeliveryTime').val == null || $('#ExpectedDeliveryTime').val() == "") {
+            toastr.error("Expected Delivery Time is Required.");
+            valid = false;
+        }
+
+        if ($('#ProductType').val == null || $('#ProductType').val() == "") {
+            toastr.error("Product Category is Required.");
+            valid = false;
+        }
+
+        if ($('#ShortName').val == null || $('#ShortName').val() == "") {
+            toastr.error("Customer is Required.");
+            valid = false;
+        }
+
+        if ($('#Location').val == null || $('#Location').val() == "") {
+            toastr.error("Location is Required.");
+            valid = false;
+        }
+
+        if ($('#CustId').val == null || $('#CustId').val() == "") {
+            toastr.error("Customer Code is Required.");
+            valid = false;
+        }
+
+        if (valid == true) {
+
+            $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+            });
+
+            getproducts();
+          
+
+            var url = window.location.href;
+            var part = url.substring(url.lastIndexOf('/') + 1);
+            if (part != "Edit") {
+                $.preloader.start({
+                    modal: true,
+                    src: 'sprites2.png'
+                });
+                getpreviousrecords();
+            }
+
+
+            $('#mydate').attr("style", "pointer-events: none;");
+            $('#ProductType').attr("style", "pointer-events: none;");
+            $('#ShortName').attr("style", "pointer-events: none;");
+            $('#Location').attr("style", "pointer-events: none;");
+            $('#Remark').attr("style", "pointer-events: none;");
+
+            //readonly look
+            $("#mydate").attr('readonly', 'readonly');
+            $("#ProductType").attr('readonly', 'readonly');
+            $("#ShortName").attr('readonly', 'readonly');
+            $("#Location").attr('readonly', 'readonly');
+            $("#Remark").attr('readonly', 'readonly');
+
+            $("#ExpectedDeliveryDate").attr('readonly', 'readonly');
+            $("#ExpectedDeliveryTime").attr('readonly', 'readonly');
+
+
+
+
+            $.preloader.stop();
+        }
+
+    }
+    function getpreviousrecords() {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        var url = window.location.href;
+        var part = url.substring(url.lastIndexOf('/') + 1);
+       
+
+           $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetPreviousRecords", "CustomerOrder")',
+               data: { DATE: $('#mydate').val(), CATEGORY: $('#ProductType').val(), SHORTNAME: $('#ShortName').val(), LOCATION: $('#Location').val(), CCODE: $('#CustId').val(), ID: part },
+            dataType: "json",
+               success: function (result)
+            {
+               
+                   if (result.Message == "success") {
+                       $("#real tbody").empty();
+                       $.each(result.tbldata, function (i, val) {
+
+                           $("#real tbody").append("<tr> <td hidden>" + val.ProductId + "</td> <td>" + val.ProductName + "</td> <td>" + val.Qty + "</td> <td>" + val.UOM + "</td><td>" + val.Weight + "</td><td> <button type='button' id='edt' class='btn btn-sm btn-primary btnEdit' data-toggle='modal' data-target='#EditModal' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button> </td>   </tr>");
+
+                       });
+                   } else {
+                       alert(result.Message);
+                       window.location.href = "/CustomerOrder/Index";
+                   }
+                
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                $("#real tbody").empty();
+                $.preloader.stop();
+            },
+            error: function (err) {
+                $("#real tbody").empty();
+                $.preloader.stop();
+            }
+        });
+
+    }
+
+    function getproducts() {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetProducts", "CustomerOrder")',
+             data: { PRODUCTTYPE: $('#ProductType').val(), DATE: $('#mydate').val() },
+            dataType: "json",
+            success: function (tbldata)
+            {
+                $("#product").empty();
+                $("#product").append("<option value=''>Select</option>");
+                $.each(tbldata, function (i, val) {
+                    $("#product").append("<option value='" + val.ID + "'>" + val.Name + "</option>");
+                });
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                $("#example tbody").empty();
+                $.preloader.stop();
+            },
+            error: function (err) {
+                $("#example tbody").empty();
+                $.preloader.stop();
+            }
+        });
+    }
+
+    function GetLocations(City) {
+
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetLocations", "CustomerOrder")',
+            data: { SHORTNAME: $('#ShortName').val() },
+            dataType: "json",
+            success: function (tbldata)
+            {
+                $("#Location").empty();
+                $("#Location").append("<option value=''>Select</option>");
+                $.each(tbldata, function (i, val) {
+
+                    $("#Location").append("<option value='"+ val.Area + "'>" + val.Area+"</option>");
+                });
+
+                if (City != undefined) {
+                    $("#Location").val(City);
+                    btnGoClick();
+                }
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                $.preloader.stop();
+                /*alert(response.d);*/
+            },
+            error: function (err) {
+                $.preloader.stop();
+                /*alert(err.statusText);*/
+            }
+        });
+    };
+
+     function GetCustomerCode() {
+
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetCustomerCode", "CustomerOrder")',
+            data: { SHORTNAME: $('#ShortName').val(), LOCATION: $('#Location').val() },
+            dataType: "json",
+            success: function (result)
+            {
+                if (result.Message == "success") {
+                    $("#CustId").val(result.CustCode);
+                    $("#ID").val(result.CustId);
+                    $.preloader.stop();
+                }
+                else {
+                    $("#CustId").val("");
+                    $("#ID").val("");
+                    toastr.error(result.Message);
+                    $.preloader.stop();
+                }
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                $.preloader.stop();
+                alert(response.d);
+            },
+            error: function (err) {
+                $.preloader.stop();
+                alert(err.statusText);
+            }
+        });
+    };
+
+    function CalculateWeight() {
+
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("CalculateWeight", "CustomerOrder")',
+            data: { PRODUCT: $('#product').val(), QTY: $('#Qty').val() },
+            dataType: "json",
+            success: function (result)
+            {
+                if (result.Message == "success") {
+                    $('#lblweight').html(result.weight);
+                    $('#lbluom').html(result.UOM);
+
+                    $.preloader.stop();
+                }
+                else {
+                    $('#lblweight').html('');
+                    $('#lbluom').html('');
+                    toastr.error(result.Message);
+                    $.preloader.stop();
+                }
+             //   $.preloader.stop();
+            },
+            failure: function (response) {
+                $('#lblweight').html('');
+                $('#lbluom').html('');
+                $.preloader.stop();
+                alert(response.d);
+            },
+            error: function (err) {
+                $('#lblweight').html('');
+                $('#lbluom').html('');
+                $.preloader.stop();
+                alert(err.statusText);
+            }
+        });
+    }
+
+
+    //$("#Qty").onchange(function () {
+
+    //    CalculateWeight();
+
+    //});
+
+    function btnadd() {
+
+        var valid = true;
+
+        if ($('#product').val() == null || $('#product').val() == "") {
+            toastr.error("Product is Required.");
+            valid = false;
+        }
+        if ($('#Qty').val() == null || $('#Qty').val() == "") {
+            toastr.error("Quantity No. is Required.");
+            valid = false;
+        }
+
+        if ($('#lbluom').html() == null || $('#lbluom').html() == "") {
+            toastr.error("UOM is Required.");
+            valid = false;
+        }
+
+        if ($('#lblweight').html() == null || $('#lblweight').html() == "") {
+            toastr.error("Weight is Required.");
+            valid = false;
+        }
+
+        if (valid == true) {
+            var isexist = false;
+            $("#real tbody tr").each(function (index) {
+
+                var $row = $(this);
+                var $firstColumn = $row.find('td:eq(0)');
+
+                if ($firstColumn.text() == $('#product').val()) {
+                    isexist = true;
+                }
+            });
+
+
+            if (isexist == true) {
+                toastr.error("Already Added.");
+            }
+            else {
+
+                $("#real").append("<tr> <td hidden>" + $("#product").val() + "</td> <td>" + $("#product option:selected").text() + "</td> <td>" + $("#Qty").val() + "</td> <td>" + $("#lbluom").html() + "</td><td>" + $("#lblweight").html() + "</td><td> <button type='button' id='edt' class='btn btn-sm btn-primary btnEdit' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
+                $("#product").val('');
+                $("#Qty").val('');
+                $("#lbluom").html('');
+                $("#lblweight").html('');
+          }
+        }
+    }
+
+    function Save() {
+
+        if ($('#real TBODY tr').length == 0) {
+            //...do something here
+            toastr.error("Please add Some records.");
+        }
+        else {
+
+            $.preloader.start({
+                modal: true,
+                src: 'sprites2.png'
+            });
+
+            var recs = new Array();
+
+            $("#real TBODY TR").each(function () {
+                var row = $(this);
+                var Order = {};
+                Order.ProductId = row.find("TD").eq(0).html();
+                Order.ProductName = row.find("TD").eq(1).html();
+                Order.Qty = row.find("TD").eq(2).html();
+                Order.UOM = row.find("TD").eq(3).html();
+                Order.Weight = row.find("TD").eq(4).html();
+
+                recs.push(Order);
+            });
+
+            var url = window.location.href;
+            var part = url.substring(url.lastIndexOf('/') + 1);
+            var MainID = 0
+            if (part != "Edit") {
+                MainID = part;
+            }
+            var data = {
+
+                recs: recs, DATE: $('#mydate').val(), CATEGORYID: $('#ProductType').val(), CUSTOMERSHORTNAME: $('#ShortName').val(), LOCATION: $('#Location').val(), REMARK: $('#Remark').val(), CUSTID: $('#CustId').val(), ID: $('#ID').val(), REMARK: $('#Remark').val(),
+                ExpectedDeliveryDate: $('#ExpectedDeliveryDate').val(), ExpectedDeliveryTime: $('#ExpectedDeliveryTime').val(), MainID: MainID,
+            }
+            debugger;
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/CustomerOrder/Update",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Message == "success") {
+                        $('#form0').each(function () {
+                            this.reset();
+                        });
+                        $('#product').val('');
+                        $('#Qty').val('');
+                        $('#lbluom').html('');
+                        $('#lblweight').html('');
+                        $('#real tbody').empty();
+
+                        $('#ID').val('');
+                        $('#CustId').val('');
+                        $('#Location').val('');
+                        $('#Remark').val('');
+                        $('#ShortName').val('');
+                        $('#ProductType').val('');
+                        $('#mydate').val('');
+
+
+
+                        $('#mydate').attr("style", "");
+                        $('#ProductType').attr("style", "");
+                        $('#ShortName').attr("style", "");
+                        $('#Location').attr("style", "");
+                        $('#Remark').attr("style", "");
+
+                        //removereadonly
+                        $("#mydate").removeAttr('readonly');
+                        $("#ProductType").removeAttr('readonly');
+                        $("#ShortName").removeAttr('readonly');
+                        $("#Location").removeAttr('readonly');
+                        $("#Remark").removeAttr('readonly');
+
+                        $('#OrderId').val(result.Max);
+
+                        toastr.success("Records Saved Succesfully with Order Id: " + result.Max + ".");
+                        window.location.href = "/CustomerOrder/Index";
+                     //   GetEditData(result.Max);
+                    }
+                    else {
+                        toastr.error(result.Message);
+                        $.preloader.stop();
+                    }
+                    $.preloader.stop();
+                }
+            });
+        }
+    }
+
+
+    function Edit(id) {
+
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        $("#product").prop("disabled", false);
+
+        $("#real").on('click', '.btnEdit', function () {
+            var row = $(this).closest("tr");
+            //var row = $(this).closest('tr')/*.remove()*/;
+
+            $("#product").val(row.find("TD").eq(0).html());
+            $("#Qty").val(row.find("TD").eq(2).html());
+            $("#lbluom").html(row.find("TD").eq(3).html());
+            $("#lblweight").html(row.find("TD").eq(4).html());
+
+            $(this).closest('tr').remove();
+        });
+
+        $("#product").prop("disabled", true);
+
+        $('html, body').animate({
+            scrollTop: $("#focushere").offset().top
+        }, 2000);
+
+        $.preloader.stop();
+
+    }
+
+    $("#real").on('click', '.btnDelete', function () {
+        $(this).closest('tr').remove();
+    });
+
+
+    function CalculateActualWeight() {
+
+            $.preloader.start({
+                modal: true,
+                src: 'sprites2.png'
+            });
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("CalculateActualWeight", "ActualProduction")',
+                data: { CARET: $('#CaretType').val(), GROSSWEIGHT: $('#Weight').val() },
+                dataType: "json",
+                success: function (result) {
+                    if (result.Message == "success") {
+                        $("#actualweight").val(result.ActualWeight);
+                        $.preloader.stop();
+                    }
+                    else {
+                        $("#actualweight").val(0);
+                        toastr.error(result.Message);
+                        $.preloader.stop();
+                    }
+                },
+                failure: function (response) {
+                    $.preloader.stop();
+                    /*alert(response.d);*/
+                },
+                error: function (err) {
+                    $("#actualweight").val(0);
+                    $.preloader.stop();
+                    /*alert(err.statusText);*/
+
+                }
+            });
+
+    }
+
+    $("#Weight").keyup(function () {
+        var valid = true;
+        if ($('#CaretType').val() == null || $('#CaretType').val() == "") {
+            toastr.error("Caret Type is Required.");
+            valid = false;
+        }
+
+        if (valid == true) {
+            CalculateActualWeight();
+        }
+
+    });
+
+    function CaretTypeChange() {
+        var val = true;
+        if ($("#Weight").val() == null || $("#Weight").val() == "") {
+            val = false;
+        }
+
+        if (val == true) {
+            CalculateActualWeight();
+        }
+    }
+
+    function Clear() {
+        $("#real tbody").empty();
+        $("#product").empty();
+        $("#product").append("<option value=''>Select</option>");
+        $("#ProductType").val('');
+        $("#ShortName").val('');
+        $("#Location").val('');
+        $("#Remark").val('');
+        $("#CustId").val('');
+        //$('#mydate').val('');
+        $('#ID').val('');
+
+        $('#mydate').attr("style", "");
+        $('#ProductType').attr("style", "");
+        $('#ShortName').attr("style", "");
+        $('#Location').attr("style", "");
+        $('#Remark').attr("style", "");
+
+        //removereadonly
+        $("#mydate").removeAttr('readonly');
+        $("#ProductType").removeAttr('readonly');
+        $("#ShortName").removeAttr('readonly');
+        $("#Location").removeAttr('readonly');
+        $("#Remark").removeAttr('readonly');
+
+        $("#Qty").val('');
+        $("#lbluom").html('');
+        $("#lblweight").html('');
+        toastr.warning("The Form was Reset.");
+    }
+
+    function NewOrder() {
+        window.location.href = "/CustomerOrder/Create";
+    }
+</script>
+

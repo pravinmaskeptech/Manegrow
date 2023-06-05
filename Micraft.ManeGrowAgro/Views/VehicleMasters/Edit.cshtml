@@ -1,0 +1,487 @@
+﻿@model Micraft.ManeGrowAgro.Models.VehicleMaster
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm("Edit", "VehicleMasters", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            @Html.HiddenFor(model => model.ID)
+                            <input type="hidden" id="CustomerID" value="@Model.ID" />
+                            <input type="hidden" id="Count" value="1" />
+
+                            <div class="form-horizontal">
+                                <h4>Vehicle Master</h4>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="row">
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.VendorID)
+                                        @Html.DropDownListFor(model => model.VendorID, new SelectList(ViewBag.VendorID, "ID", "VendorName"), "Select Vendor Name", new { @class = "form-control", Autocomplete = "off" })
+                                    </div>
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.VehicleNo)
+                                        @Html.EditorFor(model => model.VehicleNo, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Vehical No is required and cannot be empty", Onchange = "CheckDuplicate()" } })
+                                    </div>
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.VehicleType)
+                                        @Html.DropDownListFor(model => model.VehicleType, new SelectList(ViewBag.VehicleType, "VehicleType", "VehicleType"), "Select Vehicle Type", new { @class = "form-control", Autocomplete = "off" })
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.InsuranceValidity)
+                                        @Html.EditorFor(model => model.InsuranceValidity, new { htmlAttributes = new { @class = "form-control", type = "date", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Insurance Validity is required and cannot be empty" } })
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.Puc)
+                                        @Html.EditorFor(model => model.Puc, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "PUC is required and cannot be empty" } })
+                                    </div>
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.RCBook)
+                                        @Html.EditorFor(model => model.RCBook, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "RC Book is required and cannot be empty" } })
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.RCValidity)
+                                        @Html.EditorFor(model => model.RCValidity, new { htmlAttributes = new { @class = "form-control", type = "date", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "RC Validity is required and cannot be empty" } })
+                                    </div>
+
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.VehicleCapacity)
+                                        @Html.EditorFor(model => model.VehicleCapacity, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Vehical Capacity is required and cannot be empty" } })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <input type="submit" id="create" value="Create" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                                </div>
+
+                            </div>
+                            <br />
+                            <div id="PnlUploadFiles">
+                                <div style="background-color:#3c8dbc; padding:1px 0">
+                                    <h5 class="box-title"><strong style="color:white">  Attachment Details  </strong></h5>
+                                    <div class="box-tools pull-right">
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                @Html.Label("Attachment Name ", htmlAttributes: new { @class = "control-label-1" })
+                                                @*<input type="text" name="AttachmentName" id="AttachmentName" class="form-control" />*@
+                                                <select id="AttachmentName" name="AttachmentName" class="form-control">
+                                                    <option value="PUC NO">PUC NO</option>
+                                                    <option value="RC BOOK">RC BOOK</option>
+                                                    <option value="Insurance">Insurance</option>
+                                                    <option value="Other">Other</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                @Html.Label("Details ", htmlAttributes: new { @class = "control-label-1" })
+                                                <input type="text" id="txtDetails" name="txtDetails" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                @Html.Label("Attchment ", htmlAttributes: new { @class = "control-label-1" })
+                                                <input type="file" id="Attachments" name="Attachments" accept=".jpg, .gif, .png,.pdf" class="form-control" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <br />
+                                        <button type="button" id="UploadBtn" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <br />
+                                        <div id="progressbar-6">
+                                            <div class="progress-label-1">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-responsive" id="AttachmentList" style="width: 100%;  white-space: nowrap;"></table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <div class="col-md-4">
+
+                                                </div>
+                                                <div class="col-md-8">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <div class="col-md-8">
+
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="button" id="btnSave" value="Save Files" onclick="SaveFiles()" class="btn btn-success" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<script>
+
+
+    $(document).ready(function () {
+        debugger;
+         $("#form0").bootstrapValidator();
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+        $('#RCValidity').datepicker({
+            dateFormat: 'dd-mm-yy',
+            autoclose: true
+        });
+
+        $('#InsuranceValidity').datepicker({
+            dateFormat: 'dd-mm-yy',
+            autoclose: true
+        });
+
+        $('#VendorID').val("@Model.VendorID");
+        $('#VehicleType').val("@Model.VehicleType");
+
+        $('#RCValidity').val("@ViewBag.RCValidity");
+
+        GetData();
+    });
+
+     function CheckDuplicate() {
+        debugger;
+        var VehicleNo = $("#VehicleNo").val();
+        $.ajax({
+            url: '@Url.Action("CheckDuplicate", "VehicleMasters")',
+            type: "GET",
+            dataType: "JSON",
+            data: { VehicleNo: VehicleNo, Mode: "Create", ID: 0 },
+            success: function (result) {
+                try {
+                    if (result == "1") {
+                        $("#VehicleNo").val("");
+                        $("#form0").bootstrapValidator('revalidateField', 'VehicleNo');
+                        toastr.error("VehicleNo already exist");
+                    }
+                    else if (result == "0") {
+
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+            //Upload
+
+    $('#UploadBtn').click(function () {
+        var Details = $('#txtDetails').val();
+        if (Details == "") {
+            toastr.error('Please Enter Attachment details..!');
+        } else {
+            if ($("#AttachmentName").val() != "") {
+                var fileUpload = $("#Attachments").get(0);
+                if ($("#Attachments").val() != "") {
+                    var files = fileUpload.files;
+                    var fileData = new FormData();
+                    var ID = $('#CustomerID').val();
+
+                    for (var i = 0; i < files.length; i++) {
+                        fileData.append(files[i].name, files[i]);
+                        fileData.append("ID", ID);
+                    }
+
+
+                    $.ajax({
+                        url: '/VehicleMasters/UploadFile',
+                        type: "POST",
+                        contentType: false,
+                        processData: false,
+                        data: fileData,
+                        async: false,
+                        success: function (result) {
+                            debugger;
+                            if (result.DuplicateImg != "") {
+                                toastr.error('File Name "' + result.DuplicateImg + '" already Exist...!')
+                            }
+                            if (result.list.length > 0) {
+                                $('#FileBrowse').find("*").prop("disabled", true);
+                                LoadFileProgressBar(result.list);
+                            }
+                        },
+                        error: function (err) {
+                            alert(err.statusText);
+                        }
+                    });
+                } else {
+                    toastr.error('Please Upload File..!');
+                }
+            } else {
+                toastr.error('Please Enter Attachment Name..!');
+            }
+        }
+
+    });
+    function LoadFileProgressBar(result) {
+        var progressbar = $("#progressbar-6");
+        var progressLabel = $(".progress-label-1");
+        progressbar.show();
+        $("#progressbar-6").progressbar({
+            //value: false,
+            change: function () {
+                progressLabel.text(
+                 progressbar.progressbar("value") + "%");  // Showing the progress increment value in progress bar
+            },
+            complete: function () {
+                progressLabel.text("Loading Completed!");
+                progressbar.progressbar("value", 0);  //Reinitialize the progress bar value 0
+                progressLabel.text("");
+                progressbar.hide(); //Hiding the progress bar
+
+                $.each(result, function (i, item) {
+                    var Count = $('#Count').val();
+                    $("#AttachmentList").append(" <tbody> <tr id='R" + Count + "'> <td><input type='text' id='AttachmentName" + Count + "' style='width:100%'  readonly class='AttachmentName  form-control'/></td><td><input type='text' id='txtDtl" + Count + "'style='width:100%'  readonly class='txtDtl  form-control'/></td><td><input type='text' style='width:100%' id='FileName" + Count + "'  readonly class='FileName  form-control'/></td>  <td style='width:50px'><Button type='Button'  id='btnOtherRemove" + Count + "' onclick='DeleteFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-trash' style='font-size:18px;color:red'></i></button></td> <td style='width:50px'><Button type='Button' id='btnOtherFile" + Count + "' onclick='DownloadFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-download' style='font-size:20px;color:black'></i></button></td>  <td><input type='hidden' id='ID" + Count + "'  readonly class='ID  form-control'/></td></tr> <tbody>");
+                    $('#AttachmentName' + Count).val($('#AttachmentName').val());
+                    $('#FileName' + Count).val(result[i].Name);
+                    $('#txtDtl' + Count).val($('#txtDetails').val());
+                    $('#ID' + Count).val(0);
+
+                    $('#Count').val(parseInt($('#Count').val()) + 1);
+                    //  $('#AttachmentName').val('');
+                    $('#Attachments').val('');
+                    $('#txtDetails').val('');
+                });
+            }
+
+        });
+        function progress() {
+            var val = progressbar.progressbar("value") || 0;
+            progressbar.progressbar("value", val + 1);
+            if (val < 99) {
+                setTimeout(progress, 10);
+            }
+        }
+        setTimeout(progress, 100);
+    }
+    function DownloadFile(Count) {
+        window.location = '/VehicleMasters/Download?file=' + $("#FileName" + Count).val();
+    }
+    function SaveFiles() {
+        $('#btnSave').prop("disabled", true);
+        debugger;
+        //  var ID = $('#CustomerID').val();
+        var temp = true;
+        var AttachmentList = $('#AttachmentList tr').length;
+        if (AttachmentList > 0) {
+            var AttachmentLst = [];
+            $('#AttachmentList tbody tr').each(function (index, ele) {
+                if (($('.FileName', this).val() || "") == "") {
+                } else {
+                    var orderItem = {
+                        Name: $('.FileName', this).val(),
+                        CustomerID: $('#CustomerID').val(),
+                        Attachments: $('.AttachmentName', this).val(),
+                        DmsFileID: $('.ID', this).val(),
+                        DocumentNo: $('.txtDtl', this).val(),
+                        ID: $('#CustomerID').val(),
+                    }
+                    AttachmentLst.push(orderItem);
+                }
+            });
+
+            var data = {
+                FilesList: AttachmentLst,
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/VehicleMasters/SaveList',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.Message == "success") {
+                        //window.location.href = "/ProfessionalTaxDetails/Index";
+                        toastr.success("Attachments  Save Successfully..!");
+                        $("#AttachmentList").empty();
+                        window.location.href = "/VehicleMasters/Index";
+                        $('#btnSave').prop("disabled", false);
+                         GetData();
+                    }
+                    else {
+                        toastr.error(result.Message);
+                        $('#btnSave').prop("disabled", false);
+                    }
+
+                }
+            });
+        } else {
+            toastr.error('Please Add Attachments..');
+        }
+    };
+    function GetData() {
+        $.ajax({
+            url: '@Url.Action("GetDMSData", "VehicleMasters")',
+            type: "GET",
+            dataType: "JSON",
+            data: { ID: $("#CustomerID").val() },
+            success: function (result) {
+                try {
+                    if (result.error == "error") {
+                        toastr.error(result.msg);
+                    }
+                    else {
+                        try {
+                            //var value = new Date(parseInt(result.Data.Date.substr(6)));
+                            //var month = ("0" + (value.getMonth() + 1)).slice(-2);
+                            //var day = ("0" + value.getDate()).slice(-2);
+                            //var ret = day + "/" + month + "/" + value.getFullYear();
+                            //$("#Date").val(ret);
+
+                            //var value = new Date(parseInt(result.Data.PeriodFrom.substr(6)));
+                            //var month = ("0" + (value.getMonth() + 1)).slice(-2);
+                            //var day = ("0" + value.getDate()).slice(-2);
+                            //var ret = day + "/" + month + "/" + value.getFullYear();
+                            //$("#PeriodFrom").val(ret);
+
+                            //var value = new Date(parseInt(result.Data.PeriodTo.substr(6)));
+                            //var month = ("0" + (value.getMonth() + 1)).slice(-2);
+                            //var day = ("0" + value.getDate()).slice(-2);
+                            //var ret = day + "/" + month + "/" + value.getFullYear();
+                            //$("#PeriodTo").val(ret);
+
+                        }
+                        catch (e) {
+
+                        }
+                        $.each(result.dmsList, function (i, item) {
+                            var Count = $('#Count').val();
+                            $("#AttachmentList").append(" <tbody> <tr id='R" + Count + "'> <td><input type='text' id='AttachmentName" + Count + "'  readonly class='AttachmentName  form-control'/></td><td><input type='text' id='txtDtl" + Count + "'style='width:100%'  readonly class='txtDtl  form-control'/></td><td><input type='text'  id='FileName" + Count + "'  readonly class='FileName  form-control'/></td>  <td style='width:50px'><Button type='Button'  id='btnOtherRemove" + Count + "' onclick='DeleteFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-trash' style='font-size:18px;color:red'></i></button></td> <td style='width:50px'><Button type='Button' id='btnOtherFile" + Count + "' onclick='DownloadFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-download' style='font-size:20px;color:black'></i></button></td> <td><input type='hidden' id='ID" + Count + "'  readonly class='ID  form-control'/></td></tr> <tbody>");
+                            $('#AttachmentName' + Count).val(result.dmsList[i].FileDetails);
+                            $('#FileName' + Count).val(result.dmsList[i].Name);
+                            $('#txtDtl' + Count).val(result.dmsList[i].DocumentNo);
+                            $('#ID' + Count).val(result.dmsList[i].ID);
+                            $('#Count').val(parseInt($('#Count').val()) + 1);
+                            // $('#AttachmentName').val('');
+                            $('#Attachments').val('');
+                        });
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+    function DeleteFile(Count) {
+        var x = confirm("Are you sure you want to delete?");
+        if (x) {
+            $.ajax({
+                type: "GET",
+                url: '/VehicleMasters/DeleteFiles',
+                data: { 'ID': $('#ID' + Count).val(), FileName: $('#FileName' + Count).val(), Mode: "Edit" },
+                success: function (result) {
+                    if (result == "success") {
+                        toastr.success("File Deleted Successfully..!");
+                        $("#R" + Count + "").remove();
+
+                    } else {
+                        toastr.error(result);
+                    }
+                }
+            })
+        }
+        else {
+            return false;
+        }
+    }
+</script>

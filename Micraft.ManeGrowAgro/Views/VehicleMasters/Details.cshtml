@@ -1,0 +1,83 @@
+﻿@model Micraft.ManeGrowAgro.Models.VehicleMaster
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>VehicleMaster</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.VendorType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VendorType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VehicleNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VehicleNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VehicleType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VehicleType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InsuranceValidity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InsuranceValidity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Puc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Puc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RCBook)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RCBook)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RCValidity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RCValidity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VehicleCapacity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VehicleCapacity)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

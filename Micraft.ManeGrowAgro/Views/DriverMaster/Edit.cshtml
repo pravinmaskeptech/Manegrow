@@ -1,0 +1,214 @@
+﻿@model Micraft.ManeGrowAgro.Models.DriverMaster
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm("Edit", "DriverMaster", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.CreatedBy)
+                            @Html.HiddenFor(model => model.CreatedDate)
+
+
+                        <div class="form-horizontal">
+                            <h4>Driver Master</h4>
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+
+                                    @Html.Label("Vendor Name")
+                                    @Html.DropDownList("VendorID", new SelectList(ViewBag.Vendor, "ID", "VendorName"), "Select Vendor", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Driver name is required and cannot be empty", })
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.Label("Driver Name")
+                                    @Html.EditorFor(model => model.DriverName, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Driver name is required and cannot be empty" } })
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.Label("Mobile Number")
+                                    @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control", @type = "number", data_bv_notempty = "true", data_bv_notempty_message = "The Mobile No is required", data_bv_stringlength = "true", data_bv_stringlength_min = "10", required = "required", autocomplete = "off", data_bv_stringlength_max = "11", data_bv_stringlength_message = "The Mobile must be 10 digits long", data_bv_regexp = "true", data_bv_regexp_regexp = "[0-9]", data_bv_regexp_message = "The Mobile can only consist digit" } })
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.Label("Adhar Number")
+                                    @Html.EditorFor(model => model.AdharNo, new { @type = "number", htmlAttributes = new { @class = "form-control", Autocomplete = "off", @Pattern = "", data_bv_regexp_message = "Input string is not valid aadhar No.", maxlength = "20", style = "text-transform:uppercase" } })
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-4 col-12 mb-3">
+
+                                    @Html.LabelFor(model => model.Pincode)
+                                    @Html.EditorFor(model => model.Pincode, new { @type = "number", htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Pincode is required and cannot be empty", required = "required", @onchange = "GetCityArea()" } })
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.City)
+                                    @*@Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })*@
+                                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "City Name is required and cannot be empty", required = "required" } })
+
+                                </div>
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.State)
+                                    @*@Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })*@
+                                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "State Name is required and cannot be empty", required = "required" } })
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Address)
+                                    <br />
+                                    @Html.TextAreaFor(model => model.Address, new { htmlAttributes = new { cols = "38", @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Address is required and cannot be empty", required = "required" } })
+
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Reference)
+                                    @Html.EditorFor(model => model.Reference, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Reference is required and cannot be empty" } })
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.Label("Reference Contact")
+                                    @Html.EditorFor(model => model.ReferenceContact, new { htmlAttributes = new { @class = "form-control", @type = "number", data_bv_notempty = "true", data_bv_notempty_message = "The Reference Contact No is required", data_bv_stringlength = "true", data_bv_stringlength_min = "10", required = "required", autocomplete = "off", data_bv_stringlength_max = "11", data_bv_stringlength_message = "The Mobile must be 10 digits long", data_bv_regexp = "true", data_bv_regexp_regexp = "[0-9]", data_bv_regexp_message = "The Mobile can only consist digit" } })
+                                </div>
+                            </div>
+
+                        </div>
+
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="submit" id="edit" value="Update" class="btn btn-primary" />&nbsp;&nbsp;
+                                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    $(document).ready(function () {
+        $("#form0").bootstrapValidator();
+       var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+
+    });
+
+    function GetCityArea() {
+        debugger;
+
+        $('#City').val('');
+        $('#State').val('');
+
+        $.ajax({
+            url: "/DriverMaster/GetCityArea",
+            type: "GET",
+            dataType: "json",
+            data: { Pincode: $('#Pincode').val() },
+            success: function (result) {
+                if (result.Count != 0) {
+                    $('#City').val(result.pincode[0].City);
+                    $('#State').val(result.pincode[0].State);
+
+                    $("#form0").bootstrapValidator('revalidateField', 'City');
+                    $("#form0").bootstrapValidator('revalidateField', 'State');
+
+                } else {
+                    toastr.error("Pincode Not Found");
+                    $('#Pincode').val('')
+                    $('#Pincode').focus();
+                }
+            },
+            error: function (ex) {
+                console.log("error");
+                console.log(ex);
+            }
+        });
+
+    }
+
+
+     function CheckDuplicate() {
+        debugger;
+         var DriverName = $("#DriverName").val();
+        $.ajax({
+            url: '@Url.Action("CheckDuplicate", "DriverMaster")',
+            type: "GET",
+            dataType: "JSON",
+            data: { DriverName: DriverName, Mode: "Create", ID: 0 },
+            success: function (result) {
+                try {
+                    if (result == "1") {
+                        $("#DriverName").val("");
+                        $("#form0").bootstrapValidator('revalidateField', 'DriverName');
+                        toastr.error("Driver Name already exist");
+                    }
+                    else if (result == "0") {
+
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+</script>
+

@@ -1,0 +1,624 @@
+﻿@model Micraft.ManeGrowAgro.Models.MonthlyProdPlan
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #tbl11 .form-control {
+        width: 70px;
+        padding: 0;
+    }
+</style>
+
+<!-- /.content-header -->
+<!-- Main content -->
+<br />
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                <div class="content-header" style="padding:1px">
+                                   <h4>Monthly Prod Plan</h4>
+                                </div>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="modal-body">
+                                <input type="hidden" id="ID" />
+                                <input type="hidden" id="Count" value="14785" />
+                                <div class="row">
+                                    <div class="col-md-1"> Year</div>
+                                    <div class="col-md-2">
+                                        <select name="Year" id="Year" class="Year form-control" >
+                                            <option value="">Select Year</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2026">2026</option>
+                                            <option value="2027">2027</option>
+                                            <option value="2028">2028</option>
+                                            <option value="2029">2029</option>
+                                            <option value="2030">2030</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-1">Month</div>
+                                    <div class="col-md-2">
+                                        <select name="Month" id="Month" class="Month form-control" >
+                                            <option value="">Select Month</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="col-md-3"><input type="file" id="postedFile" name="postedFile" class="form-control" placeholder="Upload file" /></div>
+                                    <div class="col-md-1" style="align-items:center;"><input type="button" value="Upload" class="btn btn-primary" onclick="excelupload()" /></div>
+
+                                    <div class="col-md-1"><a id="imgPLSign2" href="~/Photo/BulkExcelFiles/MonthlyProdPlan.xlsx"><img src='\Photo\excelDownload.png' alt='Smiley face' height='30' width='30' /></a></div>
+                                </div>
+
+
+                                <div class="col-md-1">
+                                    <div class="form-group" @*style="padding-top:25px;"*@>
+                                        @*<a href='#' title='Airwaybill print'> <img src='\Photo\excelDownload.png' alt='Smiley face' height='60' width='60' id='AWB{{:AirwayBillNo}}' onclick='DownloadExcelFile(this.id);'></a>*@
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <hr />
+                                    </div>
+                                    </div>
+                                <form>
+                                    <div id="orderItems">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered dt-responsive" style="width: 100%" id="tbl11">
+                                                <thead style="background-color: #d8e9c1;font-size:12px!important">
+                                                    <tr>
+                                                        <th >Room No</th>
+                                                        @for (int i = 1; i <= 31; i++)
+                                                        {
+                                                            <th class="dd"> @i </th>
+
+                                                        }
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="mycontainer" id="mainrow">
+
+
+                                                        <td >
+                                                             @Html.DropDownList("RoomNo", new SelectList(ViewBag.RoomNo, "RoomNo", "RoomNo"), "Select", new{@class = "form-control", @style = "width:100px!important" })
+
+                                                        </td>
+
+                                                        <td>
+                                                            <input type="number" id="1" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="2" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="3" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="4" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="5" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="6" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="7" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="8" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="9" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="10" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="11" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="12" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="13" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="14" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="15" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="16" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="17" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="18" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="19" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="20" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+
+                                                        <td>
+                                                            <input type="number" id="21" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="22" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="23" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="24" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="25" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="26" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="27" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="28" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="29" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="30" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" id="31" class="form-control" onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47">
+                                                        </td>
+                                                        <td>
+                                                            <input type="button" id="AddPlan" value="add" style="width:80px" class="btn btn-success" onclick="AddData()" />
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <br /><br />
+
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                                <thead style="font-size:12px!important">
+                                                    <tr class="text-uppercase">
+                                                        <th>Year</th>
+                                                        <th>Month</th>
+                                                        <th>Room No</th>
+
+                                                        @for (int i = 1; i <= 31; i++)
+                                                        {
+                                                            <th> @i </th>
+
+                                                        }
+
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                        <br />
+                                        <button type="button" class="btn btn-success" onclick="Save()"> Save </button>
+                                        <button type="button" class="btn btn-primary" onclick="backToList()"> Back to List </button>
+                                    </div>
+
+
+                                </form>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+    });
+
+    function backToList() {
+        window.location.href = '/MonthlyProdPlan/Index'
+    }
+
+
+    function Save() {
+        
+        if ($('#example TBODY tr').length == 0) {
+            //...do something here
+            toastr.error("Please add Some records.");
+        }
+        else {
+
+            $.preloader.start({
+                modal: true,
+                src: 'sprites2.png'
+            });
+
+            var recs = new Array();
+
+            $("#example TBODY TR").each(function () {
+                var row = $(this);
+                var MonthlyProdPlan = {};
+                MonthlyProdPlan.Year = row.find("TD").eq(0).html();
+                MonthlyProdPlan.Month = row.find("TD").eq(1).html();
+                MonthlyProdPlan.RoomNo = row.find("TD").eq(2).html();
+                MonthlyProdPlan.D1 = row.find("TD").eq(3).html();
+                MonthlyProdPlan.D2 = row.find("TD").eq(4).html();
+                MonthlyProdPlan.D3 = row.find("TD").eq(5).html();
+                MonthlyProdPlan.D4 = row.find("TD").eq(6).html();
+                MonthlyProdPlan.D5 = row.find("TD").eq(7).html();
+                MonthlyProdPlan.D6 = row.find("TD").eq(8).html();
+                MonthlyProdPlan.D7 = row.find("TD").eq(9).html();
+                MonthlyProdPlan.D8 = row.find("TD").eq(10).html();
+                MonthlyProdPlan.D9 = row.find("TD").eq(11).html();
+                MonthlyProdPlan.D10 = row.find("TD").eq(12).html();
+                MonthlyProdPlan.D11 = row.find("TD").eq(13).html();
+                MonthlyProdPlan.D12 = row.find("TD").eq(14).html();
+                MonthlyProdPlan.D13 = row.find("TD").eq(15).html();
+                MonthlyProdPlan.D14 = row.find("TD").eq(16).html();
+                MonthlyProdPlan.D15 = row.find("TD").eq(17).html();
+                MonthlyProdPlan.D16 = row.find("TD").eq(18).html();
+                MonthlyProdPlan.D17 = row.find("TD").eq(19).html();
+                MonthlyProdPlan.D18 = row.find("TD").eq(20).html();
+                MonthlyProdPlan.D19 = row.find("TD").eq(21).html();
+                MonthlyProdPlan.D20 = row.find("TD").eq(22).html();
+                MonthlyProdPlan.D21 = row.find("TD").eq(23).html();
+                MonthlyProdPlan.D22 = row.find("TD").eq(24).html();
+                MonthlyProdPlan.D23 = row.find("TD").eq(25).html();
+                MonthlyProdPlan.D24 = row.find("TD").eq(26).html();
+                MonthlyProdPlan.D25 = row.find("TD").eq(27).html();
+                MonthlyProdPlan.D26 = row.find("TD").eq(28).html();
+                MonthlyProdPlan.D27 = row.find("TD").eq(29).html();
+                MonthlyProdPlan.D28 = row.find("TD").eq(30).html();
+                MonthlyProdPlan.D29 = row.find("TD").eq(31).html();
+                MonthlyProdPlan.D30 = row.find("TD").eq(32).html();
+                MonthlyProdPlan.D31 = row.find("TD").eq(33).html();
+                recs.push(MonthlyProdPlan);
+            });
+
+            var data = {
+                recs: recs
+            }
+
+            $.ajax({
+                type: "POST",
+                url:'@Url.Action("Save", "MonthlyProdPlan")',
+                //url: "/MonthlyProdPlan/Save",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Message == "success") {
+                        $('#form0').each(function () {
+                            this.reset();
+                        });
+                        $('#example tbody').empty();
+                        toastr.success("Saved.");
+                    }
+                    else {
+                        toastr.error(result.Message);
+                        $.preloader.stop();
+                    }
+                    $.preloader.stop();
+                }
+            });
+
+        }
+    }
+
+    function excelupload()
+    {
+        var valid = true;
+        if ($("#Year").val() == "" || $("#Year").val() == null) {
+            toastr.error("Please Select Year.");
+            valid = false;
+        }
+
+        if ($("#Month").val() == "" || $("#Month").val() == null) {
+            toastr.error("Please Select Month.");
+            valid = false;
+        }
+
+        if ($("#postedFile").val() == "" || $("#postedFile").val() == null) {
+            toastr.error("Please Select File.");
+            valid = false;
+        }
+
+        if (valid == true)
+        {
+            var model = new FormData();
+
+            var fileUpload = $("#postedFile").get(0);
+            var files = fileUpload.files;
+
+            for (var i = 0; i < files.length; i++) {
+                model.append(files[i].name, files[i]);
+            }
+            $.preloader.start({
+                modal: true,
+                src: 'sprites2.png'
+            });
+            $.ajax({
+                url: '@Url.Action("UploadExcel", "MonthlyProdPlan")',
+                type: "POST",
+                contentType: false,
+                processData: false,
+                data: model,
+                success: function (result) {
+                    if (result.Message == "success") {
+
+                        GetTblData();
+                        $("#postedFile").val(null);
+                        toastr.success("File Uploaded");
+                        //if (result.excelremovedcount > 0) {
+                        //    toastr.error(result.excelremovedcount + " already exist not uploaded.");
+                        //}
+                        $.preloader.stop();
+                    }
+                    else {
+                        toastr.error(result.Message);
+                        $.preloader.stop();
+                    }
+                },
+                error: function (err) {
+                    $.preloader.stop();
+                    alert(err.statusText);
+                }
+            });
+        }
+    }
+
+    function GetTblData() {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetTblData", "MonthlyProdPlan")',
+            data: { },
+            dataType: "json",
+            success: function (tbldata)
+            {
+                $.each(tbldata, function (i, val) {
+
+                    $("#example").append("<tr> <td>" + $("#Year").val() + "</td> <td>" + $("#Month").val() + "</td> <td>" + val.RoomNo + "</td> <td>" + val.C1 + "</td><td>" + val.C2 + "</td><td>" + val.C3 + "</td><td>" + val.C4 + "</td><td>" + val.C5 + "</td><td>" + val.C6 + "</td><td>" + val.C7 + "</td><td>" + val.C8 + "</td><td>" + val.C9 + "</td><td>" + val.C10 + "</td><td>" + val.C11 + "</td><td>" + val.C12 + "</td><td>" + val.C13 + "</td><td>" + val.C14 + "</td><td>" + val.C15 + "</td><td>" + val.C16 + "</td><td>" + val.C17 + "</td><td>" + val.C18 + "</td><td>" + val.C19 + "</td><td>" + val.C20 + "</td><td>" + val.C21 + "</td><td>" + val.C22 + "</td><td>" + val.C23 + "</td><td>" + val.C24 + "</td><td>" + val.C25 + "</td><td>" + val.C26 + "</td><td>" + val.C27 + "</td><td>" + val.C28 + "</td><td>" + val.C29 + "</td><td>" + val.C30 + "</td><td>" + val.C31 + "</td> <td> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>  </tr>");
+
+
+                    var result = [];
+                    var cou = 0;
+                    var row = "";
+                    $("#row1").remove();
+                    $('#example tr').each(function () {
+                        $('td', this).each(function (index, val) {
+                            if (!result[index]) result[index] = 0;
+                            result[index] += parseInt($(val).text());
+                        });
+                    });
+
+                    $(result).each(function () {
+                        cou = cou + 1;
+                        if (cou > 3 && cou <= 34) {
+                            row = row + "<td>" + this + "</td>";
+                        }
+
+                    });
+                    $("#row1").remove();
+
+                    $("#example>thead").prepend("<tr style='background-color:#e8f2d9;' id='row1'><td colspan='3'>Total</td>" + row + "</tr>");
+
+                });
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                //alert(response.d);
+                $.preloader.stop();
+            },
+            error: function (err) {
+                $.preloader.stop();
+                //alert(err.statusText);
+            }
+        });
+    }
+
+    function AddData() {
+
+        var temp = true;
+        if ($('#Year').val() == "") {
+            temp = false;
+            toastr.error("Year is Required.");
+        }
+        if ($('#Month').val() == "" || $('#Month').val() == null) {
+            temp = false;
+            toastr.error("Month is Required.");
+        }
+
+        if ($('#RoomNo').val() == "" || $('#RoomNo').val() == 0) {
+            temp = false;
+            toastr.error("Room No. is Required.");
+        }
+
+        if ($('#1').val() == "") { temp = false; toastr.error("Please Enter Plan Day(1)."); }
+        if ($('#2').val() == "") { temp = false; toastr.error("Please Enter Plan Day(2)."); }
+        if ($('#3').val() == "") { temp = false; toastr.error("Please Enter Plan Day(3)."); }
+        if ($('#4').val() == "") { temp = false; toastr.error("Please Enter Plan Day(4)."); }
+        if ($('#5').val() == "") { temp = false; toastr.error("Please Enter Plan Day(5)."); }
+        if ($('#6').val() == "") { temp = false; toastr.error("Please Enter Plan Day(6)."); }
+        if ($('#7').val() == "") { temp = false; toastr.error("Please Enter Plan Day(7)."); }
+        if ($('#8').val() == "") { temp = false; toastr.error("Please Enter Plan Day(8)."); }
+        if ($('#9').val() == "") { temp = false; toastr.error("Please Enter Plan Day(9)."); }
+        if ($('#10').val() == "") { temp = false; toastr.error("Please Enter Plan Day(10)."); }
+        if ($('#11').val() == "") { temp = false; toastr.error("Please Enter Plan Day(11)."); }
+        if ($('#12').val() == "") { temp = false; toastr.error("Please Enter Plan Day(12)."); }
+        if ($('#13').val() == "") { temp = false; toastr.error("Please Enter Plan Day(13)."); }
+        if ($('#14').val() == "") { temp = false; toastr.error("Please Enter Plan Day(14)."); }
+        if ($('#15').val() == "") { temp = false; toastr.error("Please Enter Plan Day(15)."); }
+        if ($('#16').val() == "") { temp = false; toastr.error("Please Enter Plan Day(16)."); }
+        if ($('#17').val() == "") { temp = false; toastr.error("Please Enter Plan Day(17)."); }
+        if ($('#18').val() == "") { temp = false; toastr.error("Please Enter Plan Day(18)."); }
+        if ($('#19').val() == "") { temp = false; toastr.error("Please Enter Plan Day(19)."); }
+        if ($('#20').val() == "") { temp = false; toastr.error("Please Enter Plan Day(20)."); }
+        if ($('#21').val() == "") { temp = false; toastr.error("Please Enter Plan Day(21)."); }
+        if ($('#22').val() == "") { temp = false; toastr.error("Please Enter Plan Day(22)."); }
+        if ($('#23').val() == "") { temp = false; toastr.error("Please Enter Plan Day(23)."); }
+        if ($('#24').val() == "") { temp = false; toastr.error("Please Enter Plan Day(24)."); }
+        if ($('#25').val() == "") { temp = false; toastr.error("Please Enter Plan Day(25)."); }
+        if ($('#26').val() == "") { temp = false; toastr.error("Please Enter Plan Day(26)."); }
+        if ($('#27').val() == "") { temp = false; toastr.error("Please Enter Plan Day(27)."); }
+        if ($('#28').val() == "") { temp = false; toastr.error("Please Enter Plan Day(28)."); }
+        if ($('#29').val() == "") { temp = false; toastr.error("Please Enter Plan Day(29)."); }
+        if ($('#30').val() == "") { temp = false; toastr.error("Please Enter Plan Day(30)."); }
+        if ($('#31').val() == "") { temp = false; toastr.error("Please Enter Plan Day(31)."); }
+
+        if (temp == true) {
+
+
+            $("#example").append("<tr> <td>" + $("#Year").val() + "</td> <td>" + $("#Month").val() + "</td> <td>" + $("#RoomNo").val() + "</td> <td>" + $("#1").val() + "</td><td>" + $("#2").val() + "</td><td>" + $("#3").val() + "</td><td>" + $("#4").val() + "</td><td>" + $("#5").val() + "</td><td>" + $("#6").val() + "</td><td>" + $("#7").val() + "</td><td>" + $("#8").val() + "</td><td>" + $("#9").val() + "</td><td>" + $("#10").val() + "</td><td>" + $("#11").val() + "</td><td>" + $("#12").val() + "</td><td>" + $("#13").val() + "</td><td>" + $("#14").val() + "</td><td>" + $("#15").val() + "</td><td>" + $("#16").val() + "</td><td>" + $("#17").val() + "</td><td>" + $("#18").val() + "</td><td>" + $("#19").val() + "</td><td>" + $("#20").val() + "</td><td>" + $("#21").val() + "</td><td>" + $("#22").val() + "</td><td>" + $("#23").val() + "</td><td>" + $("#24").val() + "</td><td>" + $("#25").val() + "</td><td>" + $("#26").val() + "</td><td>" + $("#27").val() + "</td><td>" + $("#28").val() + "</td><td>" + $("#29").val() + "</td><td>" + $("#30").val() + "</td><td>" + $("#31").val() + "</td> <td> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>  </tr>");
+
+            $('#RoomNo').val('');
+            $('#1').val('');
+            $('#2').val('');
+            $('#3').val('');
+            $('#4').val('');
+            $('#5').val('');
+            $('#6').val('');
+            $('#7').val('');
+            $('#8').val('');
+            $('#9').val('');
+            $('#10').val('');
+            $('#11').val('');
+            $('#12').val('');
+            $('#13').val('');
+            $('#14').val('');
+            $('#15').val('');
+            $('#16').val('');
+            $('#17').val('');
+            $('#18').val('');
+            $('#19').val('');
+            $('#20').val('');
+            $('#21').val('');
+            $('#22').val('');
+            $('#23').val('');
+            $('#24').val('');
+            $('#25').val('');
+            $('#26').val('');
+            $('#27').val('');
+            $('#28').val('');
+            $('#29').val('');
+            $('#30').val('');
+            $('#31').val('');
+        }
+
+
+        var result = [];
+        var cou = 0;
+        var row = "";
+        $("#row1").remove();
+        $('#example tr').each(function () {
+            $('td', this).each(function (index, val) {
+                if (!result[index]) result[index] = 0;
+                result[index] += parseInt($(val).text());
+            });
+        });
+
+        $(result).each(function () {
+            cou = cou + 1;
+            if (cou > 3 && cou <= 34) {
+                 row = row+"<td>" + this + "</td>";
+            }
+
+        });
+        $("#row1").remove();
+
+        $("#example>thead").prepend("<tr style='background-color:#e8f2d9;' id='row1'><td colspan='3'>Total</td>" + row + "</tr>");
+    }
+
+
+        $("#example").on('click', '.btnDelete', function () {
+            $(this).closest('tr').remove();
+
+            //change total
+
+            var result = [];
+            var cou = 0;
+            var row = "";
+            $("#row1").remove();
+            $('#example tr').each(function () {
+                $('td', this).each(function (index, val) {
+                    if (!result[index]) result[index] = 0;
+                    result[index] += parseInt($(val).text());
+                });
+            });
+
+            $(result).each(function () {
+                cou = cou + 1;
+                if (cou > 3 && cou <= 34) {
+                    row = row + "<td>" + this + "</td>";
+                }
+
+            });
+
+            $("#row1").remove();
+            $("#example>thead").prepend("<tr style='background-color:#e8f2d9;' id='row1'><td colspan='3'>Total</td>" + row + "</tr>");
+
+        });
+
+</script>

@@ -1,0 +1,1012 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+   
+</style>
+
+<!-- /.content-header -->
+<!-- Main content -->
+<br />
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            onSubmit = "return false"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <div class="content-header" style="padding:1px">
+                                <h4>POD Updation</h4>
+                            </div>
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <input type="hidden" id="abcc" />
+                            <input type="hidden" id="SelectedOrderNo" />
+                            <div class="modal-body">
+
+                                <input type="hidden" id="Id" name="Id" />
+
+                                <input type="hidden" id="OrderNo" name="OrderNo" />
+
+                                <input type="hidden" id="Count" value="1000" />
+
+                                <input type="hidden" id="SelectedCount" value="" />
+
+                                <div class="row">
+                                    <div class="col-md-2 col-12">
+                                        <lable>Dispatch Date</lable>
+                                    </div>
+                                    <div class="col-md-2 col-12">
+                                        <input type="text" class="form-control" id="mydate" readonly="readonly">
+                                    </div>
+                                    <div class="col-md-2 col-12">
+                                        <lable>Select Customer</lable>
+                                    </div>
+                                    <div class="col-md-2 col-12">
+                                        @Html.DropDownList("CustID", new SelectList(ViewBag.CustID, "ID", "CustName"), "Select", new { @class = "form-control", style = "min-width:100px", onchange = "GetDamageDetails()" })
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div style="overflow-x:auto;">
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                                <thead>
+                                                    <tr class="text-uppercase">
+                                                        <th>Order No</th>
+                                                        <th>Item</th>
+                                                        <th>Order Qty</th>
+                                                        <th>Prev Received Qty</th>
+                                                        <th>UOM</th>
+                                                        <th>Weight(Kg)</th>
+                                                        <th>Received Qty</th>
+                                                        <th>Rejection</th>
+                                                        <th>POD</th>
+                                                        <th>Reject Reason</th>
+                                                        <th>Reject Photo</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                        <button type="button" class="btn btn-success" id="Savebtn" onclick="Save()"> Save </button>
+                                        <button type="button" class="btn btn-primary" onclick="backToList()"> Back to List </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="modal" id="myModal">
+                                <div class="modal-dialog modal-xl modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div id="PnlUploadFiles">
+                                            <div class="modal-header" style="background-color:#3c8dbc;">
+                                                <h5 class="box-title"><strong style="color:white">  Reject Product Image  </strong></h5>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <div class="box-tools pull-right">
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <div class="col-md-12">
+                                                            @Html.Label("Reject Reason ", htmlAttributes: new { @class = "control-label-1" })
+                                                            @Html.DropDownList("AttachmentName", new SelectList(ViewBag.Dmgreason, "DamageReason", "DamageReason"), "Select", new { @class = "form-control" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <div class="col-md-12">
+                                                            @Html.Label("Details ", htmlAttributes: new { @class = "control-label-1" })
+                                                            <input type="text" id="txtDetails" name="txtDetails" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <div class="col-md-12">
+                                                            @Html.Label("Attchments ", htmlAttributes: new { @class = "control-label-1" })
+                                                            <input type="file" id="Attachments" name="Attachments" accept=".jpg, .gif, .png,.pdf" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <br />
+                                                    <button type="button" id="UploadBtns" class="btn btn-warning">Add Record</button>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <br />
+                                                    <div id="progressbar-6">
+                                                        <div class="progress-label-1">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table class="table table-responsive" id="AttachmentList" style="width: 100%;  white-space: nowrap;"></table>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="col-md-4">
+
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <label id="lbltot" class="ml-4"></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="col-md-8">
+
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="button" id="btnSave" value="Save Files" onclick="SaveFiles()" class="btn btn-success" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                       
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        try {
+            $('#mydate').datepicker({
+                dateFormat: 'dd-mm-yy',
+                autoclose: true,
+                onSelect: function () {
+                    GetDamageDetails()
+
+                }
+            });
+            $('#mydate').val('@DateTime.Now.ToString("dd-MM-yyyy")');
+            $("input:file").css('background', 'lightgreen');
+         /* GetTodaysData();*/
+        }
+        catch (e) {
+        }
+    });
+
+    $('input[type=file]').change(function (e) {
+
+
+        $(this).parents('.parent-selector').find('.element-to-paste-filename').text(e.target.files[0].name);
+    });
+
+    function backToList() {
+        window.location.href = '/PODUpdation/Index'
+    }
+
+    //$('#mydate').on('change', function () {
+    //    if ($('#CustID').val() != null) {
+    //        if ($('#CustID').val() != "") {
+    //            alert();
+    //            GetMonthlyWeekly();
+
+    //        }
+    //    }
+    //});
+
+    var rowCount = 0;
+    function GetDamageDetails() {
+
+      
+         $.ajax({
+            type: "POST",
+            url: '@Url.Action("DmgReason", "PODUpdation")',
+            dataType: "json",
+             success: function (result) {
+                
+                  $('#example tbody').empty();
+debugger
+        $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetDamageDetails", "PODUpdation")',
+                     data: { DATE: $('#mydate').val(), CustomerID: $('#CustID').val() },
+                    dataType: "json",
+                     success: function (results) {
+                         if (results.Message == "success") {
+                             var dnd = true;
+                             var Count = 1001;
+                             $.each(results.orders, function (i, item) {
+
+                                 $("#example").append("<tr> <td><label id='OrderNo" + Count + "'  ></label></td> <td><label id='ProductName" + Count + "' style='width: 200px'></label></td> <td><label id='OrderQty" + Count + "' ></label> <td><label id='RejectedQty" + Count + "' ></label></td> <td><label id='UOM" + Count + "' ></label></td> <td><label id='Weight" + Count + "' ></label></td> <td><input type='text' id='ReceivedQty" + Count + "'  style='width: 100px'  onchange='checkval(" + Count + ")' ></input</td> <td><label id='RejectQty" + Count + "'  style='width: 70px' ></label></td>  <td id='PODID" + Count + "'><input type='file' id='POD" + Count + "'  style='width: 100px' onchange='GetPOD(" + Count + ")'></td> <td><select id='DamageReason" + Count +"'  style='width: 100px'></select></input</td><td> <input type='hidden'  id='PODName" + Count + "'/><button type='button'  id='" + item.Id + "' class='btn btn-primary btnAdd'  onclick='ShowImagePopup(" + item.Id + ");'><i class='fa fa-plus'></i> </td> </tr>");
+
+                                 $('#OrderNo' + Count).text(item.Id);
+                                 $('#ProductName' + Count).text(item.ProductName);
+                                 $('#OrderQty' + Count).text(item.Qty);
+                                 $('#UOM' + Count).text(item.UOM);
+                                 $('#Weight' + Count).text(item.Weight);
+
+                                 if (item.RejectedQty == null || item.RejectedQty == "") {
+                                     item.RejectedQty = 0;
+                                 }
+
+
+                                 $('#RejectedQty' + Count).text(item.RejectedQty);
+
+                                 $('#RejectQty' + Count).text(0);
+                                 debugger
+                                 $("#DamageReason" + Count).append("<option value=''>Reject Reason</option>");
+                                 $.each(result, function (i, val) {
+
+                                     $("#DamageReason" + Count).append("<option value='" + val.ID + "'>" + val.DamageReason + "</option>");
+
+                                 });
+
+                                
+                                 Count++;
+
+                             });
+                             rowCount = Count;
+                         }
+
+                     },
+        });
+
+             }
+         });
+
+
+
+     
+
+
+    }
+
+
+
+    function checkval(id) {
+        debugger
+       // $("#example").empty();
+        if ((parseInt($("#OrderQty" + id).text()) - parseInt($("#RejectedQty" + id).text())) >= parseInt($("#ReceivedQty" + id).val())) {
+            //alert("valid");
+            totalqtycalculator();
+
+        }
+        else {
+            $("#ReceivedQty" + id).val('');
+            toastr.error("Received Qty Should Not Be Greather Than Order Qty.");
+
+
+            //alert("invalid");
+        }
+
+    }
+
+
+    function Save() {
+        var temp = true;
+
+
+        var Countt = 0;
+        var PODMSG = "";
+        var ReceivedQtyMSG = "";
+        var rejectreasonMSG = "";
+        $("#example TBODY TR").each(function () {
+            var row = $(this);
+            var Order = {};
+
+            Countt = Countt + 1;
+            if (row.find("TD:eq(10) input[type='hidden']").val() == "" || row.find("TD:eq(10) input[type='hidden']").val() == null) {
+                PODMSG = "Please Upload POD";
+            }
+
+            if (row.find("TD").eq(7).text() != 0 && row.find("TD:eq(9) select").val() == "") {
+                rejectreasonMSG = "Please Select REJECT REASON";
+            }
+
+
+            if ( row.find("TD:eq(6) input[type='text']").val()=="") {
+
+                ReceivedQtyMSG = "Please Enter Received Qty";
+             ////   temp = false;
+            }
+
+
+
+        });
+        debugger
+
+        if (PODMSG != "") {
+            temp = false;
+            toastr.error(PODMSG);
+        }
+        if (ReceivedQtyMSG != "") {
+            temp = false;
+            toastr.error(ReceivedQtyMSG);
+        }
+        if (rejectreasonMSG != "") {
+            temp = false;
+            toastr.error(rejectreasonMSG);
+        }
+
+        if (Countt == 0) {
+            toastr.error("No Data Found.");
+            temp = false;
+        }
+
+
+         if (temp == true){
+            $.preloader.start({
+                modal: true,
+                src: 'sprites2.png'
+            });
+
+            var recs = new Array();
+
+            $("#example TBODY TR").each(function () {
+                var row = $(this);
+                var Order = {};
+                    Order.OrderNo = row.find("TD").eq(0).text();
+                    Order.ProductName = row.find("TD").eq(1).text();
+                    Order.Qty = row.find("TD").eq(2).text();
+                    Order.UOM = row.find("TD").eq(4).text();
+                    Order.Weight = row.find("TD").eq(5).text();
+                    Order.ReceivedQty = row.find("TD:eq(6) input[type='text']").val();
+                    Order.RejectedQty = row.find("TD").eq(7).text();
+                    Order.DamageReasonID = row.find("TD:eq(9) select").val();
+                    Order.DamageReason = row.find("TD:eq(9) option:selected").text();
+                    Order.PODName = row.find("TD:eq(10) input[type='hidden']").val();
+                    recs.push(Order);
+            });
+             debugger
+            var url = window.location.href;
+            var part = url.substring(url.lastIndexOf('/') + 1);
+            var MainID = 0
+            if (part != "Create") {
+                MainID = part;
+            }
+            var list = [];
+
+            var data = {
+                Cust: list,
+                recs: recs, DATE: $('#mydate').val(), CustomerID: $('#CustID').val(), CustomerName: $("#CustID option:selected").text()
+            }
+            debugger;
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/PODUpdation/Save",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.Message == "success") {
+                        $('#form0').each(function () {
+                            this.reset();
+                        });
+                        $()
+                        $('#OrderNo').html('');
+                        $('#ProductName').html('');
+                        $('#Qty').html('');
+                        $('#UOM').html('');
+                        $('#Weight').html('');
+                        $('#ReceivedQty').val('');
+                        $('#RejectedQty').html('');
+                        $('#RejectQty').html('');
+
+                        $('#DamageReasonID').val('');
+                        $('#example tbody').empty();
+
+                        $('#mydate').html('');
+                        $('#CustID').html('');
+
+                        toastr.success("Records Saved Succesfully with Order Id: " + result.Max + ".");
+                        window.location.href = "/PODUpdation/Index";
+                        //   GetEditData(result.Max);
+                    }
+                    else {
+                        if (result.Message == "Session Timeout Please Login Again...") {
+                            alert(result.Message)
+                            window.location.href = "/Account/Login";
+                        }
+                        toastr.error(result.Message);
+                        $.preloader.stop();
+                    }
+                    $.preloader.stop();
+                }
+            });
+         }
+    }
+
+    function totalqtycalculator() {
+        var newId = rowCount;
+        for (var i = 1; i < newId; i++) {
+            $("#RejectQty" + i).text((parseInt($("#OrderQty" + i).text()) - parseInt($("#RejectedQty" + i).text())) - parseInt($("#ReceivedQty"+i).val()));
+        }
+    }
+
+    //function alculateQty() {
+    //    $("#lbltot").text(0);
+    //    var Qty = 0;
+    //    var ReceivedQty = 0;
+    //    var RejectedQty = 0;
+    //    $("#example TBODY TR").each(function () {
+    //        var row = $(this);
+
+    //        Qty = Qty + parseFloat(row.find("TD").eq(2).html());
+    //        ReceivedQty = ReceivedQty + parseFloat(row.find("TD").eq(5).html());
+    //        RejectedQty = RejectedQty + parseFloat(row.find("TD").eq(6).html());
+    //    });
+    //    $("#lbltot").text(RejectedQty);
+    //}
+
+    // Upload File
+
+    $('#UploadBtn').click(function () {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+        var Details = $('#txtDetails').val();
+        if (Details == "") {
+            toastr.error('Please Enter Attachment details..!');
+        } else {
+            if ($("#AttachmentName").val() != "") {
+                var fileUpload = $("#Attachments").get(0);
+                if ($("#Attachments").val() != "") {
+                    var files = fileUpload.files;
+                    var fileData = new FormData();
+                    var ID = $('#OrderNo').val();
+                    for (var i = 0; i < files.length; i++) {
+                        fileData.append(files[i].name, files[i]);
+                        fileData.append("OrderNo", ID);
+                    }
+                    $.ajax({
+                        url: '/PODUpdation/UploadFile',
+                        type: "POST",
+                        contentType: false,
+                        processData: false,
+                        data: fileData,
+                        async: false,
+                        success: function (result) {
+                            debugger;
+                            if (result.DuplicateImg != "") {
+                                toastr.error('File Name "' + result.DuplicateImg + '" already Exist...!')
+                            }
+                            if (result.list.length > 0) {
+                                $('#FileBrowse').find("*").prop("disabled", true);
+                                LoadFileProgressBar(result.list);
+                            }
+                        },
+                        error: function (err) {
+                            alert(err.statusText);
+                        }
+                    });
+                } else {
+                    toastr.error('Please Upload File..!');
+                }
+            } else {
+                toastr.error('Please Enter Damage Reason..!');
+            }
+        }
+    });
+   
+    function DownloadFile(Count) {
+        window.location = '/PODUpdation/Download?file=' + $("#FileName" + Count).val();
+    }
+    function SaveFiles() {
+        //$('#btnSave').prop("disabled", true);
+        debugger;
+        //  var ID = $('#CustomerID').val();
+        var temp = true;
+        var AttachmentList = $('#AttachmentList tr').length;
+        if (AttachmentList > 0) {
+            var AttachmentLst = [];
+            $('#AttachmentList tbody tr').each(function (index, ele) {
+                if (($('.FileName', this).val() || "") == "") {
+                } else {
+                    var orderItem = {
+                        Name: $('.FileName', this).val(),
+                        CustomerID: $('#CustomerID').val(),
+                        Attachments: $('.AttachmentName', this).val(),
+                        DmsFileID: $('.ID', this).val(),
+                        DocumentNo: $('.txtDtl', this).val(),
+                        ID: $('#OrderNo').val(),
+                    }
+                    AttachmentLst.push(orderItem);
+                }
+            });
+
+            var data = {
+                FilesList: AttachmentLst,
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/PODUpdation/SaveList',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.Message == "success") {
+
+                        toastr.success("Attachments  Save Successfully..!");
+                        $("#AttachmentList").empty();
+                      //  $("#myModal").modal("show");
+                     //   $('#btnSave').prop("disabled", false);
+                        $("#myModal").modal("hide");
+                  //       GetData();
+                    }
+                    else {
+                        toastr.error(result.Message);
+                        $('#btnSave').prop("disabled", false);
+                    }
+                }
+            });
+        } else {
+            toastr.error('Please Add Attachments..');
+        }
+    };
+    function GetData() {
+        $.ajax({
+            url: '@Url.Action("GetDMSData", "PODUpdation")',
+            type: "GET",
+            dataType: "JSON",
+            data: { ID: $("#OrderNo").val() },
+            success: function (result) {
+                try {
+                    if (result.error == "error") {
+                        toastr.error(result.msg);
+                    }
+                    else {
+                        try {
+
+                        }
+                        catch (e) {
+
+                        }
+                        $("#AttachmentList").empty();
+                        $.each(result.dmsList, function (i, item) {
+
+                            var Count = $('#Count').val();
+                            $("#AttachmentList").append(" <tbody> <tr id='R" + Count + "'> <td><input type='text' id='AttachmentName" + Count + "'  readonly class='AttachmentName  form-control'/></td><td><input type='text' id='txtDtl" + Count + "'style='width:100%'  readonly class='txtDtl  form-control'/></td><td><input type='text'  id='FileName" + Count + "'  readonly class='FileName  form-control'/></td>  <td style='width:50px'><Button type='Button'  id='btnOtherRemove" + Count + "' onclick='DeleteFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-trash' style='font-size:18px;color:red'></i></button></td> <td style='width:50px'><Button type='Button' id='btnOtherFile" + Count + "' onclick='DownloadFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-download' style='font-size:20px;color:black'></i></button></td> <td><input type='hidden' id='ID" + Count + "'  readonly class='ID  form-control'/></td></tr> <tbody>");
+                            $('#AttachmentName' + Count).val(result.dmsList[i].FileDetails);
+                            $('#FileName' + Count).val(result.dmsList[i].Name);
+                            $('#txtDtl' + Count).val(result.dmsList[i].DocumentNo);
+                            $('#ID' + Count).val(result.dmsList[i].ID);
+                            $('#Count').val(parseInt($('#Count').val()) + 1);
+                            // $('#AttachmentName').val('');
+                            $('#Attachments').val('');
+                        });
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+    function DeleteFile(Count) {
+        var x = confirm("Are you sure you want to delete?");
+        if (x) {
+            $.ajax({
+                type: "GET",
+                url: '/PODUpdation/DeleteFiles',
+                data: { 'ID': $('#ID' + Count).val(), FileName: $('#FileName' + Count).val(), Mode: "Edit" },
+                success: function (result) {
+                    if (result == "success") {
+                        toastr.success("File Deleted Successfully..!");
+                        $("#R" + Count + "").remove();
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                }
+            })
+        }
+        else {
+            return false;
+        }
+    }
+    function ShowImagePopup(Id) {
+       // alert(Id)
+        $("#OrderNo").val(Id)
+        $('#myModal').modal({ backdrop: 'static', keyboard: false })
+        $("#myModal").modal("show");
+
+        GetData()
+    }
+
+    function CheckDuplicate() {
+        debugger;
+        var OrderNo = $("#OrderNo").val();
+        $.ajax({
+            url: '@Url.Action("CheckDuplicate", "PODUpdation")',
+            type: "GET",
+            dataType: "JSON",
+            data: { OrderNo: OrderNo, Mode: "Create", ID: 0 },
+            success: function (result) {
+                try {
+                    if (result == "1") {
+                        $("#OrderNo").val("");
+                        $("#form0").bootstrapValidator('revalidateField', 'OrderNo');
+                        toastr.error("OrderNo already exist");
+                    }
+                    else if (result == "0") {
+
+                         }
+                    else {
+                        toastr.error(result);
+                         }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+
+
+</script>
+
+
+
+
+<script type="text/javascript">
+    var IDDD = "";
+var fileReadernew = new FileReader();
+var filterType = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
+
+    fileReadernew.onload = function (event) {
+  var image = new Image();
+    debugger
+  image.onload=function(){
+	//document.getElementById("original-Img").src=image.src;
+	var canvas=document.createElement("canvas");
+	var context=canvas.getContext("2d");
+	const width = 400; // set your width
+	const scaleFactor = width / image.width;
+	canvas.width = width;
+	canvas.height = image.height * scaleFactor;
+      context.drawImage(image, 0, 0, width, image.height * scaleFactor);
+      var Name = canvas.toDataURL();
+    //  document.getElementById("upload-Preview").src = Name;
+
+
+      debugger
+      var mergedImage = "";
+      try {        
+          var str1 = "data:image/png;base64,";
+          if (Name.indexOf(str1) != -1) {
+              mergedImage = Name.replace('data:image/png;base64,', '');
+          }
+      } catch (e) {
+
+      }
+
+      try {
+          var str1 = "data:image/jpeg;base64,";
+          if (Name.indexOf(str1) != -1) {
+              mergedImage = Name.replace('data:image/jpeg;base64,', '');
+          }
+      } catch (e) {
+
+      }
+
+      try {
+          var str1 = "data:image/jpg;base64,";
+          if (Name.indexOf(str1) != -1) {
+              mergedImage = Name.replace('data:image/jpg;base64,', '');
+          }
+      } catch (e) {
+
+      }
+
+
+
+      $.ajax({
+          url: '/PODUpdation/UploadSignature',
+          type: "POST",
+          dataType: "JSON",
+          data: { 'imageData': mergedImage, 'OrderNo': $('#SelectedOrderNo').val(), },
+          success: function (result) {
+              if (result.Message == "success") {
+
+                  $.preloader.stop();
+                  var ID = $('#SelectedCount').val();
+                  $('#PODName' + ID).val(result.fname);
+                  $("#PODID" + IDDD).css('background-color', 'green');
+                  alert("POD successfully Updated..")                 
+              }
+          },
+          error: function (err) {
+              alert(err.statusText);
+          }
+      });
+
+
+
+
+
+
+
+  }
+  image.src=event.target.result;
+};
+
+    var loadImageFile = function (ID) {
+        debugger
+        var abc=$('#abcc').val()
+        var uploadImage = document.getElementById(abc);
+        
+  //check and retuns the length of uploded file.
+  if (uploadImage.files.length === 0) { 
+    return; 
+  }
+  
+  //Is Used for validate a valid file.
+        var uploadFile = document.getElementById(abc).files[0];
+  if (!filterType.test(uploadFile.type)) {
+      alert("Please select a valid image.");
+      $.preloader.stop();
+    return;
+  }
+  
+        fileReadernew.readAsDataURL(uploadFile);
+    }
+
+    function GetPOD(ID) {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        $('#SelectedCount').val(ID);
+        var fileUpload = "POD" + ID;
+        $('#SelectedOrderNo').val($('#OrderNo' + ID).text())
+        $('#abcc').val(fileUpload);
+      
+        loadImageFile(ID);
+
+        IDDD = ID;
+
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    var fileReaders = new FileReader();
+    var filterType = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
+
+    fileReaders.onload = function (event) {
+        var image = new Image();
+        debugger
+        image.onload = function () {
+            //document.getElementById("original-Img").src=image.src;
+            var canvas = document.createElement("canvas");
+            var context = canvas.getContext("2d");
+            const width = 400; // set your width
+            const scaleFactor = width / image.width;
+            canvas.width = width;
+            canvas.height = image.height * scaleFactor;
+            context.drawImage(image, 0, 0, width, image.height * scaleFactor);
+            var Name = canvas.toDataURL();
+            //  document.getElementById("upload-Preview").src = Name;
+
+
+            debugger
+            var mergedImage = "";
+            try {
+                var str1 = "data:image/png;base64,";
+                if (Name.indexOf(str1) != -1) {
+                    mergedImage = Name.replace('data:image/png;base64,', '');
+                }
+            } catch (e) {
+
+            }
+
+            try {
+                var str1 = "data:image/jpeg;base64,";
+                if (Name.indexOf(str1) != -1) {
+                    mergedImage = Name.replace('data:image/jpeg;base64,', '');
+                }
+            } catch (e) {
+
+            }
+
+            try {
+                var str1 = "data:image/jpg;base64,";
+                if (Name.indexOf(str1) != -1) {
+                    mergedImage = Name.replace('data:image/jpg;base64,', '');
+                }
+            } catch (e) {
+
+            }
+
+
+
+            $.ajax({
+                url: '/PODUpdation/UploadFile',
+                type: "POST",
+                dataType: "JSON",
+                data: { 'imageData': mergedImage, 'OrderNo': $('#OrderNo').val(), },
+                success: function (result) {
+                    $.preloader.stop();
+                    if (result.Message == "success") {
+                        debugger
+                       
+                        var ID = $('#SelectedCount').val();
+                      //  $('#PODName' + ID).val(result.fname);
+                    //    LoadFileProgressBar(result.fname);
+                        var Count = $('#Count').val();
+                        $("#AttachmentList").append(" <tbody> <tr id='R" + Count + "'> <td><input type='text' id='AttachmentName" + Count + "' style='width:100%'  readonly class='AttachmentName  form-control'/></td><td><input type='text' id='txtDtl" + Count + "'style='width:100%'  readonly class='txtDtl  form-control'/></td><td><input type='text' style='width:100%' id='FileName" + Count + "'  readonly class='FileName  form-control'/></td>  <td style='width:50px'><Button type='Button'  id='btnOtherRemove" + Count + "' onclick='DeleteFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-trash' style='font-size:18px;color:red'></i></button></td> <td style='width:50px'><Button type='Button' id='btnOtherFile" + Count + "' onclick='DownloadFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-download' style='font-size:20px;color:black'></i></button></td>  <td><input type='hidden' id='ID" + Count + "'  readonly class='ID  form-control'/></td></tr> <tbody>");
+                        $('#AttachmentName' + Count).val($('#AttachmentName').val());
+                        $('#FileName' + Count).val(result.fname);
+                        $('#txtDtl' + Count).val($('#txtDetails').val());
+                        $('#ID' + Count).val(0);
+
+                        $('#Count').val(parseInt($('#Count').val()) + 1);
+                        //  $('#AttachmentName').val('');
+                        $('#Attachments').val('');
+                        $('#txtDetails').val('');
+
+
+
+
+                        alert("POD successfully Updated..")
+                    }
+                },
+                error: function (err) {
+                    $.preloader.stop();
+                    alert(err.statusText);
+                }
+            });
+
+
+
+
+
+
+
+        }
+        image.src = event.target.result;
+    };
+
+    var loadImageFiles = function (ID) {
+        debugger
+        var abc = "Attachments";
+        var uploadImage = document.getElementById(abc);
+
+        //check and retuns the length of uploded file.
+        if (uploadImage.files.length === 0) {
+            return;
+        }
+
+        //Is Used for validate a valid file.
+        var uploadFile = document.getElementById(abc).files[0];
+        if (!filterType.test(uploadFile.type)) {
+            alert("Please select a valid image.");
+            $.preloader.stop();
+            return;
+        }
+
+        fileReaders.readAsDataURL(uploadFile);
+    }
+    
+
+
+    $('#UploadBtns').click(function () {
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+
+        loadImageFiles();
+
+
+
+
+
+    });
+
+    function LoadFileProgressBar(result) {
+        debugger
+        var progressbar = $("#progressbar-6");
+        var progressLabel = $(".progress-label-1");
+        progressbar.show();
+        $("#progressbar-6").progressbar({
+            //value: false,
+            change: function () {
+                progressLabel.text(
+                    progressbar.progressbar("value") + "%");  // Showing the progress increment value in progress bar
+            },
+            complete: function () {
+                progressLabel.text("Loading Completed!");
+                progressbar.progressbar("value", 0);  //Reinitialize the progress bar value 0
+                progressLabel.text("");
+                progressbar.hide(); //Hiding the progress bar
+
+                $.each(result, function (i, item) {
+                    var Count = $('#Count').val();
+                    $("#AttachmentList").append(" <tbody> <tr id='R" + Count + "'> <td><input type='text' id='AttachmentName" + Count + "' style='width:100%'  readonly class='AttachmentName  form-control'/></td><td><input type='text' id='txtDtl" + Count + "'style='width:100%'  readonly class='txtDtl  form-control'/></td><td><input type='text' style='width:100%' id='FileName" + Count + "'  readonly class='FileName  form-control'/></td>  <td style='width:50px'><Button type='Button'  id='btnOtherRemove" + Count + "' onclick='DeleteFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-trash' style='font-size:18px;color:red'></i></button></td> <td style='width:50px'><Button type='Button' id='btnOtherFile" + Count + "' onclick='DownloadFile(" + Count + ")' class='btn btn-default' ><i class='fa fa-download' style='font-size:20px;color:black'></i></button></td>  <td><input type='hidden' id='ID" + Count + "'  readonly class='ID  form-control'/></td></tr> <tbody>");
+                    $('#AttachmentName' + Count).val($('#AttachmentName').val());
+                    $('#FileName' + Count).val(result);
+                    $('#txtDtl' + Count).val($('#txtDetails').val());
+                    $('#ID' + Count).val(0);
+
+                    $('#Count').val(parseInt($('#Count').val()) + 1);
+                    //  $('#AttachmentName').val('');
+                    $('#Attachments').val('');
+                    $('#txtDetails').val('');
+                });
+                $.preloader.stop();
+            }
+        });
+        function progress() {
+            var val = progressbar.progressbar("value") || 0;
+            progressbar.progressbar("value", val + 1);
+            if (val < 99) {
+                setTimeout(progress, 10);
+            }
+        }
+        setTimeout(progress, 100);
+    }
+</script>

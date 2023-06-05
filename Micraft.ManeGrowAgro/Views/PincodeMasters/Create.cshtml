@@ -1,0 +1,151 @@
+﻿@model Micraft.ManeGrowAgro.Models.PincodeMasters
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+                <h5 class="text-dark mr-2"><b>Pincode Master</b></h5>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("Create", "PincodeMasters", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <h4>Pincode</h4>
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Pincode, htmlAttributes: new { })
+
+                                    @Html.EditorFor(model => model.Pincode, new { htmlAttributes = new { @class = "form-control", @type = "number", data_bv_notempty = "true", data_bv_notempty_message = "The Pincode is required", data_bv_stringlength = "true", data_bv_stringlength_min = "6", required = "required", autocomplete = "off", data_bv_stringlength_max = "11", data_bv_stringlength_message = "The PincodeMust be 6 digits long", data_bv_regexp = "true", data_bv_regexp_regexp = "[0-9]", data_bv_regexp_message = "The Pincode can only consist digit", Onchange = "CheckDuplicate()"} })
+                                </div>
+                                @*<a href="~/Views/PincodeMasters/Create.cshtml">~/Views/PincodeMasters/Create.cshtml</a>*@
+                            <div class="col-md-4 col-12 mb-3">
+                                @Html.LabelFor(model => model.City, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "City is required and cannot be empty", required = "required", Onchange = "CheckDuplicate()" } })
+
+                            </div>
+
+                            <div class="col-md-4 col-12 mb-3">
+                                @Html.LabelFor(model => model.Zone, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.Zone, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Zone is required and cannot be empty", required = "required", Onchange = "CheckDuplicate()" } })
+
+                            </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.State, htmlAttributes: new { })
+                                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "State is required and cannot be empty", required = "required", Onchange = "CheckDuplicate()" } })
+
+                                </div>
+
+                                <div class="col-md-4 col-12 mb-3">
+                                    @Html.LabelFor(model => model.Area, htmlAttributes: new { })
+                                    @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Area is required and cannot be empty", required = "required", Onchange = "CheckDuplicate()" } })
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <input type="submit" id="AddNew" value="Create" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                            </div>
+
+                          </div>
+
+                        }
+
+
+                    </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </section>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+<script>
+     $(document).ready(function () {
+
+        $("#form0").bootstrapValidator();
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+     });
+
+
+     function CheckDuplicate() {
+        debugger;
+         var Pincode = $("#Pincode").val();
+         var City = $("#City").val();
+         var Zone = $("#Zone").val();
+         var Area = $("#Area").val();
+         var State = $("#State").val();
+        $.ajax({
+            url: '@Url.Action("CheckDuplicate", "PincodeMasters")',
+            type: "GET",
+            dataType: "JSON",
+            data: { Pincode: Pincode, City: City, Zone: Zone, Area: Area, State: State, Mode: "Create", ID: 0 },
+            success: function (result) {
+                try {
+                    if (result == "1") {
+                        $("#Area").val("");
+                        $("#form0").bootstrapValidator('revalidateField', 'Area');
+                        toastr.error("Record already exist");
+                    }
+                    else if (result == "0") {
+
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+
+
+
+
+
+</script>

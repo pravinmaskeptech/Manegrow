@@ -1,0 +1,67 @@
+﻿@model Micraft.ManeGrowAgro.Models.CutOffMasater
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>CutOffMasater</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CityCutOff)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CityCutOff)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Vendor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vendor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PackingCutoff)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PackingCutoff)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PlantCutoff)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PlantCutoff)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DispatchCutoff)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DispatchCutoff)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

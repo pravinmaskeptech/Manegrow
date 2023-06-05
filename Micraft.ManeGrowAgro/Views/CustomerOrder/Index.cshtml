@@ -1,0 +1,1077 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+                <h5 class="text-dark mr-2"><b></b></h5>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+
+<style>
+
+    #ddlCustomer_suggestion {
+        width: 700px !important;
+    }
+
+    #ddlBranch_suggestion {
+        width: 700px !important;
+    }
+
+    .panel-group {
+        margin: 30px 0px;
+        width: 91%;
+        min-height: 700px;
+    }
+
+        .panel-group .panel {
+            border-radius: 0;
+            box-shadow: none;
+            border-color: #EEEEEE;
+        }
+
+    .panel-default > .panel-heading {
+        padding: 0;
+        border-radius: 0;
+        color: #212121;
+        background-color: #FAFAFA;
+        border-color: #EEEEEE;
+    }
+
+    .panel-title {
+        font-size: 14px;
+    }
+
+        .panel-title > a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+        }
+
+    .more-less {
+        float: right;
+        color: #212121;
+    }
+
+    .panel-default > .panel-heading + .panel-collapse > .panel-body {
+        border-top-color: #EEEEEE;
+    }
+
+    .box_top_3 {
+        background: #EBF0FF;
+    }
+
+    .box_top_1 {
+        background: #EDF6EA;
+    }
+
+    .box_top_font {
+        font-size: 16px;
+    }
+
+    .feature-wrap1 i {
+        font-size: 50px;
+        height: 110px;
+        width: 110px;
+        margin: 3px;
+        border-radius: 100%;
+        line-height: 110px;
+        text-align: center;
+        background: #ffffff;
+        color: #4ea32a;
+        border: 3px solid #ffffff;
+        box-shadow: inset 0 0 0 5px #f2f2f2;
+        -webkit-box-shadow: inset 0 0 0 5px #f2f2f2;
+        -webkit-transition: 500ms;
+        -moz-transition: 500ms;
+        -o-transition: 500ms;
+        transition: 500ms;
+        /* float: left; */
+        margin-right: 25px;
+    }
+
+        .feature-wrap1 i:hover {
+            /* background: #4ea32a; */
+            color: #4ea32a;
+            box-shadow: inset 0 0 0 5px #c52d2f;
+            -webkit-box-shadow: inset 0 0 0 5px #4ea32a;
+            border: 3px solid #4ea32a;
+        }
+
+    a {
+        color: #428bca;
+        text-decoration: none;
+    }
+
+    .box_top_font {
+        font-size: 16px;
+        margin-left: 20px;
+    }
+
+    .box_top_2_span {
+        color: #FF9933;
+    }
+
+    .box_top {
+        text-align: center;
+        padding: 10px;
+        display: block;
+        min-height: 90px;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        border-radius: 2px;
+        margin-bottom: 15px;
+    }
+
+    .box_top_1 {
+        background: #EDF6EA;
+    }
+
+    .box_top_2 {
+        background: #FFF5EB;
+    }
+
+    .box_top_3 {
+        background: #EBF0FF;
+    }
+
+    .box_top_3_span {
+        color: #3366FF;
+    }
+
+    .box_top_4 {
+        background: #FFE6E6;
+    }
+
+    .box_top_2 {
+        background: #FFF5EB;
+    }
+
+    .feature-wrap2 i:hover {
+        /* background: #FF9933; */
+        color: #FF9933;
+        box-shadow: inset 0 0 0 5px #c52d2f;
+        -webkit-box-shadow: inset 0 0 0 5px #FF9933;
+        border: 3px solid #FF9933;
+    }
+
+    .feature-wrap2 i {
+        font-size: 50px;
+        height: 110px;
+        width: 110px;
+        margin: 3px;
+        border-radius: 100%;
+        line-height: 110px;
+        text-align: center;
+        background: #ffffff;
+        color: #FF9933;
+        border: 3px solid #ffffff;
+        box-shadow: inset 0 0 0 5px #f2f2f2;
+        -webkit-box-shadow: inset 0 0 0 5px #f2f2f2;
+        -webkit-transition: 500ms;
+        -moz-transition: 500ms;
+        -o-transition: 500ms;
+        transition: 500ms;
+        /* float: left; */
+        margin-right: 25px;
+    }
+
+
+    .charts {
+        text-align: center;
+        padding: 10px;
+        display: block;
+        min-height: 90px;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        border-radius: 2px;
+        margin-bottom: 15px;
+        background: #fff;
+        margin-top: 45px;
+    }
+
+    .page-header {
+        padding-bottom: 9px;
+        margin: 10px 0 0px;
+        border-bottom: 1px solid #C7D1DD;
+    }
+
+    .top {
+        margin-top: 30px;
+    }
+
+    .circle-tile {
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .circle-tile-heading {
+        /* border: 3px solid rgba(255, 255, 255, 0.3); */
+        border-radius: 104%;
+        /* color: #FFFFFF; */
+        height: 46px;
+        margin: 0 auto -40px;
+        position: relative;
+        transition: all 0.3s ease-in-out 0s;
+        width: 80px;
+    }
+
+        .circle-tile-heading .fa {
+            line-height: 80px;
+        }
+
+    .circle-tile-content {
+        padding-top: 50px;
+    }
+
+    .circle-tile-number {
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 1;
+        padding: 5px 0 15px;
+    }
+
+    .circle-tile-description {
+        text-transform: uppercase;
+        font-size: 20px;
+        color: #f4f4f4;
+    }
+
+    .circle-tile-footer {
+        background-color: #115882;
+        color: #f4f4f4;
+        display: block;
+        padding: 5px;
+        transition: all 0.3s ease-in-out 0s;
+    }
+
+        .circle-tile-footer:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+        }
+
+    .circle-tile-heading.dark-blue:hover {
+        background-color: #2E4154;
+    }
+
+    .circle-tile-heading.green:hover {
+        background-color: #138F77;
+    }
+
+    .circle-tile-heading.orange:hover {
+        background-color: #DA8C10;
+    }
+
+    .circle-tile-heading.blue:hover {
+        background-color: #2473A6;
+    }
+
+    .circle-tile-heading.red:hover {
+        background-color: #CF4435;
+    }
+
+    .circle-tile-heading.purple:hover {
+        background-color: #7F3D9B;
+    }
+
+    .tile-img {
+        text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.9);
+    }
+
+    .dark-blue {
+        /* background-color: #3c8dbc; */
+    }
+
+    .green {
+        background-color: #16A085;
+    }
+
+    .blue {
+        background-color: #2980B9;
+    }
+
+    .orange {
+        background-color: #F39C12;
+    }
+
+    .red {
+        background-color: #61a5cc;
+        border-radius: 13px;
+    }
+
+    .purple {
+        background-color: #8E44AD;
+    }
+
+    .dark-gray {
+        background-color: #95A5A6;
+    }
+
+    .gray {
+        background-color: #95A5A6;
+    }
+
+    .light-gray {
+        background-color: #BDC3C7;
+    }
+
+    .yellow {
+        background-color: #F1C40F;
+    }
+
+    .text-dark-blue {
+        color: #34495E;
+    }
+
+    .text-green {
+        color: #16A085;
+    }
+
+    .text-blue {
+        color: #2980B9;
+    }
+
+    .text-orange {
+        color: #F39C12;
+    }
+
+    .text-red {
+        color: #E74C3C;
+    }
+
+    .text-purple {
+        color: #8E44AD;
+    }
+
+    .text-faded {
+        color: #f4f4f4;
+        font-size: 15px;
+    }
+
+
+
+    /* ----- v CAN BE DELETED v ----- */
+
+
+
+    .orange-circle-button {
+        border: .5em solid #EDF6EA;
+        font-size: 1em;
+        line-height: 1.1em;
+        color: #4ea32a;
+        margin: auto;
+        border-radius: 50%;
+        height: 8em;
+        width: 7em;
+        position: relative;
+        background-color: #EDF6EA;
+        text-decoration: none;
+        border-color: #4ea32a;
+    }
+
+    .orange-circle-button1 {
+        border: .5em solid #FF9933;
+        font-size: 1em;
+        line-height: 1.1em;
+        color: #FF9933;
+        margin: auto;
+        border-radius: 50%;
+        height: 8em;
+        width: 7em;
+        position: relative;
+        background-color: #FFF5EB;
+        text-decoration: none;
+        border-color: #FF9933;
+    }
+
+    .orange-circle-button2 {
+        border: .5em solid #3366FF;
+        font-size: 1em;
+        line-height: 1.1em;
+        color: #3366FF;
+        margin: auto;
+        border-radius: 50%;
+        height: 8em;
+        width: 7em;
+        position: relative;
+        background-color: #EBF0FF;
+        text-decoration: none;
+        border-color: #3366FF;
+    }
+
+    .orange-circle-button3 {
+        border: .5em solid #EDF6EA;
+        font-size: 1em;
+        line-height: 1.1em;
+        color: #EDF6EA;
+        margin: auto;
+        border-radius: 50%;
+        height: 8em;
+        width: 7em;
+        position: relative;
+        background-color: #EDF6EA;
+        text-decoration: none;
+        border-color: #EDF6EA;
+    }
+
+    .orange-circle-button4 {
+        border: .5em solid #FF0000;
+        font-size: 1em;
+        line-height: 1.1em;
+        color: #FF0000;
+        margin: auto;
+        border-radius: 50%;
+        height: 8em;
+        width: 7em;
+        position: relative;
+        background-color: #FFE6E6;
+        text-decoration: none;
+        border-color: #FF0000;
+    }
+
+    .orange-circle-button5 {
+        border: .5em solid #EDF6EA;
+        font-size: 1em;
+        line-height: 1.1em;
+        color: #EDF6EA;
+        margin: auto;
+        border-radius: 50%;
+        height: 8em;
+        width: 7em;
+        position: relative;
+        background-color: #EDF6EA;
+        text-decoration: none;
+        border-color: #4ea32a;
+    }
+
+    <!-- .orange-circle-button:visited {
+        color: #ffffff;
+        background-color: #e84d0e;
+        text-decoration: none;
+    }
+    -->
+    .orange-circle-link-greater-than {
+        font-size: 1em;
+    }
+
+
+    .panel-body .btn:not(.btn-block) {
+        width: 120px;
+        margin-bottom: 10px;
+    }
+
+    /***************/
+
+    .wrimagecard {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        text-align: left;
+        position: relative;
+        background: #fff;
+        box-shadow: 12px 15px 20px 0px rgba(46,61,73,0.15);
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+        .wrimagecard .fa {
+            position: relative;
+            font-size: 70px;
+        }
+
+    .wrimagecard-topimage_header {
+        padding: 20px;
+    }
+
+    a.wrimagecard:hover, .wrimagecard-topimage:hover {
+        box-shadow: 2px 4px 8px 0px rgba(46,61,73,0.2);
+    }
+
+    .wrimagecard-topimage a {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+    .wrimagecard-topimage_title {
+        padding: 20px 24px;
+        height: 80px;
+        padding-bottom: 0.75rem;
+        position: relative;
+    }
+
+    .wrimagecard-topimage a {
+        border-bottom: none;
+        text-decoration: none;
+        color: #525c65;
+        transition: color 0.3s ease;
+    }
+
+    /****************/
+    .small-box {
+        z-index: 0 !important;
+    }
+
+        .small-box h3 {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            white-space: nowrap;
+            padding: 0;
+        }
+
+
+    .myButton {
+        border-radius: 5px;
+        border: 1px solid #ffffff;
+        display: inline-block;
+        cursor: pointer;
+        font-family: Arial;
+        font-size: 16px;
+        padding: 5px 20px;
+        text-decoration: none;
+        border-color: #3c8dbc !important;
+        background-color: #3c8dbc !important;
+        color: #FFFFFF;
+    }
+
+        .myButton:hover {
+            background-color: #eb675e;
+            color: #000;
+        }
+
+        .myButton:active {
+            position: relative;
+            top: 1px;
+        }
+
+    .inner {
+        padding: 10px;
+        height: 100px;
+    }
+
+    table.dataTable th,
+    table.dataTable td {
+        white-space: nowrap;
+    }
+</style>
+
+<body class="hold-transition skin-blue sidebar-mini">
+
+    <section class="content">
+        <section id="demo1">
+
+            <div class="content-header" style="padding:1px">
+                <div class="row">
+                    <div class="col-md-10">
+                        <center style="color: #2f2f69">  <h4>Customer Order List</h4></center>
+                    </div>
+                  
+                </div>
+            </div>
+          
+           
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+
+
+                                <div class="row">
+
+                                    <div class="col-md-2 col-12 mb-2">
+                                        @Html.Label("From Date")
+                                        <input type="text" class="form-control" id="FromDate">
+                                    </div>
+                                    <div class="col-md-2 col-12 mb-2">
+                                        @Html.Label("To Date")
+                                        <input type="text" class="form-control" id="ToDate">
+                                    </div>
+
+
+
+                                    <div class="col-md-2 col-12 mb-2">
+                                        @Html.Label("Customer Type")
+                                        @Html.DropDownList("Type", new SelectList(ViewBag.CustType, "Type", "Type"), "Select Type", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Customer Type is required and cannot be empty" })
+                                    </div>
+                                    <div class="col-md-2 col-12 mb-2">
+                                        @Html.Label("City")
+                                        @Html.DropDownList("City", new SelectList(ViewBag.City, "City", "City"), "Select City", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "City is required and cannot be empty" })
+                                    </div>
+                                    <div class="col-md-2 col-12 mb-2">
+                                        @Html.Label("Short Name")
+                                        @Html.DropDownList("Short Name", new SelectList(ViewBag.Shortname, "ShortName", "ShortName"), "Select ShortName", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Short Name is required and cannot be empty" })
+                                    </div>
+                                    <div class="col-md-2 col-12 mb-2">
+                                        @Html.Label("Sales Person")
+                                        @Html.DropDownList("SalesPerson", new SelectList(ViewBag.SalesPerson, "Name", "Name"), "Select Name", new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Short Name is required and cannot be empty" })
+                                    </div>
+
+
+
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-2 col-12 mb-2">
+
+                                    </div>
+                                    <div class="col-md-2 col-12 mb-2">
+
+                                    </div>
+
+
+
+                                    <div class="col-md-2 col-12 mb-2">
+
+                                    </div>
+                                    <div class="col-md-2 col-12 mb-2">
+
+                                    </div>
+                                    <div class="col-md-3 col-12 mb-2">
+
+                                    </div>
+
+                                    <button type="button" class="btn btn-success" onclick="godata()"> Search </button>
+
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%;">
+                                        <thead>
+                                            <tr class="text-uppercase">
+                                                <th></th>
+                                                <th>Order No</th>
+                                                <th>Order Status</th>
+                                                <th>Customer Name</th>
+                                                <th>Short Name</th>
+                                                <th>Customer Type</th>
+
+                                                <th id="hfQty" style="color: red ">Qty</th>
+                                                <th>Product</th>
+                                                @*<th>UOM</th>*@
+                                                <th id="hfWeight" style="color: red ">Weight(kg)</th>
+                                                <th>City</th>
+
+                                                <th>Location</th>
+                                                <th>Delivery Date</th>
+                                                <th>DeliveryTime</th>
+                                                <th>Remark</th>
+                                                <th>Packaging Remark</th>
+                                                <th>Creator</th>
+                                                <th>Mobile No</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </section>
+    </section>
+</body>
+
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+<script src="~/Scripts/jquery.preloaders.js"></script>
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+        $('#FromDate').datepicker({
+            dateFormat: 'dd-mm-yy', onSelect: function (selected, evnt) {
+            }
+        })
+
+        $('#ToDate').datepicker({
+            dateFormat: 'dd-mm-yy', onSelect: function (selected, evnt) {
+            }
+        })
+
+        godata();
+
+        $("#pnlremark").hide();
+        $("#hdpreviousqty").val();
+
+
+    });
+
+    function showremark() {
+        debugger;
+
+        if ($("#hdpreviousqty").val() != $('#Qty').val()) {
+            $("#pnlremark").show();
+        }
+        else {
+            $("#pnlremark").hide();
+        }
+
+        $("#hdpreviousqty").val();
+
+
+    }
+
+
+    function popup(ID) {
+        $("#myModal").modal("show");
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetPopupData", "CustomerOrder")',
+             data: { ID: ID },
+            dataType: "json",
+            success: function (result)
+            {
+
+                if (result.Message == "success") {
+                    if (result.order.OrderStatus == "dispatched" || result.order.OrderStatus =="Order Dispatched" || result.order.OrderStatus == "Delivered") {
+                        $("#myModal").modal("hide");
+                        toastr.warning("Order Already " + result.order.OrderStatus);
+
+                    } else {
+                        $('#OrderNo').val(result.order.ID)
+                        $('#Customer').val(result.order.CustName)
+                        $('#CustomerCode').val(result.order.CustomerCode)
+                        $('#Product').val(result.order.ProductName)
+                        $('#Qty').val(result.order.Qty)
+                        $("#hdpreviousqty").val(result.order.Qty)
+                        $("#Weight").val(result.order.Weight)
+                        $("#hdproductid").val(result.order.ProductId)
+
+                        var value = new Date(parseInt(result.order.Date.substr(6)));
+                        var month = ("0" + (value.getMonth() + 1)).slice(-2);
+                        var day = ("0" + value.getDate()).slice(-2);
+                        var ret = day + "-" + month + "-" + value.getFullYear();
+                        $("#OrderDate").val(ret);
+
+                        getpreviousrecords();
+                    }
+
+
+                }
+                else {
+                }
+            },
+            failure: function (response) {
+            },
+            error: function (err) {
+
+            }
+        });
+
+    }
+
+    function totalweightcalculator() {
+        $('#TotalWeight').val((parseFloat($('#NoOfBox').val()) * parseFloat($('#BoxWeight').val())).toFixed(2))
+
+    }
+
+    function getproductdetails() {
+        $("#OrderNo").val();
+
+    }
+
+     $("#Update").click(function () {
+        var Id = $("#OrderNo").val();
+        var Qty = $("#Qty").val();
+         var PackagingRemark = $("#PackagingRemark").val();
+         var Weight = $("#Weight").val();
+         if ($("#hdpreviousqty").val() != $('#Qty').val()) {
+             if ($("#PackagingRemark").val() != "") {
+
+                 var records = {
+                     "Id": Id,
+                     "Qty": Qty,
+                     "PackagingRemark": PackagingRemark,
+                     "Weight": Weight,
+                     "OldQty": $("#hdpreviousqty").val(),
+                     "CustomerName": $('#Customer').val(),
+                 };
+                 $.ajax({
+                     url: "/CustomerOrder/updateqty",
+                     type: "POST",
+                     dataType: "json",
+                     data: JSON.stringify(records),
+                     contentType: "Application/json",
+                     success: function (result) {
+                         if (result.Message == "success") {
+                             $("#Qty").removeAttr("disabled",true);
+                             $('#pnlremark').hide();
+                             getpreviousrecords()
+
+                             //swal("success", "Record Updated Success", "success");
+
+                         } else {
+                             swal("Error", "Something went wrong while updating record", "error");
+                         }
+                     },
+                     error: function (ex) {
+                         console.log("error");
+                         console.log(ex);
+                     }
+                 });
+
+             }
+             else { toastr.error("Plese Enter Remark..")  }
+         }
+    });
+
+    function CalculateWeight() {
+
+        $.preloader.start({
+            modal: true,
+            src: 'sprites2.png'
+        });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("CalculateWeight", "CustomerOrder")',
+            data: { PRODUCT: $('#hdproductid').val(), QTY: $('#Qty').val() },
+            dataType: "json",
+            success: function (result)
+            {
+                if (result.Message == "success") {
+                    $('#Weight').val(result.weight);
+                    $.preloader.stop();
+                }
+                else {
+                    $('#Weight').html('');
+                    toastr.error(result.Message);
+                    $.preloader.stop();
+                }
+                $.preloader.stop();
+            },
+            failure: function (response) {
+                $('#Weight').val('');
+                $.preloader.stop();
+                alert(response.d);
+            },
+            error: function (err) {
+                $('#Weight').html('');
+                $.preloader.stop();
+                alert(err.statusText);
+            }
+        });
+    }
+
+
+    function godata() {
+        setdates();
+
+        getdatatable();
+
+    }
+
+    function setdates() {
+
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("SetDates", "CustomerOrder")',
+             data: { FROMDATE: $("#FromDate").val(), TODATE: $("#ToDate").val(), TYPE: $("#Type").val(), CITY: $("#City").val(), SHORTNAME: $("#Short_Name").val(), SalesPerson: $('#SalesPerson').val()},
+            dataType: "json",
+            success: function (result)
+            {
+                if (result.Message == "success") {
+
+                }
+                else {
+                }
+            },
+            failure: function (response) {
+            },
+            error: function (err) {
+
+            }
+        });
+
+    }
+
+    function getdatatable() {
+         try {
+
+             $('#example').DataTable({
+                 "destroy": true,
+                paging: true,
+                "searching": true,
+                dom: 'Bfrtip',
+                "bServerSide": true,
+                "sAjaxSource": '@Url.Action("GetData", "CustomerOrder")',
+                 "sServerMethod": "POST",
+                 buttons: [
+                     {
+                         text: 'Excel',
+                         action: function (e, dt, node, config) {
+                             window.location.href = '/CustomerOrder/Export';
+                         }
+                     }, {
+                         text: 'New Order',
+                         action: function (e, dt, node, config) {
+                             window.location.href = '/CustomerOrder/Create';
+                         }
+                     }
+                ],
+
+
+
+                language: {
+                    searchPlaceholder: "Search",
+                    search: ""
+                },
+                 "aoColumns": [
+
+                     {
+                         "mData": function (o) {
+                             return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.ID + "  class='btn btn-primary btn-sm mr-2' onclick='EditOrder(this.id);'><i class='fa fa-edit'></i></button></div>"
+                         }
+                     },
+
+                     {
+                         "mData": "ID"
+                     },
+                     {
+                         "mData": "OrderStatus"
+                     },
+                     {
+                         "mData": "CustName"
+                     },
+                     {
+                         "mData": "ShortName"
+                     },
+
+                    {
+                        "mData": "CustomerTypes"
+                    },
+
+
+                    {
+                        "mData": "Qty"
+                    },
+                     {
+                         "mData": "ProductName"
+                     },
+                    //{
+                    //    "mData": "UOM"
+                    //},
+                    {
+                        "mData": "Weight"
+                    },
+
+
+
+
+                     {
+                         "mData": "City"
+                     },
+                     {
+                         "mData": "Area"
+                     },
+                     {
+                         "mData": "ExpectedDeliveryDate",
+                         data: "ExpectedDeliveryDate", render: function (data) {
+                             return moment(data).format('DD-MM-YYYY');
+                         }
+                     },
+
+                     {
+                         "mData": "ExpectedDeliveryTime"
+                     },
+                    {
+                        "mData": "Remark"
+                     },
+                     {
+                         "mData": "PackagingRemark"
+                     }
+                     ,
+                     {
+                         "mData": "CreatedBy"
+                     }                     ,
+                     {
+                         "mData": "EmpMobile"
+                     }
+
+
+                 ],
+
+                 fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+
+
+                     if (aData.CustomerTypes == "MODERN TRADE") {
+                         /*  $('td', nRow).css('background-color', '#ff6666');*/
+                      //   alert(aData.ID)
+                       //  $('#883').removeClass("btn btn-primary btn-sm mr-2").addClass("btn btn-warning btn-sm mr-2");
+                         $("#883").removeClass("btn btn-primary btn-sm mr-2").addClass("btn-info btn-danger");
+
+                     }
+
+
+                     if (aData.OrderStage == "3") {
+                         $('td', nRow).css('background-color', '#ff6666');
+                     }
+                     else if (aData.OrderStage == "2") {
+                         $('td', nRow).css('background-color', '#85a3e0');
+                     }
+                    
+                     else if (aData.OrderStage == "6") {
+                         $('td', nRow).css('background-color', '##e7e00c');
+                     }
+                     else if (aData.OrderStage == "7") {
+                         $('td', nRow).css('background-color', '#ed0606');
+                     }
+                     else if (aData.OrderStage == "8") {
+                         $('td', nRow).css('background-color', '#28a745');
+                     }
+
+
+                     else {
+                        // $('td', nRow).css('background-color', 'blue');
+                     }
+                 },
+                 "footerCallback": function (row, aData, start, end, display) {
+                     //Get data here
+                     console.log(aData);
+                     //Do whatever you want. Example:
+                     var totalWeight = 0;
+                     var totalQAty = 0;
+                     for (var i = 0; i < aData.length; i++) {
+                         totalWeight += parseFloat(aData[i].Weight);
+                         totalQAty += parseInt(aData[i].Qty);
+                     }
+                     totalWeight = parseFloat(totalWeight).toFixed(2)
+                     var hqty = "Qty(" + totalQAty+")"
+                     $('#hfQty').text(hqty);
+
+                     var hfWeight = "Weight(" + totalWeight + "-kg)"
+                     $('#hfWeight').text(hfWeight);
+
+
+
+
+                 }
+             });
+
+        }
+        catch (e) {
+        }
+
+    }
+    function EditOrder(ID) {
+             window.location.href = "/CustomerOrder/Edit/"+ ID;
+    }
+</script>
+

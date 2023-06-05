@@ -1,0 +1,127 @@
+﻿@model Micraft.ManeGrowAgro.Models.States
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-2 col-md-2 col-12">
+            <h4>State Master</h4>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("Create", "States", FormMethod.Post, new
+                        {
+                            @id = "form0",
+                            enctype = "multipart/form-data",
+                            @class = "form-horizontal",
+                            data_bv_message = "This value is not valid",
+                            data_toggle = "validator",
+                            data_bv_feedbackicons_valid = "glyphicon glyphicon-ok",
+                            data_bv_feedbackicons_invalid = "glyphicon glyphicon-remove",
+                            data_bv_feedbackicons_validating = "glyphicon glyphicon-refresh"
+                        }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="row">
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.State, htmlAttributes: new { })
+                                        @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "State is required and cannot be empty", Onchange = "CheckDuplicate()", required = "required" } })
+                                    </div>
+
+                                    <div class="col-md-4 col-12 mb-3">
+                                        @Html.LabelFor(model => model.StateCode, htmlAttributes: new { })
+                                        @Html.EditorFor(model => model.StateCode, new { htmlAttributes = new { @class = "form-control", Autocomplete = "off", data_bv_notempty = "true", data_bv_notempty_message = "Start code is required and cannot be empty", Onchange = "CheckDuplicate()", required = "required" } })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <input type="submit" id="AddNew" value="Create" class="btn btn-primary" onclick="CheckVal(event);" />&nbsp;&nbsp;
+                                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                                </div>
+
+                            </div>
+                         }
+
+                        @section Scripts {
+                            @Scripts.Render("~/bundles/jqueryval")
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+
+     $(document).ready(function () {
+
+        $("#form0").bootstrapValidator();
+
+        var tEMP = '@TempData["success"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Success!", tEMP, "success");
+        }
+        var tEMP = '@TempData["error"]';
+        if (tEMP != "" && tEMP != undefined && tEMP != null) {
+            swal("Error!", tEMP, "error");
+        }
+
+     });
+
+
+     function CheckDuplicate() {
+        debugger;
+         var State = $("#State").val();
+         var StateCode = $("#StateCode").val();
+
+        $.ajax({
+            url: '@Url.Action("CheckDuplicate", "States")',
+            type: "GET",
+            dataType: "JSON",
+            data: { State: State, StateCode: StateCode, Mode: "Create", ID: 0 },
+            success: function (result) {
+                try {
+                    if (result == "1") {
+                        $("#State").val("");
+                        $("#StateCode").val("");
+                        $("#form0").bootstrapValidator('revalidateField', 'State');
+                        $("#form0").bootstrapValidator('revalidateField', 'StateCode');
+                        toastr.error("Record already exist");
+                    }
+                    else if (result == "0") {
+
+                    }
+                    else {
+                        toastr.error(result);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+     }
+
+
+
+
+
+</script>

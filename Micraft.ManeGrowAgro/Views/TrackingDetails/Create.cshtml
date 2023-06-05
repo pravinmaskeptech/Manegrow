@@ -1,0 +1,206 @@
+﻿@model Micraft.ManeGrowAgro.Models.TrackingDetails
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .tdbold {
+        font-weight: bold;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <center>     <h3>Track Your Order</h3></center>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<div class="row mx-0" style="text-align:center">
+
+    <div class="col-md-3">
+
+    </div>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.OrderNo, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Order No" } })
+        @Html.ValidationMessageFor(model => model.OrderNo, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-md-2">
+        <input type="button" id="brnTrack" class="btn btn-success" value="TRACK" onclick="TrackOrder()" />
+    </div>
+    <div class="col-md-2">
+        <input type="button" id="btnpod" style="display:none" class="btn btn-primary" value="POD" onclick="ViewPOD()" /> 
+        <input type="hidden" id="hfPOD" />
+    </div>
+
+</div>
+    <hr />
+    <div id="hfstatus" style="display:none" class="mx-0">
+        <div style="background-color: #c7d8ff; color: #020202; text-align: center; font-size: 16px"> Order Summary</div>
+        <input type="hidden" id="lblStatus" />
+        <div class="row mx-0">
+            <div class="col-md-12">
+                <table class="" align="center" border="0" id="tblHeader" style="width:100%"></table>
+            </div>
+        </div>
+
+        <div class="row mx-0">
+            <div class="col-md-12">
+                <table class="" align="center" border="0" id="tblStatus" style="font-size: 16px; padding: 10px; width: 100%">
+                    <tr style="background-color: #c7d8ff; color: #020202">
+                        <td align="left">DATE</td>
+                        <td align="left">LOCATION</td>
+                        <td align="left">STATUS</td>
+                        <td align="left">Updated By</td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="PODModal">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">POD</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <img id="PODNew">
+                    </div>
+                </div>
+
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="DownloadFileNew()"><i class="fa fa-download" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+<script>
+
+    $(document).ready(function () {
+        $('#OrderNo').focus()
+
+    });
+    function TrackOrder() {
+       
+        if ($('#OrderNo').val() == "") {
+            toastr.error("PLease Enter Order No");
+        } else {
+           
+                    $.ajax({
+                        url: "/TrackingDetails/TrackOrder",
+                        type: "POST",
+                        dataType: "JSON",
+                        data: { OrderNo: $("#OrderNo").val()},
+                        success: function (result) {
+                            debugger
+                            if (result.Message == 'success') {
+                              
+                                if (result.cnt > 0) {
+
+
+                                    //  if (result.Shipment.ForwardingNo != '' && result.Shipment.ForwardingNo != null && result.Shipment.ForwardingNo != 'undefined') { strRef = result.Shipment.ForwardingNo; }
+                                    $("#tblStatus").find("tr:gt(0)").remove();
+
+                                    $("#tblHeader").empty();
+                                    var temp = 1;
+                                    //    $("#tblStatus").append('<tr style="background-color:#c7d8ff; color:white"><td colspan="4" class="tdbold" style="font-size:16px;padding:10px;">Order History</td></tr>');
+                                    $.each(result.track, function (i, result) {
+                                        $('#hfstatus').show();
+                                        var value = new Date(parseInt(result.Date.substr(6)));
+                                        var month = ("0" + (value.getMonth() + 1)).slice(-2);
+                                        var day = ("0" + value.getDate()).slice(-2);
+                                        var ret = day + "/" + month + "/" + value.getFullYear();
+                                        ret = ret + " " + result.StatusTime;
+                                        if (temp == 1) {
+                                            $("#lblStatus").val(result.Status)
+                                        }
+                                        temp++;
+                                        $("#tblStatus").append('<tr><td align="left">' + ret + '</td><td align="left">' + result.Location + '</td><td align="left">' + result.Status + '</td><td align="left">' + result.CreatedBy + '</td></tr>');
+                                    });
+
+                                    var value = new Date(parseInt(result.order.ExpDelDate.substr(6)));
+                                    var month = ("0" + (value.getMonth() + 1)).slice(-2);
+                                    var day = ("0" + value.getDate()).slice(-2);
+                                    var ret = day + "/" + month + "/" + value.getFullYear();
+                                    ret = ret + " " + result.order.ExpDelTime;
+
+                                    if (result.order.PODName != null && result.order.PODName != "") {
+                                        $('#hfPOD').val(result.order.PODName)
+                                        $('#btnpod').show();
+                                    } else {
+                                        $('#btnpod').hide();
+                                    }
+                                    
+
+                                    $("#tblHeader").append('<tr> <td class="tdbold" > Order No. </td > <td>  <a href="' + '' + '"/>' + result.order.ID + '</td>      <td class="tdbold">Last Status </td><td class="tdbold" style="color: #fff; font-weight:Bold;"> <label style="color: ' + 'orange' + '" >' + $("#lblStatus").val() + ' </label></td></tr>'
+
+                                        + '< tr > <td class="tdbold">Customer Name </td> <td>' + result.order.CustName + '</td> <td class="tdbold">Customer Code</td> <td>' + result.order.CustomerCode + '</td></tr > '
+                                        + '<tr ><td class="tdbold">Product Name</td><td>' + result.order.ProductName + '</td><td class="tdbold">Exp Delivery Date</td><td>' + ret + '</td></tr > <tr>'
+                                    );
+
+                                    //   $.preloader.stop();
+                                } else {
+                                    toastr.error("Order No Not Found..");
+                                    $("#OrderNo").val('');
+                                    $('#OrderNo').focus()
+                                }
+                            } else {
+                                $.preloader.stop();
+                                toastr.error(result.Message);
+                            }
+                        }
+                    });
+                }           
+        
+
+    }
+
+    function ViewPOD()
+    {       
+        $('#PODModal').modal({ backdrop: 'static', keyboard: false })
+        $("#PODModal").modal("show");
+        var pod = $('#hfPOD').val();
+      
+        var img = "/Attachments/POD/" + pod;
+        $("#PODNew").attr("src", img);
+
+
+        //$.ajax({
+        //    type: "GET",
+        //    url: '/PODUpdation/GetPODName',
+        //    data: { 'ID': Id },
+        //    success: function (result) {
+        //        if (result.Message == "success") {
+        //            var img = "/Attachments/POD/" + result.PODNAME;
+        //            $('#hfPOD').val(img);
+        //            $("#PODNew").attr("src", img);
+        //        }
+
+        //        else {
+        //            toastr.error(result.Message);
+        //        }
+        //    }
+        //})
+    }
+
+    function DownloadFileNew() {
+        var img = $('#hfPOD').val();
+        window.location = '/PODUpdation/DownloadNew?file=' + img;
+    }
+</script>

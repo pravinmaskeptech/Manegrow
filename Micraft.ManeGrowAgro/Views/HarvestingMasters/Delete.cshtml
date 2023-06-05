@@ -1,0 +1,89 @@
+﻿@model Micraft.ManeGrowAgro.Models.HarvestingMaster
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>HarvestingMaster</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RoomNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoomNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectionDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProjectionDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.YearlyProjection)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.YearlyProjection)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MonthlyProjection)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MonthlyProjection)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DailyPrediction)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DailyPrediction)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ActualQuentity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ActualQuentity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectionFailuarReason)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProjectionFailuarReason)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsProjection)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsProjection)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
