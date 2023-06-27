@@ -9,6 +9,7 @@
         width: 70px;
         padding: 0;
     }
+
     table.dataTable th,
     table.dataTable td {
         white-space: nowrap;
@@ -22,7 +23,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-12">
-                <center> <h4 class="text-dark mr-2"><b>Dispatch List</b></h4></center> 
+                <center> <h4 class="text-dark mr-2"><b>Dispatch List</b></h4></center>
             </div><!-- /.col -->
         </div><!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -45,6 +46,7 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
+                                        <th></th>
                                         <th>Dispatch ID</th>
                                         <th>Date</th>
                                         <th>Vendor Name</th>
@@ -53,7 +55,6 @@
                                         <th>Vehical No</th>
                                         <th>No of Boxes</th>
                                         <th>Total Weight</th>
-
                                     </tr>
                                 </thead>
                             </table>
@@ -207,11 +208,11 @@
                                         </table>
                                     </div>
                                     @*<button type="button" class="btn btn-success" onclick="Save()"> Save </button>
-                                    <a href="@Url.Action("Index", "DashbordControl")" class="btn btn-primary"> Back to List </a>*@
+                                        <a href="@Url.Action("Index", "DashbordControl")" class="btn btn-primary"> Back to List </a>*@
                                 </div>
                                 <div class="row m-0">
                                     <div class="col-md-2">
-                                      
+
                                     </div>
                                     <div class="col-md-4">
                                         <label id="lbltot" class="ml-4"></label>
@@ -249,7 +250,7 @@
 <script>
 
     $(document).ready(function () {
-
+        var that = this;
          $('#ReceiptDate').datepicker({
                 dateFormat: 'dd-mm-yy',
                 autoclose: true,
@@ -261,14 +262,28 @@
             $('#example').DataTable({
                 "paging": true,
                 'iDisplayLength': 50,
-               
+
                 "searching": true,
                 dom: 'Bfrtip',
                 "bServerSide": true,
                 "sAjaxSource": '@Url.Action("GetData", "RouteAssignment")',
                 "sServerMethod": "POST",
-               buttons: ['copy', 'csv', 'excel', 'pdf', 'print',
+                buttons: [
                     {
+                        text: 'CSV',
+                        action: function (e, dt, node, config) {
+                            getExcel()
+
+                        }
+                    },
+                   {
+                       text: 'Excel',
+                       action: function (e, dt, node, config) {
+                             window.location.href = '/RouteAssignment/GetExcelLabel'
+
+                        }
+                   },
+                   {
                         text: 'Add New',
                         action: function (e, dt, node, config) {
                             window.location.href = '/RouteAssignment/Create'
@@ -301,6 +316,11 @@
                     {
                         "mData": function (o) {
                             return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.DispatchID + " class='btn btn-primary btn-sm mr-2' onclick='InvoicePrint(this.id);'><i class='fa fa-user'></i></button></div>";
+                        }
+                    },
+                    {
+                        "mData": function (o) {
+                            return "<div class = 'd-flex justify-content-center'><button type='button' id=" + o.DispatchID + " class='btn btn-primary btn-sm mr-2' onclick='ManifestExcelPrint(this.id);'><i class='fa fa-file-excel'></i></button></div>";
                         }
                     },
                     {
@@ -441,6 +461,33 @@
                     if (result.Message == "success") {
                         debugger;
                         window.open('/RouteAssignment/GetReportLabel', '_blank');
+                        //window.open('http://www.bing.com/', '_blank');
+                        //window.location = '/ShipmentDetails/GetReport';
+                    }
+                    else {
+                        toastr.error(result.Message);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
+
+    function ManifestExcelPrint(ID) {
+         $.ajax({
+            url: '@Url.Action("GetManifestExcel", "ManifetPrintExcel")',
+            type: "GET",//
+            dataType: "JSON",
+            async: false,
+            data: { DispatchID: ID },
+            success: function (result) {
+                try {
+
+                    if (result.Message == "success") {
+                        debugger;
+                        window.open('/ManifetPrintExcel/GetReportLabel', '_blank');
                         //window.open('http://www.bing.com/', '_blank');
                         //window.location = '/ShipmentDetails/GetReport';
                     }
@@ -771,4 +818,31 @@
     $("#real").on('click', '.btnDelete', function () {
         $(this).closest('tr').remove();
     });
+
+    function getExcel(){
+         $.ajax({
+            url: '@Url.Action("ExcelExport", "RouteAssignment")',
+            type: "GET",
+            dataType: "JSON",
+            async: false,
+            data: { DispatchID: ID },
+            success: function (result) {
+                try {
+
+                    if (result.Message == "success") {
+                        debugger;
+                        window.open('/RouteAssignment/GetExcelLabel', '_blank');
+                        //window.open('http://www.bing.com/', '_blank');
+                        //window.location = '/ShipmentDetails/GetReport';
+                    }
+                    else {
+                        toastr.error(result.Message);
+                    }
+                }
+                catch (e) {
+
+                }
+            }
+        });
+    }
 </script>

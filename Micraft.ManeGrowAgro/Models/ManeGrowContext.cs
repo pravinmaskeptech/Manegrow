@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Data.Entity;
 
 namespace Micraft.ManeGrowAgro.Models
 {
@@ -11,7 +7,8 @@ namespace Micraft.ManeGrowAgro.Models
         public ManeGrowContext() 
             : base("DefaultConnection")
         {
-          //  this.Configuration.LazyLoadingEnabled = true;
+            //  this.Configuration.LazyLoadingEnabled = true;
+            //this.Database.CommandTimeout = 300;
         }
        
        public virtual DbSet<CustomerType> CustomerTypes { get; set; }   
@@ -48,7 +45,8 @@ namespace Micraft.ManeGrowAgro.Models
         public virtual DbSet<AspNetRole> AspNetRole { get; set; }
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
 
-
+        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+            
         public virtual DbSet<MainOrder> MainOrder { get; set; }
         public virtual DbSet<Order> Order { get; set; }
 
@@ -105,9 +103,9 @@ namespace Micraft.ManeGrowAgro.Models
 
 
         public virtual DbSet<PODNotUploadedVendorList> PODNotUploadedVendorList { get; set; } 
+        public virtual DbSet<BoxTypeMaster> BoxTypeMaster { get; set; }
 
 
-        
 
         //public virtual DbSet<RateMaster> RateMasters { get; set; } 
 

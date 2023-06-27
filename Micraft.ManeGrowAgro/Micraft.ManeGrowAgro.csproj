@@ -60,6 +60,15 @@
       <HintPath>..\..\..\..\..\..\ApexCourier\Apex Courier\jcpl.micraft.co.in\bin\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Syncfusion.Compression.Base, Version=21.2450.9.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.XlsIO.AspNet.Mvc5.21.2.9\lib\net45\Syncfusion.Compression.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Licensing, Version=21.2460.9.0, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Licensing.21.2.9\lib\net46\Syncfusion.Licensing.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.XlsIO.Base, Version=21.2450.9.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.XlsIO.AspNet.Mvc5.21.2.9\lib\net45\Syncfusion.XlsIO.Base.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -197,6 +206,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActualProductionController.cs" />
     <Compile Include="Controllers\BankMastersController.cs" />
+    <Compile Include="Controllers\BoxTypeMasterController.cs" />
     <Compile Include="Controllers\CaretMasterController.cs" />
     <Compile Include="Controllers\CitiesController.cs" />
     <Compile Include="Controllers\CollectionMainController.cs" />
@@ -216,14 +226,17 @@
     <Compile Include="Controllers\ExpenceTypesController.cs" />
     <Compile Include="Controllers\HarvestingMastersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LogisticCostingReportController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManifestGroupController.cs" />
+    <Compile Include="Controllers\ManifetPrintExcelController.cs" />
     <Compile Include="Controllers\ModeMasterController.cs" />
     <Compile Include="Controllers\MonthlyProdPlanController.cs" />
     <Compile Include="Controllers\PincodeMastersController.cs" />
     <Compile Include="Controllers\PODReportController.cs" />
     <Compile Include="Controllers\PODUpdationController.cs" />
     <Compile Include="Controllers\ProductMastersController.cs" />
+    <Compile Include="Controllers\ProductSalesReportController.cs" />
     <Compile Include="Controllers\ProductTypesController.cs" />
     <Compile Include="Controllers\QuotationMainController.cs" />
     <Compile Include="Controllers\RateMasterController.cs" />
@@ -232,6 +245,7 @@
     <Compile Include="Controllers\RejectionReportController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ResaleTypesController.cs" />
+    <Compile Include="Controllers\RevenueReportController.cs" />
     <Compile Include="Controllers\RoomMasterController.cs" />
     <Compile Include="Controllers\SubRouteDetailsController.cs" />
     <Compile Include="Controllers\RouteAssignmentController.cs" />
@@ -246,6 +260,8 @@
     <Compile Include="Controllers\VendorMastersController.cs" />
     <Compile Include="Controllers\VendorQuotationMainController.cs" />
     <Compile Include="Controllers\VendorTypesController.cs" />
+    <Compile Include="Models\AspNetUsers.cs" />
+    <Compile Include="Models\BoxTypeMaster.cs" />
     <Compile Include="Models\CollectionDetails.cs" />
     <Compile Include="Models\CollectionMain.cs" />
     <Compile Include="Models\DamageReasons.cs" />
@@ -253,6 +269,7 @@
     <Compile Include="Models\DMSFile.cs" />
     <Compile Include="Models\ExpenceDetails.cs" />
     <Compile Include="Models\ExpenceTypes.cs" />
+    <Compile Include="Models\LogisticCostingReport.cs" />
     <Compile Include="Models\ManifestDetails.cs" />
     <Compile Include="Models\ManifestGroup.cs" />
     <Compile Include="Models\ManifestMain.cs" />
@@ -369,7 +386,6 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="LoginNew.html" />
-    <Content Include="Photo\harvesting.jpeg" />
     <Content Include="Photo\Payment.png" />
     <Content Include="plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.css" />
     <Content Include="plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.min.css" />
@@ -2100,7 +2116,6 @@
     <Content Include="Documents\ExcelFiles\16_06_2022_06_48_42Book1.xlsx" />
     <Content Include="Documents\ExcelFiles\17_06_2022_05_10_31Book1.xls" />
     <Content Include="Photo\BulkExcelFiles\MonthlyProdPlan.xlsx" />
-    <Content Include="AndroidApp\Manegrow_Agro_1_1_0.apk" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2323,13 +2338,24 @@
     <Content Include="Views\RateUpdation\Index.cshtml" />
     <Content Include="Views\RateMaster\Create.cshtml" />
     <Content Include="Views\RateMaster\Index.cshtml" />
+    <Content Include="Views\ProductSalesReport\ProductSalesReport.cshtml" />
+    <Content Include="Views\RevenueReport\Index.cshtml" />
+    <Content Include="Views\RevenueReport\TotalSalesReport.cshtml" />
+    <Content Include="Views\LogisticCostingReport\LogisticCostingReport.cshtml" />
+    <Content Include="Views\BoxTypeMaster\Index.cshtml" />
+    <Content Include="Views\BoxTypeMaster\Create.cshtml" />
+    <Content Include="Views\BoxTypeMaster\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="AndroidApp\" />
     <Folder Include="App_Data\" />
     <Folder Include="Attachments\EmployeePic\" />
+    <Folder Include="Attachments\ExcelExport\" />
     <Folder Include="Attachments\LabelPrints\" />
     <Folder Include="Attachments\VehicleMaster\" />
     <Folder Include="Uploads\" />
+    <Folder Include="Views\ManifetPrintExcel\" />
+    <Folder Include="Views\NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

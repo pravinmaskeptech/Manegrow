@@ -753,6 +753,8 @@
                                                     <tr class="text-uppercase">
                                                         <th>Box Weight</th>
                                                         <th>No of Boxes</th>
+                                                        <th>UOM</th>
+                                                        <th>Box Type</th>
                                                         <th>Total Weight</th>
                                                         <th>Action</th>
                                                         <th></th>
@@ -766,6 +768,12 @@
                                                         </td>
                                                         <td>
                                                             <input type="text" id="NoOfBox" class="form-control" placeholder="No of Boxes" onchange="totalweightcalculator()">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id="UOM" class="form-control" placeholder="UOM" value="kg" disabled>
+                                                        </td>
+                                                        <td>
+                                                            @Html.DropDownList("BoxType", new SelectList(ViewBag.BoxType, "Id", "BoxType"), "Select Box Type", new { @class = "form-control", Autocomplete = "off" })
                                                         </td>
                                                         <td>
                                                             <input type="text" id="TotalWeight" class="form-control" placeholder="Total Weight" disabled>
@@ -788,6 +796,8 @@
                                                                 <th hidden>P ID</th>
                                                                 <th>Box Weight</th>
                                                                 <th>No of Boxes</th>
+                                                                <th>UOM</th>
+                                                                <th>Box Type</th>
                                                                 <th>Total Weight</th>
                                                                 <th></th>
                                                             </tr>
@@ -869,6 +879,8 @@
                                                 <tr class="text-uppercase">
                                                     <th>Box Weight</th>
                                                     <th>No of Boxes</th>
+                                                    <th>UOM</th>
+                                                    <th>Box Type</th>
                                                     <th>Total Weight</th>
                                                     <th>Action</th>
                                                     <th></th>
@@ -882,6 +894,12 @@
                                                     </td>
                                                     <td>
                                                         <input type="text" id="BNoOfBox" class="form-control" placeholder="No of Boxes" onchange="Mergetotalweightcalculator()">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="BUOM" class="form-control" placeholder="UOM" value="kg" disabled>
+                                                    </td>
+                                                    <td>
+                                                        @Html.DropDownList("BBoxType", new SelectList(ViewBag.BoxType, "Id", "BoxType"), "Select Box Type", new { @class = "form-control", Autocomplete = "off" })
                                                     </td>
                                                     <td>
                                                         <input type="text" id="BTotalWeight" class="form-control" placeholder="Total Weight" disabled>
@@ -904,6 +922,8 @@
                                                             <th hidden>P ID</th>
                                                             <th>Box Weight</th>
                                                             <th>No of Boxes</th>
+                                                            <th>UOM</th>
+                                                            <th>Box Type</th>
                                                             <th>Total Weight</th>
                                                             <th></th>
                                                         </tr>
@@ -925,8 +945,7 @@
 
                                             </div>
                                             <div class="col-md-3">
-                                                <button type="button" class="btn btn-success mx-3" onclick="
-    ()"> Save </button>
+                                                <button type="button" class="btn btn-success mx-3" onclick="BSave()"> Save </button>
                                                 <a href="@Url.Action("Index", "DashbordControl")" class="btn btn-primary"> Back to List </a>
                                             </div>
 
@@ -968,8 +987,6 @@
 
         $("#pnlremark").hide();
         $("#hdpreviousqty").val();
-
-
     });
 
     function showremark() {
@@ -1376,6 +1393,15 @@
             toastr.error("Total Weight is Required.");
             valid = false;
         }
+        if ($('#UOM').val() == null || $('#UOM').val() == "") {
+            toastr.error("UOM is Required.");
+            valid = false;
+        }
+
+        if ($('#BoxType').val() == "" || $('#BoxType').val() == undefined || $('#BoxType').val() == NaN ||  $('#BoxType').val() == '') {
+            toastr.error('Please Select Box Type..');
+            valid = false;
+        }
 
         if (valid == true) {
             var isexist = false;
@@ -1394,11 +1420,12 @@
                 toastr.error("Already Added.");
             }
             else {
-
-                $("#real").append("<tr> <td>" + $("#BoxWeight").val() + "</td> <td>" + $("#NoOfBox").val() + "</td> <td>" + $("#TotalWeight").val() + "</td><td> <button type='button' id='edt' class='btn btn-sm btn-primary btnEdit' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
+                var boxlist = '@ViewBag.BoxType';
+                $("#real").append("<tr> <td>" + $("#BoxWeight").val() + "</td> <td>" + $("#NoOfBox").val() + "</td><td>" + $("#UOM").val() + "</td><td>" + $("#BoxType").find(":selected").text()+ "</td> <td>" + $("#TotalWeight").val() + "</td><td> <button type='button' id='edt' class='btn btn-sm btn-primary btnEdit' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
                 $("#BoxWeight").val('');
                 $("#NoOfBox").val('');
                 $("#TotalWeight").val('');
+                $("#BoxType").val('');
 
                 alculatewt();
                 //var result = BoxWeight + "    " + NoOfBox + "     " + TotalWeight;
@@ -1408,7 +1435,6 @@
                                // alert(result)
 
             }
-
 
 
         }
@@ -1424,7 +1450,7 @@
 
             NoOfBox = NoOfBox + parseFloat(row.find("TD").eq(1).html());
             BoxWeight = BoxWeight + parseFloat(row.find("TD").eq(0).html());
-            TotalWeight = TotalWeight + parseFloat(row.find("TD").eq(2).html());
+            TotalWeight = TotalWeight + parseFloat(row.find("TD").eq(4).html());
 
         });
 
@@ -1453,7 +1479,9 @@
 
             NoOfBox = NoOfBox + parseFloat(row.find("TD").eq(1).html());
             BoxWeight = BoxWeight + parseFloat(row.find("TD").eq(0).html());
-            TotalWeight = TotalWeight + parseFloat(row.find("TD").eq(2).html());
+            TotalWeight = TotalWeight + parseFloat(row.find("TD").eq(4).html());
+            UOM = row.find("TD").eq(2).html();
+            BoxType = row.find("TD").eq(3).html();
 
         });
         if (parseFloat(TotalWeight) != parseFloat($('#Weight').val())) {
@@ -1475,7 +1503,9 @@
 
                 Order.BoxWeight = row.find("TD").eq(0).html();
                 Order.NoOfBox = row.find("TD").eq(1).html();
-                Order.TotalWeight = row.find("TD").eq(2).html();                
+                Order.TotalWeight = row.find("TD").eq(4).html();
+                Order.UOM = row.find("TD").eq(2).html();
+                Order.BoxType = row.find("TD").eq(3).html();
                 recs.push(Order);
 
             });
@@ -1563,7 +1593,7 @@
                 $("#real tbody").empty();
                 $.each(tbldata, function (i, val) {
 
-                    $("#real tbody").append("<tr> <td>" + val.BoxWeight + "</td> <td>" + val.NoOfBox + "</td> <td>" + val.TotalWeight + "</td> <td> <button type='button' id='edt' class='btn btn-sm btn-primary btnEdit' data-toggle='modal' data-target='#EditModal' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
+                    $("#real tbody").append("<tr> <td>" + val.BoxWeight + "</td> <td>" + val.NoOfBox + "</td> <td>" + val.UOM + "</td> <td>" + val.BoxType + "</td> <td>" + val.TotalWeight + "</td> <td> <button type='button' id='edt' class='btn btn-sm btn-primary btnEdit' data-toggle='modal' data-target='#EditModal' onclick='Edit(this.id);'><i class='fa fa-edit'></i></button> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
 
                 });
                 var NoOfBox = 0;
@@ -1696,6 +1726,15 @@
             valid = false;
         }
 
+        if ($('#BUOM').val() == null || $('#BUOM').val() == "") {
+            toastr.error("UOM is Required.");
+            valid = false;
+        }
+
+        if ($('#BBoxType').val() == "" || $('#BBoxType').val() == undefined || $('#BBoxType').val() == NaN || $('#BBoxType').val() == '') {
+            toastr.error('Please Select Box Type..');
+            valid = false;
+        }
         if (valid == true) {
             var isexist = false;
             //$("#real tbody tr").each(function (index) {
@@ -1714,11 +1753,11 @@
             }
             else {
 
-                $("#Breal").append("<tr> <td>" + $("#BBoxWeight").val() + "</td> <td>" + $("#BNoOfBox").val() + "</td> <td>" + $("#BTotalWeight").val() + "</td><td> <button type='button' id='Bedt' class='btn btn-sm btn-primary btnEdit' onclick='BEdit(this.id);'><i class='fa fa-edit'></i></button> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
+                $("#Breal").append("<tr> <td>" + $("#BBoxWeight").val() + "</td> <td>" + $("#BNoOfBox").val() + "</td><td>" + $("#BUOM").val() + "</td> <td>" + $("#BBoxType").find(":selected").text() + "</td>  <td>" + $("#BTotalWeight").val() + "</td><td> <button type='button' id='Bedt' class='btn btn-sm btn-primary btnEdit' onclick='BEdit(this.id);'><i class='fa fa-edit'></i></button> <Button type='Button' class='btn btn-sm btn-danger btnDelete' href='#'  id='dlt' > <i class='fa fa-trash-alt'></i> </Button></td>   </tr>");
                 $("#BBoxWeight").val('');
                 $("#BNoOfBox").val('');
                 $("#BTotalWeight").val('');
-
+                $("#BBoxType").val('');
                 var NoOfBox = 0;
                 var BoxWeight = 0;
                 var TotalWeight = 0;
@@ -1727,7 +1766,7 @@
 
                     NoOfBox = NoOfBox + parseFloat(row.find("TD").eq(1).html());
                     BoxWeight = BoxWeight + parseFloat(row.find("TD").eq(0).html());
-                    TotalWeight = TotalWeight + parseFloat(row.find("TD").eq(2).html());
+                    TotalWeight = TotalWeight + parseFloat(row.find("TD").eq(4).html());
 
                 });
 
@@ -1760,7 +1799,7 @@
             //var row = $(this).closest('tr')/*.remove()*/;
             $("#BBoxWeight").val(row.find("TD").eq(0).html());
             $("#BNoOfBox").val(row.find("TD").eq(1).html());
-            $("#BTotalWeight").val(row.find("TD").eq(2).html());
+            $("#BTotalWeight").val(row.find("TD").eq(4).html());
 
             $(this).closest('tr').remove();
         });
@@ -1789,7 +1828,7 @@
 
             NoOfBox = NoOfBox + parseFloat(row.find("TD").eq(1).html());
             BoxWeight = BoxWeight + parseFloat(row.find("TD").eq(0).html());
-            TotalWeight = TotalWeight + parseFloat(row.find("TD").eq(2).html());
+            TotalWeight = TotalWeight + parseFloat(row.find("TD").eq(4).html());
 
         });
         if (parseFloat(TotalWeight) != parseFloat($('#BWeight').val())) {
@@ -1812,9 +1851,11 @@
 
                 Order.BoxWeight = row.find("TD").eq(0).html();
                 Order.NoOfBox = row.find("TD").eq(1).html();
-                Order.TotalWeight = row.find("TD").eq(2).html();
+                Order.TotalWeight = row.find("TD").eq(4).html();
                 //Order.OldQty = $("#hdpreviousqty").val();
                 //Order.PackagingRemark $("#PackagingRemark").val();
+                Order.UOM = row.find("TD").eq(2).html();
+                Order.BoxType = row.find("TD").eq(3).html();
                 recs.push(Order);
 
             });

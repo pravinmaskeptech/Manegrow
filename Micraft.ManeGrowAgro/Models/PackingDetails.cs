@@ -23,7 +23,8 @@ namespace Micraft.ManeGrowAgro.Models
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int? MergeOrderNo { get; set; }  
-
+        public string UOM { get; set; }
+        public string BoxType { get; set; }
 
     }
 

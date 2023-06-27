@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.IO;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Micraft.ManeGrowAgro.Controllers
 {
@@ -210,7 +211,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                         var store = new UserStore<ApplicationUser>(context);
                         var manager = new ApplicationUserManager(store);
                         var user = new ApplicationUser { UserName = employeeMaster.Username, Email = employeeMaster.EmailAddress, UserId = CustId, FullName = employeeMaster.Name, RegistrationType = "Employee", Address = employeeMaster.Address, PhoneNumber = employeeMaster.MobileNumber.ToString() };
-                        var adminresult = manager.CreateAsync(user, employeeMaster.Password);
+                        var adminresult = manager.Create(user, employeeMaster.Password);
                         db.SaveChanges();
                     }
                     var Userid = context.Users.Where(a => a.UserName == employeeMaster.Username).Select(a => a.Id).SingleOrDefault();
@@ -237,28 +238,32 @@ namespace Micraft.ManeGrowAgro.Controllers
                         }
                     }
                     catch { };
-                    try
+                    if(LSTView != null)
                     {
-                        foreach (var xx in LSTView)
-                    {
-
-                        var IsExistUser = db.AspNetUserRoles.Where(a => a.UserId == Userid && a.RoleId == xx.RoleID).FirstOrDefault();
-                        if (IsExistUser == null)
+                        try
                         {
-                            var asprole = new AspNetUserRoles();
-                            asprole.UserId = Userid;
-                            asprole.RoleId = xx.RoleID;
-                            db.AspNetUserRoles.Add(asprole);
-                        }
-                        else
-                        {
+                            foreach (var xx in LSTView)
+                            {
 
-                            IsExistUser.UserId = Userid;
-                            IsExistUser.RoleId = xx.RoleID;
+                                var IsExistUser = db.AspNetUserRoles.Where(a => a.UserId == Userid && a.RoleId == xx.RoleID).FirstOrDefault();
+                                if (IsExistUser == null)
+                                {
+                                    var asprole = new AspNetUserRoles();
+                                    asprole.UserId = Userid;
+                                    asprole.RoleId = xx.RoleID;
+                                    db.AspNetUserRoles.Add(asprole);
+                                }
+                                else
+                                {
+
+                                    IsExistUser.UserId = Userid;
+                                    IsExistUser.RoleId = xx.RoleID;
+                                }
+                            }
                         }
+                        catch { };
+
                     }
-                    }
-                    catch { };
 
 
                     db.SaveChanges();
@@ -757,8 +762,13 @@ namespace Micraft.ManeGrowAgro.Controllers
         {
             try
             {
+                ApplicationDbContext context = new ApplicationDbContext();
                 var emp = db.EmployeeMasters.Where(a => a.ID == id).FirstOrDefault();
+                var username = emp.Username;
                 db.EmployeeMasters.Remove(emp);
+                var Userid = db.AspNetUsers.Where(a => a.UserId == emp.ID).FirstOrDefault();
+                var aspuser = db.AspNetUserRoles.RemoveRange(db.AspNetUserRoles.Where(c => c.UserId == Userid.Id));
+                db.AspNetUsers.Remove(Userid);
                 db.SaveChanges();
                 var result = new { Message = "success" };
                 return Json(result, JsonRequestBehavior.AllowGet);

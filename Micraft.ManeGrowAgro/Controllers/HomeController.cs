@@ -48,64 +48,72 @@ namespace Micraft.ManeGrowAgro.Controllers
             }
             else
             {
-                using (SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_DashbordDetails", myConnection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        myConnection.Open();
+                ViewBag.PackingWT = 0;
+                ViewBag.WeekData = 0;
+                ViewBag.Todays = 0;
+                ViewBag.ActualData = 0;
+                ViewBag.TodaysVsActualDiff = 0;
+                ViewBag.NextDay = 0;
+                ViewBag.PackingWT = 0;
+                ViewBag.Dispatch = 0;
+                //using (SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+                //{
+                //    using (SqlCommand cmd = new SqlCommand("SP_DashbordDetails", myConnection))
+                //    {
+                //        cmd.CommandType = CommandType.StoredProcedure;
+                //        myConnection.Open();
 
-                        //Declare @tblResult table(MonthData,WeekData,Todays,ActualData,TodaysVsActualDiff,TotOrderQty,OrderWeight,ActualDispatchQty,OrderDiff)
-                        using (SqlDataReader dr = cmd.ExecuteReader())
-                        {
-                            if (dr.Read())
-                            {
-                                ViewBag.MonthData = dr["MonthData"].ToString();
-                                ViewBag.WeekData = dr["WeekData"].ToString();
-                                ViewBag.Todays = dr["Todays"].ToString();
-                                ViewBag.ActualData = dr["ActualData"].ToString();
-                                ViewBag.TodaysVsActualDiff = dr["TodaysVsActualDiff"].ToString();
-                                var TotOrderQty = dr["TotOrderQty"].ToString();
-                                ViewBag.NextDay = dr["NextDay"].ToString();
-                                ViewBag.PackingWT = dr["PackingWT"].ToString();
+                //        //Declare @tblResult table(MonthData,WeekData,Todays,ActualData,TodaysVsActualDiff,TotOrderQty,OrderWeight,ActualDispatchQty,OrderDiff)
+                //        using (SqlDataReader dr = cmd.ExecuteReader())
+                //        {
+                //            if (dr.Read())
+                //            {
+                //                ViewBag.MonthData = dr["MonthData"].ToString();
+                //                ViewBag.WeekData = dr["WeekData"].ToString();
+                //                ViewBag.Todays = dr["Todays"].ToString();
+                //                ViewBag.ActualData = dr["ActualData"].ToString();
+                //                ViewBag.TodaysVsActualDiff = dr["TodaysVsActualDiff"].ToString();
+                //                var TotOrderQty = dr["TotOrderQty"].ToString();
+                //                ViewBag.NextDay = dr["NextDay"].ToString();
+                //                ViewBag.PackingWT = dr["PackingWT"].ToString();
 
-                                ViewBag.Dispatch = dr["Dispatch"].ToString();
+                //                ViewBag.Dispatch = dr["Dispatch"].ToString();
 
 
 
-                                if (TotOrderQty == "")
-                                {
-                                    ViewBag.TotOrderQty = 0;
-                                }
-                                else
-                                {
-                                    ViewBag.TotOrderQty = TotOrderQty;
-                                }
+                //                if (TotOrderQty == "")
+                //                {
+                //                    ViewBag.TotOrderQty = 0;
+                //                }
+                //                else
+                //                {
+                //                    ViewBag.TotOrderQty = TotOrderQty;
+                //                }
 
-                                ViewBag.OrderWeight = dr["OrderWeight"].ToString();
-                                var ActualDispatchQty = dr["ActualDispatchQty"].ToString();
-                                if (ActualDispatchQty == "")
-                                {
-                                    ViewBag.ActualDispatchQty = 0;
-                                }
-                                else
-                                {
-                                    ViewBag.ActualDispatchQty = ActualDispatchQty;
-                                }
-                                var OrderDiff = dr["OrderDiff"].ToString();
-                                if (OrderDiff == "")
-                                {
-                                    ViewBag.OrderDiff = 0;
-                                }
-                                else
-                                {
-                                    ViewBag.OrderDiff = OrderDiff;
-                                }
-                            }
+                //                ViewBag.OrderWeight = dr["OrderWeight"].ToString();
+                //                var ActualDispatchQty = dr["ActualDispatchQty"].ToString();
+                //                if (ActualDispatchQty == "")
+                //                {
+                //                    ViewBag.ActualDispatchQty = 0;
+                //                }
+                //                else
+                //                {
+                //                    ViewBag.ActualDispatchQty = ActualDispatchQty;
+                //                }
+                //                var OrderDiff = dr["OrderDiff"].ToString();
+                //                if (OrderDiff == "")
+                //                {
+                //                    ViewBag.OrderDiff = 0;
+                //                }
+                //                else
+                //                {
+                //                    ViewBag.OrderDiff = OrderDiff;
+                //                }
+                //            }
 
-                        }
-                    }
-                }
+                //        }
+                //    }
+                //}
             }
             //ViewBag.Customer = db.ConsignorDetails.Select(x => new { x.ConsignorID, x.ConsignorName }).ToList();
             if (Session["AuthorizeMsg"] != null)

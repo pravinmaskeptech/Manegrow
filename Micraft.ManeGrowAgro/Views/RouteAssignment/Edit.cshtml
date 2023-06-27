@@ -52,10 +52,16 @@
                 <div class="row">
 
                     <div class="col-md-2">
-                       
+
                     </div>
                     <div class="col-sm-3">
 
+                    </div>
+                    <div class="col-md-2">
+                        <label for="Product Type">Product Type</label>
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.DropDownList("ProductType", new SelectList(ViewBag.ProductType, "ID", "Type"), "Select Product Type", new { @class = "form-control", Autocomplete = "off" })
                     </div>
 
                 </div>
@@ -303,6 +309,7 @@
                     $("#VehicalNo").val(result.Dispatch.VehicalNo);
                     $("#NoOfBoxes").val(result.Dispatch.NoofBoxes);
                     $("#TotalWT").val(result.Dispatch.TotalWeight);
+                    $("#ProductType").val(result.Dispatch.ProductType);
                     GetEditCustomers(ID);
 
 
@@ -789,8 +796,7 @@
             toastr.error('Please enter Vehical No..');
             temp = false;
         }
-
-
+      
 
         var count = $('#RootDetails tr').length;
 
@@ -799,7 +805,10 @@
             temp = false;
         }
         if (temp == true) {
-
+            var productytpevalue = parseInt($('#ProductType').val())
+            if (productytpevalue ==  NaN) {
+                productytpevalue = null;
+            }
 
             if (parseInt(list.length) != 0) {
                 var data = {
@@ -821,7 +830,7 @@
                     VendorID: $('#VendorName').val(),
 
                     RouteName: $("#Route option:selected").text(),
-
+                    ProductType: productytpevalue
                 }
                 debugger
                 $(this).val('Please wait...');

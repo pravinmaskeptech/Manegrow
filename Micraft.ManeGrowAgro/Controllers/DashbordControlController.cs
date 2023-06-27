@@ -18,6 +18,7 @@ using ClosedXML.Excel;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Micraft.ManeGrowAgro.Security;
+using System.Data.Entity.Core.EntityClient;
 
 namespace Micraft.ManeGrowAgro.Controllers
 {
@@ -51,19 +52,20 @@ namespace Micraft.ManeGrowAgro.Controllers
             ViewBag.Product = db.ProductMasters.OrderBy(a => a.Name).ToList();
 
             ViewBag.ProductType = db.ProductTypes.OrderBy(a => a.Type).ToList();
+            ViewBag.BoxType = db.BoxTypeMaster.OrderBy(a => a.BoxType).ToList();
             return View();
         }
 
-        public JsonResult GetProducts( int PrdType)
+        public JsonResult GetProducts(int PrdType)
         {
             var prd = db.ProductMasters.Where(a => a.TypeID == PrdType).ToList();
-            var result = new {Message="success",prd };
+            var result = new { Message = "success", prd };
             return Json(result, JsonRequestBehavior.AllowGet);
 
         }
 
         [HttpGet]
-        public ActionResult SetDates(string FROMDATE, string TODATE, string TYPE, string CITY, string SHORTNAME,string SalesPerson,string Product,int? ProductType)
+        public ActionResult SetDates(string FROMDATE, string TODATE, string TYPE, string CITY, string SHORTNAME, string SalesPerson, string Product, int? ProductType)
         {
             Session["FromDate"] = FROMDATE.ToString();
             Session["ToDate"] = TODATE.ToString();
@@ -98,7 +100,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                 var Product = "";
                 if (Session["Product"] != "")
                 {
-                    Product = Session["Product"].ToString(); 
+                    Product = Session["Product"].ToString();
                 }
 
                 var city = "";
@@ -113,11 +115,11 @@ namespace Micraft.ManeGrowAgro.Controllers
                     shrtname = Session["ShortName"].ToString();
                 }
                 var salespName = "";
-                if(Session["SalesPerson"] !="")
+                if (Session["SalesPerson"] != "")
                 {
-                     salespName = Session["SalesPerson"].ToString(); 
+                    salespName = Session["SalesPerson"].ToString();
                 }
-                
+
                 DateTime? Fromdate = null;
                 DateTime? Todate = null;
 
@@ -133,7 +135,7 @@ namespace Micraft.ManeGrowAgro.Controllers
 
 
                 var ProductType = 0;
-                if (Session["ProductType"] != "" && Session["ProductType"] !=null)
+                if (Session["ProductType"] != "" && Session["ProductType"] != null)
                 {
                     var ProductType1 = Session["ProductType"].ToString();
                     ProductType = Convert.ToInt32(ProductType1);
@@ -141,8 +143,8 @@ namespace Micraft.ManeGrowAgro.Controllers
 
                 var Orders = db.Order.ToList();
                 int totalRecord = 0;
-  
-                //}
+
+            
                 var result1 = (from dr in db.MainOrder
                                join dp in db.CustomerMasters
                                on dr.CustomerId equals dp.ID
@@ -156,7 +158,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                                join prd in db.ProductMasters
                                on e.ProductId equals prd.ID
 
-                               join a in db.EmployeeMasters 
+                               join a in db.EmployeeMasters
                               on dr.CreatedBy equals a.Username
 
                                select new
@@ -181,13 +183,12 @@ namespace Micraft.ManeGrowAgro.Controllers
                                    IsPacked = e.OrderStatus,
                                    OrderStatus = e.OrderStatus,
                                    OrderStage = e.OrderStage,
-                                        
-                                                    CreatedBy = a == null ? string.Empty : a.Name,
-                                                    EmpMobile = a == null ? string.Empty : a.MobileNumber,
-                                       ProductTypeID=prd.TypeID
+                                   CreatedBy = a == null ? string.Empty : a.Name,
+                                   EmpMobile = a == null ? string.Empty : a.MobileNumber,
+                                   ProductTypeID = prd.TypeID
 
                                }).OrderBy(x => x.OrderStage).ToList();
-
+               
                 if (Fromdate != null && Todate != null)
                 {
                     result1 = result1.Where(a => (a.Date >= Fromdate && a.Date <= Todate)).ToList();
@@ -213,7 +214,7 @@ namespace Micraft.ManeGrowAgro.Controllers
 
                 if (salespName != "")
                 {
-                    result1 = result1.Where(a => a.CreatedBy.ToLower() == salespName.ToLower()).ToList(); 
+                    result1 = result1.Where(a => a.CreatedBy.ToLower() == salespName.ToLower()).ToList();
                 }
 
                 if (Product != "")
@@ -221,30 +222,30 @@ namespace Micraft.ManeGrowAgro.Controllers
                     result1 = result1.Where(a => a.ProductName.ToLower() == Product.ToLower()).ToList();
                 }
 
-               if(ProductType !=0)
+                if (ProductType != 0)
                 {
-                    result1 = result1.Where(a => a.ProductTypeID == ProductType).ToList(); 
+                    result1 = result1.Where(a => a.ProductTypeID == ProductType).ToList();
                 }
                 var result = result1;
 
-               
 
-                StringBuilder sb = new StringBuilder();
-                sb.Clear();
-                sb.Append("{");
-                sb.Append("\"sEcho\": ");
-                sb.Append(sEcho);
-                sb.Append(",");
-                sb.Append("\"iTotalRecords\": ");
-                sb.Append(totalRecord);
-                sb.Append(",");
-                sb.Append("\"iTotalDisplayRecords\": ");
-                sb.Append(totalRecord);
-                sb.Append(",");
-                sb.Append("\"aaData\": ");
-                sb.Append(Newtonsoft.Json.JsonConvert.SerializeObject(result));
-                sb.Append("}");
-                return sb.ToString();
+
+                StringBuilder reponseBuilder = new StringBuilder();
+                reponseBuilder.Clear();
+                reponseBuilder.Append("{");
+                reponseBuilder.Append("\"sEcho\": ");
+                reponseBuilder.Append(sEcho);
+                reponseBuilder.Append(",");
+                reponseBuilder.Append("\"iTotalRecords\": ");
+                reponseBuilder.Append(totalRecord);
+                reponseBuilder.Append(",");
+                reponseBuilder.Append("\"iTotalDisplayRecords\": ");
+                reponseBuilder.Append(totalRecord);
+                reponseBuilder.Append(",");
+                reponseBuilder.Append("\"aaData\": ");
+                reponseBuilder.Append(Newtonsoft.Json.JsonConvert.SerializeObject(result));
+                reponseBuilder.Append("}");
+                return reponseBuilder.ToString();
             }
             catch (Exception ex)
             {
@@ -254,16 +255,16 @@ namespace Micraft.ManeGrowAgro.Controllers
 
         public JsonResult GetPopupData(int ID)
         {
-           
-            var order = (from e in db.Order.Where(a => a.Id == ID )
+
+            var order = (from e in db.Order.Where(a => a.Id == ID)
 
                          join dr in db.MainOrder
                           on e.MasterOrderId equals dr.Id
 
-                          join cus in db.CustomerMasters
-                          on dr.CustomerId equals cus.ID
+                         join cus in db.CustomerMasters
+                         on dr.CustomerId equals cus.ID
 
-                         join pm in db.ProductMasters 
+                         join pm in db.ProductMasters
                         on e.ProductId equals pm.ID
 
                          select new
@@ -275,12 +276,12 @@ namespace Micraft.ManeGrowAgro.Controllers
                              Date = dr.Date,
                              CustName = cus.CustName,
                              CustomerCode = dr.CustomerCode,
-                             ProductName =string.Concat( e.ProductName," ",pm.Weight, " ", pm.ProdUom),
+                             ProductName = string.Concat(e.ProductName, " ", pm.Weight, " ", pm.ProdUom),
                              ProductId = e.ProductId,
                              OrderStatus = e.OrderStatus,
 
                          }).OrderByDescending(x => x.ID).FirstOrDefault();
-            
+
 
             var result = new { Message = "success", order };
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -290,7 +291,7 @@ namespace Micraft.ManeGrowAgro.Controllers
 
         [CustomAuthorize("You dont have access to Update Packing", "PackingEdit, Admin")]
         public JsonResult updateqty(Order order)
-       {
+        {
             try
             {
                 //var entityList = db.PackingDetails.Where(x => x.OrderNo == order.Id).ToList();
@@ -300,7 +301,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                 var model = db.Order.Where(x => x.Id == order.Id).FirstOrDefault();
 
                 var OrderMain = db.MainOrder.Where(a => a.Id == model.MasterOrderId).FirstOrDefault();
-                PackingHistory history =new PackingHistory();
+                PackingHistory history = new PackingHistory();
                 history.SalesOrderNo = model.Id;
                 history.CustomerID = OrderMain.CustomerId;
                 history.OrderDate = OrderMain.Date;
@@ -318,8 +319,8 @@ namespace Micraft.ManeGrowAgro.Controllers
 
                 //TempData["success"] = "Record Update success!";
                 var result = new { Message = "success" };
-                    return Json(result, JsonRequestBehavior.AllowGet);
-              
+                return Json(result, JsonRequestBehavior.AllowGet);
+
             }
             catch (Exception ex)
             {
@@ -355,11 +356,11 @@ namespace Micraft.ManeGrowAgro.Controllers
 
         [HttpPost]
         [CustomAuthorize("You dont have access to save Packing", "PackingEdit, Admin")]
-        public ActionResult Save(List<PackingDetails> recs, int OrderNo,int PrevQty ,int OrderQty,int? OldQty,string PackagingRemark,decimal OrderWT)  
+        public ActionResult Save(List<PackingDetails> recs, int OrderNo, int PrevQty, int OrderQty, int? OldQty, string PackagingRemark, decimal OrderWT)
         {
             try
             {
-               var entityList = db.PackingDetails.Where(x => x.OrderNo == OrderNo).ToList();                
+                var entityList = db.PackingDetails.Where(x => x.OrderNo == OrderNo).ToList();
                 db.PackingDetails.RemoveRange(entityList);
 
                 // Save changes
@@ -371,14 +372,14 @@ namespace Micraft.ManeGrowAgro.Controllers
                 //
                 var masterid = db.Order.Where(a => a.Id == OrderNo).FirstOrDefault();
                 masterid.OrderStage = 3;
-               
+
                 var isvalidforpacking = false;
-              
-              
+
+
                 if (masterid != null)
                 {
-                      masterid.PackagingRemark = null;
-                    if (Convert.ToInt32( PrevQty)==Convert.ToInt32(OrderQty) && OrderQty!=0)
+                    masterid.PackagingRemark = null;
+                    if (Convert.ToInt32(PrevQty) == Convert.ToInt32(OrderQty) && OrderQty != 0)
                     {
                         masterid.OrderStatus = "Packing Completed";
                         masterid.PackagingRemark = "";
@@ -390,7 +391,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                     else
                     {
 
-                        if(Convert.ToInt32(OrderQty)==0)
+                        if (Convert.ToInt32(OrderQty) == 0)
                         {
                             masterid.OrderStatus = "Order Cancelled";
                             masterid.PackagingRemark = PackagingRemark;
@@ -399,7 +400,8 @@ namespace Micraft.ManeGrowAgro.Controllers
                             masterid.Weight = OrderWT;
                             masterid.OrderStage = 7;
 
-                        }else
+                        }
+                        else
                         {
                             if (Convert.ToInt32(OrderQty) != Convert.ToInt32(OldQty) && Convert.ToInt32(OrderQty) != 0)
                             {
@@ -411,15 +413,15 @@ namespace Micraft.ManeGrowAgro.Controllers
                                 masterid.OrderStage = 3;
                                 isvalidforpacking = true;
                             }
-                           
+
                         }
 
                     }
 
-                    if(isvalidforpacking==true)
+                    if (isvalidforpacking == true)
                     {
                         foreach (var x in recs)
-                        {                            
+                        {
                             var order = new PackingDetails();
                             order.OrderNo = OrderNo;
                             order.NoOfBox = x.NoOfBox;
@@ -427,20 +429,23 @@ namespace Micraft.ManeGrowAgro.Controllers
                             order.TotalWeight = x.TotalWeight;
                             order.CreatedBy = User.Identity.Name;
                             order.CreatedDate = DateTime.Today;
+                            order.UOM = x.UOM;
+                            order.BoxType = x.BoxType;
                             db.PackingDetails.Add(order);
                         }
                     }
                 }
 
                 TrackingDetails track = new TrackingDetails();
-                if(masterid.OrderStatus == "Quantity Changed & Packing Completed")
+                if (masterid.OrderStatus == "Quantity Changed & Packing Completed")
                 {
-                    track.Status = masterid.OrderStatus +" "+OldQty+" to "+OrderQty;
-                }else
+                    track.Status = masterid.OrderStatus + " " + OldQty + " to " + OrderQty;
+                }
+                else
                 {
                     track.Status = masterid.OrderStatus;
                 }
-                
+
                 track.Action = "Packing Details";
                 track.Location = "Plant";
                 track.OrderNo = masterid.Id;
@@ -453,8 +458,8 @@ namespace Micraft.ManeGrowAgro.Controllers
 
 
                 db.SaveChanges();
-                  var  result = new { Message = "success" };
-                  return Json(result, JsonRequestBehavior.AllowGet);                
+                var result = new { Message = "success" };
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
 
 
@@ -512,14 +517,16 @@ namespace Micraft.ManeGrowAgro.Controllers
             if (todate != "")
             {
                 Todate = Convert.ToDateTime(todate);
-            }else
+            }
+            else
             {
                 Todate = DateTime.Today;
             }
             if (todate != "")
             {
                 Fromdate = Convert.ToDateTime(frmdate);
-            }else
+            }
+            else
             {
                 Fromdate = DateTime.Today;
             }
@@ -566,7 +573,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                             }
                         }
                     }
-                   
+
                     RedirectToAction("Index");
                 }
             }
@@ -578,33 +585,33 @@ namespace Micraft.ManeGrowAgro.Controllers
         {
             decimal? TotalWT = 0;
             int? TotalQty = 0;
-            var data = OrderData.Select(a=>a.Id).ToList();
+            var data = OrderData.Select(a => a.Id).ToList();
             var Orderlist = db.Order.Where(a => data.Contains(a.Id)).ToList();
-            var orders = Orderlist.Where(a=>a.OrderStatus == "dispatched" || a.OrderStatus == "Order Dispatched" || a.OrderStatus == "Delivered" || a.OrderStatus == "Order Cancelled" || a.OrderStatus == "Quantity Changed & Packing Completed" || a.OrderStatus == "Packing Completed"  || a.OrderStatus== "Merge & Packing Completed").OrderBy(a => a.Id).ToList();
-            if (orders.Count == 0)                    
+            var orders = Orderlist.Where(a => a.OrderStatus == "dispatched" || a.OrderStatus == "Order Dispatched" || a.OrderStatus == "Delivered" || a.OrderStatus == "Order Cancelled" || a.OrderStatus == "Quantity Changed & Packing Completed" || a.OrderStatus == "Packing Completed" || a.OrderStatus == "Merge & Packing Completed").OrderBy(a => a.Id).ToList();
+            if (orders.Count == 0)
             {
-              //  var lstOrdermainID= Orderlist.GroupBy(x => x.MasterOrderId).Select(x => ( MasterOrderId: x.Select(p => p.MasterOrderId))).ToList();
+                //  var lstOrdermainID= Orderlist.GroupBy(x => x.MasterOrderId).Select(x => ( MasterOrderId: x.Select(p => p.MasterOrderId))).ToList();
                 var lstOrdermainID = (from table in Orderlist
-                          group new { table.MasterOrderId } by new { table.MasterOrderId } into grp
-                          orderby grp.Key.MasterOrderId descending
-                          select new
-                          {
-                              ID = grp.Key.MasterOrderId
-                          }).ToList();
+                                      group new { table.MasterOrderId } by new { table.MasterOrderId } into grp
+                                      orderby grp.Key.MasterOrderId descending
+                                      select new
+                                      {
+                                          ID = grp.Key.MasterOrderId
+                                      }).ToList();
 
 
                 var sss = lstOrdermainID.Select(a => a.ID).ToList();
-                var results = (from table in db.MainOrder.Where(a=>sss.Contains(a.Id))
+                var results = (from table in db.MainOrder.Where(a => sss.Contains(a.Id))
                                group new { table.CustomerCode } by new { table.CustomerCode } into grp
                                orderby grp.Key.CustomerCode descending
                                select new
                                {
                                    ID = grp.Key.CustomerCode
                                }).ToList();
-                if (results.Count() !=1)
+                if (results.Count() != 1)
                 {
                     var result3 = new { Message = "customer name mismatch from selected orders" };
-                    return Json(result3, JsonRequestBehavior.AllowGet); 
+                    return Json(result3, JsonRequestBehavior.AllowGet);
                 }
                 foreach (var x in OrderData)
                 {
@@ -614,20 +621,21 @@ namespace Micraft.ManeGrowAgro.Controllers
                 }
                 var result = new { Message = "success", TotalWT, TotalQty };
                 return Json(result, JsonRequestBehavior.AllowGet);
-            }else
+            }
+            else
             {
                 var message = "";
                 foreach (var x in orders)
                 {
-                    message= message+","+"Order No : "+x.Id+" Already "+x.OrderStatus+"\n";
+                    message = message + "," + "Order No : " + x.Id + " Already " + x.OrderStatus + "\n";
                 }
-                var result = new { Message = message,  };
+                var result = new { Message = message, };
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
 
         [CustomAuthorize("You dont have access to save Packing", "PackingEdit, Admin")]
-        public ActionResult BSave(List<PackingDetails> recs,List<Order> OrderNo ,int OrderQty, decimal OrderWT,string MergeOrderNo)
+        public ActionResult BSave(List<PackingDetails> recs, List<Order> OrderNo, int OrderQty, decimal OrderWT, string MergeOrderNo)
         {
             try
             {
@@ -637,51 +645,53 @@ namespace Micraft.ManeGrowAgro.Controllers
                 {
                     var masterid = db.Order.Where(a => a.Id == xx.Id).FirstOrDefault();
                     masterid.OrderStage = 3;
-                                      
-                        masterid.PackagingRemark = null;                       
-                            masterid.OrderStatus = "Merge & Packing Completed";
-                            masterid.PackagingRemark ="Merge with Order No "+MergeOrderNo;
-                            masterid.OrderStage = 6;
+
+                    masterid.PackagingRemark = null;
+                    masterid.OrderStatus = "Merge & Packing Completed";
+                    masterid.PackagingRemark = "Merge with Order No " + MergeOrderNo;
+                    masterid.OrderStage = 6;
                     if (temp == false)
                     {
 
-                        masterid.MergeOrderNo = xx.Id;                       
+                        masterid.MergeOrderNo = xx.Id;
                     }
                     else
                     {
                         masterid.MergeOrderNo = mergeNo;
-                       
+
                     }
                     //     masterid.Qty = OrderQty;
                     //     masterid.Weight = OrderWT;
 
 
                     foreach (var x in recs)
-                            {
+                    {
 
-                                var pkj = new PackingDetails();
-                                pkj.OrderNo = xx.Id;
-                                
-                                pkj.CreatedBy = User.Identity.Name;
-                                pkj.CreatedDate = DateTime.Today;
-                                if(temp==false)
-                                {
-                                    pkj.NoOfBox = x.NoOfBox;
-                                    pkj.BoxWeight = x.BoxWeight;
-                                    pkj.TotalWeight = x.TotalWeight;
-                                    pkj.MergeOrderNo = xx.Id;
-                                    mergeNo = xx.Id;
-                                }
-                                else
-                                {
-                                    pkj.MergeOrderNo = mergeNo;
-                                    pkj.NoOfBox = 0;
-                                    pkj.BoxWeight = 0;
-                                    pkj.TotalWeight = 0;
-                                }                                
-                                db.PackingDetails.Add(pkj);
-                            }
-                            temp = true;
+                        var pkj = new PackingDetails();
+                        pkj.OrderNo = xx.Id;
+
+                        pkj.CreatedBy = User.Identity.Name;
+                        pkj.CreatedDate = DateTime.Today;
+                        if (temp == false)
+                        {
+                            pkj.NoOfBox = x.NoOfBox;
+                            pkj.BoxWeight = x.BoxWeight;
+                            pkj.TotalWeight = x.TotalWeight;
+                            pkj.MergeOrderNo = xx.Id;
+                            pkj.BoxType = x.BoxType;
+                            pkj.UOM = x.UOM;
+                            mergeNo = xx.Id;
+                        }
+                        else
+                        {
+                            pkj.MergeOrderNo = mergeNo;
+                            pkj.NoOfBox = 0;
+                            pkj.BoxWeight = 0;
+                            pkj.TotalWeight = 0;
+                        }
+                        db.PackingDetails.Add(pkj);
+                    }
+                    temp = true;
 
 
                     TrackingDetails track = new TrackingDetails();
@@ -709,7 +719,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
-        public ActionResult StickerPrint(int OrderNo) 
+        public ActionResult StickerPrint(int OrderNo)
         {
             try
             {
@@ -915,9 +925,10 @@ namespace Micraft.ManeGrowAgro.Controllers
                     var result = new { Message = "success", FileName = StikerPrintName };
                     return Json(result, JsonRequestBehavior.AllowGet);
 
-                }else
+                }
+                else
                 {
-                    var result = new { Message = "This Facility Only For Packing...."};
+                    var result = new { Message = "This Facility Only For Packing...." };
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
 
@@ -943,4 +954,35 @@ namespace Micraft.ManeGrowAgro.Controllers
             return File(FileBytes, "application/pdf", FileName);
         }
     }
+
+    public class response
+    {
+        public int ID { get; set; }
+        public string UOM { get; set; }
+
+        public int? Qty { get; set; }
+        public string Area { get; set; }
+        public string ContactPerson { get; set; }
+        public string MobileNumber { get; set; }
+        public string CustomerTypes { get; set; }
+        public string Remark { get; set; }
+        public decimal? Weight { get; set; }
+        public string ExpectedDeliveryTime { get; set; }
+        public DateTime? ExpectedDeliveryDate { get; set; }
+        public string City { get; set; }
+        public string ShortName { get; set; }
+        public DateTime? Date { get; set; }
+        public string CustName { get; set; }
+        public string ProductName { get; set; }
+        public string PackagingRemark { get; set; }
+        public string IsPacked { get; set; }
+        public string OrderStatus { get; set; }
+        public int? OrderStage { get; set; }
+        public string CreatedBy { get; set; }
+        public string EmpMobile { get; set; }
+        public int? ProductTypeID { get; set; }
+
+
+    }
+
 }

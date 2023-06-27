@@ -30,7 +30,7 @@
     var eCode = "";
 
     var name = "";
-    if(User.Identity.Name=="" || User.Identity.Name == null)
+    if (User.Identity.Name == "" || User.Identity.Name == null)
     {
         Response.Redirect("~/Account/Login");
     }
@@ -133,7 +133,7 @@
                     <strong>  HOME</strong>
                 </p>
             </a>
-          
+
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
 
@@ -166,9 +166,9 @@
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="navbarDropdown">
-                        <a href="/Account/Login" class="dropdown-item text-center" >
+                        <a href="/Account/Login" class="dropdown-item text-center">
                             <img src="~/Photo/logout.png" class="w3-circle" alt="Alps" style="width:40%" />
-                           
+
                         </a>
 
                     </div>
@@ -192,7 +192,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-    with font-awesome or any other icon font library -->
+                        with font-awesome or any other icon font library -->
                         <li class="nav-item">
                             <a href="/Home/Index" class="nav-link">
                                 <img src="~/Photo/home.png" class="w3-circle" alt="Alps" style="width:10%" />
@@ -277,8 +277,8 @@
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     @*<i class="nav-icon fas fa-chart-pie"></i>*@
-                                    <img src="~/Photo/harvesting.png" class="w3-circle" alt="Alps" style="width:12%"/>
-                                    
+                                    <img src="~/Photo/harvesting.png" class="w3-circle" alt="Alps" style="width:12%" />
+
                                     <p>
                                         <strong>
                                             HARVESTING
@@ -327,7 +327,7 @@
 
 
                                     <h5 style="color:green"><center> REPORTS</center></h5>
-                                    
+
                                     <li class="nav-item">
                                         <a href="/Report/MonthlyProdReport" class="nav-link">
                                             <i class="nav-icon fas fa-list"></i>
@@ -678,13 +678,13 @@
                                     </li>
 
                                     @*<li class="nav-item">
-                        <a href="/CutOffMasaters/Index" class="nav-link">
-                            <i class="nav-icon fas fa-motorcycle"></i>
-                            <p>
-                                Cut Off Master
-                            </p>
-                        </a>
-                    </li>*@
+            <a href="/CutOffMasaters/Index" class="nav-link">
+                <i class="nav-icon fas fa-motorcycle"></i>
+                <p>
+                    Cut Off Master
+                </p>
+            </a>
+        </li>*@
                                     <li class="nav-item">
                                         <a href="/DepartmentMasters/Index" class="nav-link">
                                             <i class="nav-icon fas fa-building"></i>
@@ -723,6 +723,14 @@
                                             <i class="nav-icon fas fa-motorcycle"></i>
                                             <p>
                                                 Bank Master
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/BoxTypeMaster/Index" class="nav-link">
+                                            <i class="nav-icon fas fa-box"></i>
+                                            <p>
+                                                BoxType Master
                                             </p>
                                         </a>
                                     </li>
@@ -808,9 +816,9 @@
                         {
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <img src="~/Photo/report.png" class="w3-circle" alt="Alps" style="width:10%" /> 
+                                    <img src="~/Photo/report.png" class="w3-circle" alt="Alps" style="width:10%" />
                                     <p>
-                                        <strong>All REPORT</strong> 
+                                        <strong>All REPORT</strong>
                                         <i class="fas fa-angle-right right"></i>
                                     </p>
                                 </a>
@@ -892,31 +900,57 @@
                                             </p>
                                         </a>
                                     </li>
+                                    @*<li class="nav-item">
+                                        <a href="/ProductSalesReport/ProductSalesReport" class="nav-link">
+                                            <i class="nav-icon fas fa-list"></i>
+                                            <p>
+                                                Product Sale Report
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/RevenueReport/TotalSalesReport" class="nav-link">
+                                            <i class="nav-icon fas fa-list"></i>
+                                            <p>
+                                                Total Sales Report
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/LogisticCostingReport/LogisticCostingReport" class="nav-link">
+                                            <i class="nav-icon fas fa-list"></i>
+                                            <p>
+                                                Logistic Costing Report
+                                            </p>
+                                        </a>
+                                    </li>*@
+
+
                                     <br />
                                 </ul>
                             </li>
                         }
 
-                       
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <img src="~/Photo/profile.png" class="w3-circle" alt="Alps" style="width:10%" />
-                                    <p>
-                                        <strong>CHANGE PASSWORD</strong>
-                                        <i class="fas fa-angle-right right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="/Manage/ChangePassword" class="nav-link">
-                                            <i class="nav-icon fas fa-key"></i>
-                                            <p>
-                                                Change Password
-                                            </p>
-                                        </a>
-                                    </li>
-                                     @if (User.IsInRole("Admin") || User.IsInRole("ResetPasswordEdit") || User.IsInRole("ResetPasswordView"))                      
-                                     {
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <img src="~/Photo/profile.png" class="w3-circle" alt="Alps" style="width:10%" />
+                                <p>
+                                    <strong>CHANGE PASSWORD</strong>
+                                    <i class="fas fa-angle-right right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/Manage/ChangePassword" class="nav-link">
+                                        <i class="nav-icon fas fa-key"></i>
+                                        <p>
+                                            Change Password
+                                        </p>
+                                    </a>
+                                </li>
+                                @if (User.IsInRole("Admin") || User.IsInRole("ResetPasswordEdit") || User.IsInRole("ResetPasswordView"))
+                                {
                                     <li class="nav-item">
                                         <a href="/Account/ResetPassword" class="nav-link">
                                             <i class="nav-icon fas fa-key"></i>
@@ -925,27 +959,27 @@
                                             </p>
                                         </a>
                                     </li>
-                                     }
+                                }
 
-                                </ul>
+                            </ul>
 
-                            </li>
-                        
+                        </li>
+
                         <li class="nav-item">
-                               <a href="/Account/Login" class="nav-link">
-                                    <img src="~/Photo/logout.png" class="w3-circle" alt="Alps" style="width:13%" />
-                                    <p style="color:red">
-                                      Log Out
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                
+                            <a href="/Account/Login" class="nav-link">
+                                <img src="~/Photo/logout.png" class="w3-circle" alt="Alps" style="width:13%" />
+                                <p style="color:red">
+                                    Log Out
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
 
-                            </li>
+
+                        </li>
 
                     </ul>
 
-                  
+
 
                 </nav>
                 <!-- /.sidebar-menu -->

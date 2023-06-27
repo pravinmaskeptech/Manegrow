@@ -38,5 +38,7 @@ namespace Micraft.ManeGrowAgro.Models
         public string UpdatedBy { get; set; }
 
         public DateTime? UpdatedDate { get; set; } 
+
+        public int?  ProductType { get; set; }
     }
 }

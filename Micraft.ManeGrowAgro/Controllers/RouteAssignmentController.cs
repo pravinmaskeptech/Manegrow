@@ -1,7 +1,9 @@
-﻿using iTextSharp.text;
+﻿using ClosedXML.Excel;
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Micraft.ManeGrowAgro.Models;
 using Micraft.ManeGrowAgro.Security;
+using Syncfusion.XlsIO;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -134,7 +136,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                 Session["Type"] = "";
                 Session["City"] = "";
                 Session["ShortName"] = "";
-
+                ExcelExport();
                 StringBuilder sb = new StringBuilder();
                 sb.Clear();
                 sb.Append("{");
@@ -167,6 +169,7 @@ namespace Micraft.ManeGrowAgro.Controllers
             ViewBag.VendorName = db.VendorMasters.Where(a => a.UserName == "sdjgfsfgh").OrderBy(a => a.VendorName).ToList();
             ViewBag.SubRoute = db.RouteMains.Where(a => a.MainRouteName == "dhgfsj").OrderBy(a => a.MainRouteName).ToList();
             ViewBag.VendorType = db.VendorTypes.OrderBy(a => a.VendorType).ToList();
+            ViewBag.ProductType = db.ProductTypes.OrderBy(a => a.Type).ToList();
             return View();
         }
 
@@ -181,7 +184,7 @@ namespace Micraft.ManeGrowAgro.Controllers
             ViewBag.VendorType = db.VendorTypes.OrderBy(a => a.VendorType).ToList();
 
             ViewBag.VendorName = db.VendorMasters.Where(a => a.VendorType == disp.VendorType).OrderBy(a => a.VendorName).ToList();
-
+            ViewBag.ProductType = db.ProductTypes.OrderBy(a => a.Type).ToList();
 
             return View(disp);
         }
@@ -201,6 +204,13 @@ namespace Micraft.ManeGrowAgro.Controllers
             var result = new { Message = "success", Vendordetails };
             return Json(result, JsonRequestBehavior.AllowGet);
 
+        }
+
+        public JsonResult GetProducts()
+        {
+            var productlist = db.ProductTypes.OrderBy(a => a.Type).ToList();
+            var result = new { Message = "success", productlist };
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         public JsonResult GetEditData(int ID)
         {
@@ -591,7 +601,7 @@ namespace Micraft.ManeGrowAgro.Controllers
             var result = new { Message = "success", order, dtl };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult Save(List<MainOrder> Cust, string Date, int Route, string DriverName, string VendorType, string VendorName, string VehicalNo, int TotalBoxes, decimal TotalWT, int? ID, int? VendorID,string RouteName)
+        public JsonResult Save(List<MainOrder> Cust, string Date, int Route, string DriverName, string VendorType, string VendorName, string VehicalNo, int TotalBoxes, decimal TotalWT, int? ID, int? VendorID,string RouteName, int ProductType)
         {
             try
             {
@@ -642,6 +652,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                         dispatchdtl.VendorType = VendorType;
                         dispatchdtl.CreatedBy = User.Identity.Name;
                         dispatchdtl.CreatedDate = DateTime.Today;
+                        dispatchdtl.ProductType = ProductType;
                         db.dispatchDetails.Add(dispatchdtl);
                         db.SaveChanges();
                         DispatchID = db.dispatchDetails.Max(u => u.DispatchID);
@@ -1475,7 +1486,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                 document.Open();
 
                 var ManifestMain = db.ManifestMains.Where(a => a.DispatchID == DispatchID).ToList();
-
+                //var x = db.ManifestMains.Where(a => a.DispatchID == DispatchID).FirstOrDefault();
                 foreach (var x in ManifestMain)
                 {
                     PdfPTable table1 = new PdfPTable(14);
@@ -1516,10 +1527,6 @@ namespace Micraft.ManeGrowAgro.Controllers
                     PC111.Colspan = 10;
                     PC111.HorizontalAlignment = 1;
                     table1.AddCell(PC111);
-
-
-
-                    //2 nd row
 
                     Paragraph pr1002 = new Paragraph();
                     pr1002.Add(new Phrase("\n", FontFactory.GetFont("Arial", 4, Font.NORMAL)));
@@ -1857,7 +1864,8 @@ namespace Micraft.ManeGrowAgro.Controllers
                     catch (Exception ee) { }
                     try
                     {
-                        PdfPCell p292e22 = new PdfPCell(new Phrase(new Phrase("" + x.TotalOrderWeight, FontFactory.GetFont("Arial", 10, Font.BOLD))));
+                        var totWeightValue = data2.Sum(t => t.OrderWeight ?? 0);
+                        PdfPCell p292e22 = new PdfPCell(new Phrase(new Phrase("" + totWeightValue, FontFactory.GetFont("Arial", 10, Font.BOLD))));
                         p292e22.HorizontalAlignment = 1;
                         p292e22.BackgroundColor = BaseColor.WHITE;
                         //      p292e22.Border = Rectangle.RIGHT_BORDER;
@@ -1868,7 +1876,8 @@ namespace Micraft.ManeGrowAgro.Controllers
                     catch (Exception ee) { }
                     try
                     {
-                        PdfPCell p292e22 = new PdfPCell(new Phrase(new Phrase("" + x.TotalDispatchQty, FontFactory.GetFont("Arial", 10, Font.BOLD))));
+                        var totDispatchQty = data2.Sum(t => t.DispatchQty ?? 0);
+                        PdfPCell p292e22 = new PdfPCell(new Phrase(new Phrase("" + totDispatchQty, FontFactory.GetFont("Arial", 10, Font.BOLD))));
                         p292e22.HorizontalAlignment = 1;
                         p292e22.BackgroundColor = BaseColor.WHITE;
                         //         p292e22.Border = Rectangle.RIGHT_BORDER;
@@ -1879,7 +1888,8 @@ namespace Micraft.ManeGrowAgro.Controllers
                     catch (Exception ee) { }
                     try
                     {
-                        PdfPCell p292e22 = new PdfPCell(new Phrase(new Phrase("" + x.TotalBoxQty, FontFactory.GetFont("Arial", 10, Font.BOLD))));
+                        var totBoxQty = data2.Sum(t => t.BoxQty ?? 0);
+                        PdfPCell p292e22 = new PdfPCell(new Phrase(new Phrase("" + totBoxQty, FontFactory.GetFont("Arial", 10, Font.BOLD))));
                         p292e22.HorizontalAlignment = 1;
                         p292e22.BackgroundColor = BaseColor.WHITE;
                         //           p292e22.Border = Rectangle.RIGHT_BORDER;
@@ -2954,7 +2964,7 @@ namespace Micraft.ManeGrowAgro.Controllers
             var result = new {Message="success" };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult Update(List<MainOrder> Cust, string Date, int Route, string DriverName, string VendorType, string VendorName, string VehicalNo, int TotalBoxes, decimal TotalWT, int? ID, int? VendorID, string RouteName, string strDelete)
+        public JsonResult Update(List<MainOrder> Cust, string Date, int Route, string DriverName, string VendorType, string VendorName, string VehicalNo, int TotalBoxes, decimal TotalWT, int? ID, int? VendorID, string RouteName, string strDelete, int? ProductType)
         {
             try
             {
@@ -3509,6 +3519,7 @@ namespace Micraft.ManeGrowAgro.Controllers
                                     md.OrderWeight = xx.Weight;
                                     md.DispatchQty = xx.OrderQty;
                                     md.BoxQty = pkg.NoOfBox;
+                                    md.ManifestMainID = main.ManifestMainID;
                                     md.BoxInKG = Convert.ToDecimal(pkg.TotalWeight);
 
                                     db.ManifestDetails.Add(md);
@@ -3558,6 +3569,75 @@ namespace Micraft.ManeGrowAgro.Controllers
 
 
         }
+
+        public void ExcelExport()
+        {
+            var dataa = (from x in db.dispatchDetails
+                         join c in db.RouteMains
+                         on x.Route equals c.ID
+
+                         select new
+                         {
+                             x.DispatchDate,
+                             x.DispatchID,
+                             x.DriverName,
+                             x.VehicalNo,
+                             x.NoofBoxes,
+                             x.TotalWeight,
+                             Route = c.MainRouteName,
+                             x.VendorName,
+
+
+                         }).OrderByDescending(x => x.DispatchID).ToList();
+
+
+
+
+
+            var totalRecord = dataa.Count();
+
+
+            try
+            {
+               
+                using (ExcelEngine excel = new ExcelEngine())
+                {
+                    IApplication application = excel.Excel;
+                    application.DefaultVersion = ExcelVersion.Excel2013;
+                    IWorkbook workbook = application.Workbooks.Create(1);
+                    IWorksheet worksheet = workbook.Worksheets[0];
+                    
+                    worksheet.ImportData(dataa, 1, 1, false);
+                    string path = Server.MapPath("~/Attachments/ExcelExport/");
+                    var filename = Guid.NewGuid() + ".xlsx";
+                    Session["RouteFileExportPath"] = path + filename;
+                    Session["RouteFileName"] = filename;
+                    FileStream stream = new FileStream((path+filename), FileMode.Create, FileAccess.ReadWrite);
+                    workbook.SaveAs(stream);
+                    stream.Dispose();
+                }
+
+                var response = new { Message = "success", FileName = "DispatchDetails.xlsx" };
+                //document.Close();
+               // return Json(response, JsonRequestBehavior.AllowGet);
+            
+            }
+            catch (Exception ex)
+            {
+              //s  return null;
+                throw;
+            }
+        }
+        public FileResult GetExcelLabel()
+        {
+            
+            string ReportURL = Session["RouteFileExportPath"].ToString();
+            byte[] FileBytes = System.IO.File.ReadAllBytes(ReportURL);
+            return File(FileBytes, "application/excel", Session["RouteFileName"].ToString());
+        }
+
+
+
     }
     internal class FileName
     {
